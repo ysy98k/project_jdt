@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.j.mapper.JProjectTheoreticalValue">
+
+    <select id="getRow" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        "pro_id" as "projectId",
+        "tag_name" as "tagName",
+        "real_name" as "realName",
+        "unit",
+        "theoretical_consumption" as "theoreticalConsumption"
+        FROM "raising"."j_project_theoretical_value"
+        where "pro_id" = #{projectId} and "tag_name" = #{tagName}
+        union
+        SELECT
+        "pro_id" as "projectId",
+        "tag_name" as "tagName",
+        "real_name" as "realName",
+        "unit",
+        "theoretical_consumption" as "theoreticalConsumption"
+        FROM "raising"."j_project_theoretical_value"
+        where "pro_id" = -1 and "tag_name" = #{tagName}
+        ;
+    </select>
+
+
+</mapper>

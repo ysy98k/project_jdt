@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.CoordinateInfo.mtsTest"><!--不知道可不可以删，先改个名让它在项目中实际不存在-->
+    <select id="getRows" parameterType="com.raising.forward.entity.CoordinateInfo" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "id" as "coordinateInfoId",
+        "check_id" as "lineId",
+        "x" as "x",
+        "y" as "y",
+        "z" as "z",
+        "mileage" as "mileage",
+        "design_mileage" as "designMileage",
+        "design_x" as "designX",
+        "design_y" as "designY",
+        "design_z" as "designZ"
+        from
+        "${tenant}"."t_coordinate_info"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="lineId != null">
+                and "check_id" = #{lineId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="count"  resultType="java.lang.Integer">
+        select
+        count(1)
+        from
+        "${tenant}"."t_coordinate_info"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="lineId != null">
+                and "check_id" = #{lineId}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="addRows" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into "${tenant}"."t_coordinate_info"("check_id","mileage","x","y","z","design_mileage","design_x","design_y","design_z")
+        <trim prefix="Values" suffixOverrides=",">
+            <if test="dataList != null">
+                <foreach collection="dataList"  item="oneRow" index="index"  separator=",">
+                    <trim prefix="(" suffix=")" suffixOverrides=",">
+                        <if test="oneRow != null">
+                            #{lineId},#{oneRow.mileage},#{oneRow.x},#{oneRow.y},#{oneRow.z},
+                            #{oneRow.designMileage},#{oneRow.designX},#{oneRow.designY},#{oneRow.designZ},
+                        </if>
+                    </trim>
+                </foreach>
+            </if>
+        </trim>
+
+    </insert>
+
+</mapper>
+

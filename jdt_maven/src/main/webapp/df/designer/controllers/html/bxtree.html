@@ -1,0 +1,103 @@
+<div data-id="control">
+	<div class="view">
+		<div id="control" class="tree"
+			style="min-height: 180px;margin-right: 2px;width: 100%"></div>
+	</div>
+	<div class="configView">
+		<div class="row">
+			<div class="col-sm-12">
+				<label for="treeId" title="id"
+					class="col-sm-6 no-padding smaller-20"> 树组件ID</label><label
+					id="treeId" class="col-sm-6 no-padding smaller-20"></label>
+            </div>
+		</div>
+		<div class="hr hr-dotted hr8"></div>
+		<div id="widgetheight">
+			<div class="row">
+				<div class="col-sm-12">
+					<label for="treeHeight" title="高度"
+						class="col-sm-6 no-padding smaller-20"> 树的高度(px)</label><input
+						id="treeHeight" type="text" class="col-sm-6" />
+				</div>
+			</div>
+		</div>
+		<div id="coreattribute">
+				
+		</div>
+		<div id="plugins">
+			<div class="hr hr-dotted hr8"></div>
+			<div class="row">
+				<div class="col-sm-6">
+					<label for="checkbox" title="复选框" class="smaller-20"> 是否复选框</label><label><input
+						id="checkbox" data-attribute="checkbox"
+						class="ace ace-switch ace-switch-3" type="checkbox" /><span
+						class="lbl"></span></label>
+				</div>
+				<div class="col-sm-5 no-padding">
+					<label for="dnd" title="是否可拖曳" class="smaller-20">是否可拖拽</label><label><input
+						id="dnd" data-attribute="dnd"
+						class="ace ace-switch ace-switch-3" type="checkbox" /><span
+						class="lbl"></span></label>
+				</div>
+			</div>
+		</div>
+		<div id="checkboxplugin" style="display: none">
+			<div class="hr hr-dotted hr8"></div>
+			<div class="row">
+				<div class="col-sm-6">
+					<label for="three_state" title="级联选择" class="smaller-20"> 级联选择</label><label><input
+						id="three_state" data-attribute="three_state" data-level="checkbox.three_state"
+						class="ace ace-switch ace-switch-3" type="checkbox" /><span
+						class="lbl"></span></label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="dataConfigView">
+		<div class="row">
+			<div class=" col-sm-12">
+				<label for="dataPattern" title="数据源模式为local时，右键可对树进行编辑；为ccs时，可以通过ccsid获取树的配置值"
+					class="smaller-20 col-sm-5 no-padding">数据源模式</label><select
+					id="dataPattern" class="col-sm-7" data-attribute="dataPattern" data-level="dataPattern">
+					<option value="local">local</option>
+					<option value="ccs">ccs</option>
+				</select>
+			</div>
+		</div>
+        <div class="hr hr-dotted hr8"></div>
+        <div id="localDiv">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="treeValue" title="value"
+                           class="col-sm-5 no-padding smaller-20"> 树节点的值</label><input
+                        id="treeValue" type="text" class="col-sm-7" data-attribute="id"data-level="selectNode.id"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="treeLable" title="value"
+                           class="col-sm-5 no-padding smaller-20"> 树节点的标签</label><input
+                        id="treeLable" type="text" class="col-sm-7" data-attribute="text"data-level="selectNode.text"/>
+                </div>
+            </div>
+        </div>
+        <!--
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="contextmenu" title="右键可编辑" class="smaller-20">右键可编辑</label><label><input
+                        id="contextmenu" data-attribute="contextmenu"
+                        class="ace ace-switch ace-switch-3" type="checkbox" /><span
+                        class="lbl"></span></label>
+                </div>
+            </div>
+        -->
+
+		<div class="row" id="ccsIdDiv" style="display: none">
+			<div class=" col-sm-12">
+				<label for="ccsCfg" title="ccsId"
+					class="smaller-20 col-sm-5 no-padding">ccsId</label><input
+					id="ccsCfg" class="col-sm-7 treeInput" type="text" data-attribute="ccsCfg" data-level="ccsCfg"/>
+			</div>
+		</div>
+	</div>
+</div>

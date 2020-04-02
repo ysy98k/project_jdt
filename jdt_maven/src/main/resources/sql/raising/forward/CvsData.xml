@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.CvsDataMapper">
+
+    <!--根据fdItemCode 查询对应的字符串-->
+    <select id="getRowsForTageName" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+
+      select *
+      from
+      "${tenant}"."t_cvs_data"
+      <trim prefix="where" prefixOverrides="and">
+            <if test="projectId != null">
+                and "pro_id" = #{projectId}
+            </if>
+            <!--<if test="tagNames != null">
+                and "tag_name" in
+                <foreach collection="tagNames" item="tag" open="(" close=")" separator=",">
+                    #{tag}
+                </foreach>
+            </if>-->
+      </trim>
+
+    </select>
+
+
+
+</mapper>

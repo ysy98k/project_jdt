@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="project.properties" />
+	<settings>
+		<setting name="logPrefix" value="dao." />
+		<setting name="logImpl" value="STDOUT_LOGGING" />
+		<!-- 开启二级缓存 -->
+		<setting name="cacheEnabled" value="false"/>
+	</settings>
+
+	<!--
+    plugins在配置文件中的位置必须符合要求，否则会报错，顺序如下:
+    properties?, settings?,
+    typeAliases?, typeHandlers?,
+    objectFactory?,objectWrapperFactory?,
+    plugins?,
+    environments?, databaseIdProvider?, mappers?
+	-->
+	<plugins>
+		<!-- com.github.pagehelper为PageHelper类所在包名 -->
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<!--<property name="dialect" value="postgresql"/>-->
+			<!--设置为true时，使用rowbounds的时候，会将rowbonds的第一个参数offset当做pageNum使用，和startpage中的pageNum效果一样-->
+			<!--<property name="offsetAsPageNum" value="true"/>-->
+			<!--设置为true时，使用rowbounds分页时就会进行count查询-->
+			<!--<property name="rowBoundsWithCount" value="true"/>-->
+			<!--设置为true时，如果pagesize=0或者rowbounds.limit=0就会查询出所有的结果-->
+			<property name="pageSizeZero" value="true"/>
+			<property name="reasonable" value="true"/>
+		</plugin>
+	</plugins>
+	<mappers>
+		<mapper resource="mybatis/sqlMap/DesignPage.xml" />
+		<mapper resource="mybatis/sqlMap/PageManage.xml" />
+
+		<!-- Mapper for jdt samples Begin -->
+		<!-- >mapper resource="sql/jdt/samples/SampleMap.xml" / -->
+		<!-- Mapper for jdt samples End -->
+	</mappers>
+</configuration>

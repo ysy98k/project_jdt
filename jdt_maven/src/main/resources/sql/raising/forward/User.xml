@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.UserDao">
+    <sql id="getGroupName">
+        (select "fd_group_name"
+        from "public"."t_usergroup"
+        where  "fd_groupid" = (
+        select "fd_groupid"
+        from "public"."t_groupmember"
+        where "fd_userid" = (
+        SELECT "fd_userid"	FROM "public"."t_user" where "fd_open_id"= #{openId}
+        )
+        )
+        ) as "groupName"
+    </sql>
+
+    <sql id="Sql_SelectColumns">
+        "fd_userid" As "userId",
+        "fd_username" As "username",
+        "fd_display_name" As "displayName",
+        "fd_desc" As "description",
+        "fd_telephone" As "telephone",
+        "fd_open_id" As "openId",
+        "fd_email" As "email",
+        "fd_employeeid" as "employeeId",
+        "fd_validity" as "validity",
+        "fd_tenantid" as "tenantId"
+    </sql>
+
+
+
+    <!--根据条件，查询记录-->
+    <select id="getUsers"  resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid ="Sql_SelectColumns" />,
+        <include refid="getGroupName" />
+        from "public"."t_user"
+        where "fd_delete_flag" = 0
+        <trim>
+            <if test="id != null ">
+                and "fd_userid" = #{id}
+            </if>
+            <if test="openId != null ">
+                and "fd_open_id" = #{openId}
+            </if>
+            <if test="number != null ">
+                and "fd_telephone" = #{number}
+            </if>
+
+        </trim>
+    </select>
+
+    <select id="getUsers2" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        u."fd_userid" as "userId",
+        u."fd_username" as "userName",
+        u."fd_tenantid" as "tenantid",
+        n."fd_groupid" as "groupId" ,
+        ug."fd_group_name" as "groupName",
+        ug."fd_display_name" as "displayName",
+        t."fd_tenant_name" as "tenant"
+        FROM
+        "public"."t_user" u LEFT JOIN t_groupmember n on u.fd_userid = n.fd_userid LEFT JOIN t_usergroup ug on n.fd_groupid = ug.fd_groupid
+        left JOIN "public"."t_tenant" t on u."fd_tenantid" = t."fd_tenantid"
+        where u."fd_delete_flag" = 0 and n."fd_delete_flag" = 0 and ug."fd_delete_flag" = 0
+        <trim>
+            <if test="userId != null">
+                and u."fd_userid" = #{userId}
+            </if>
+            <if test="tenant != null">
+                and t."fd_tenant_name" = #{tenant}
+            </if>
+        </trim>
+    </select>
+
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+          <include refid="Sql_SelectColumns"></include>
+        from "public"."t_user"
+        where "fd_delete_flag" = 0
+        <if test="userId != null">
+            and "fd_userid" = #{userId}
+        </if>
+        <if test="username != null">
+            and "fd_username" like CONCAT('%',#{username},'%')
+        </if>
+        <if test="displayName != null">
+            and "fd_display_name" like CONCAT('%',#{displayName},'%')
+        </if>
+        <if test="userIds != null">
+            and "fd_userid" in
+            <foreach collection="userIds" open="(" separator="," close=")" item="value">
+                '${value}'
+            </foreach>
+        </if>
+    </select>
+    
+    <select id="strictQuery" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        <include refid="Sql_SelectColumns"></include>
+        from "public"."t_user"
+        where "fd_delete_flag" = 0
+        <if test="userId != null">
+            and "fd_userid" = #{userId}
+        </if>
+        <if test="username != null">
+            and "fd_username"  = #{username}
+        </if>
+        <if test="displayName != null">
+            and "fd_display_name" = #{displayName}
+        </if>
+        <if test="userIds != null">
+            and "fd_userid" in
+            <foreach collection="userIds" open="(" separator="," close=")" item="value">
+                '${value}'
+            </foreach>
+        </if>
+    </select>
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject" resultType="int">
+        SELECT
+          count(1)
+        from "public"."t_user"
+        where "fd_delete_flag" = 0
+        <if test="userId != null">
+            and "fd_userid" = #{userId}
+        </if>
+        <if test="username != null">
+            and "fd_username" like CONCAT('%',#{username},'%')
+        </if>
+        <if test="displayName != null">
+            and "fd_display_name" like CONCAT('%',#{displayName},'%')
+        </if>
+        <if test="userIds != null">
+            and "fd_userid" in
+            <foreach collection="userIds" open="(" separator="," close=")" item="value">
+                '${value}'
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getPhone" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+       select "t_user"."fd_username" as "username"
+        from "public"."t_user"
+        where "fd_telephone" = #{phone} and "fd_delete_flag" = 0
+    </select>
+
+
+    <update id="updateRow" parameterType="com.alibaba.fastjson.JSONObject">
+        update "public"."t_user"
+        <trim prefix="set" suffixOverrides="," >
+            <if test="displayName != null ">
+                "fd_display_name" = #{displayName},
+            </if>
+            <if test="description != null ">
+                "fd_desc" = #{description},
+            </if>
+            <if test="telephone != null ">
+                "fd_telephone" = #{telephone},
+            </if>
+            <if test="email != null ">
+                "fd_email" = #{email},
+            </if>
+            <if test="employeeId != null ">
+                "fd_employeeid" = #{employeeId},
+            </if>
+            <choose>
+                <when test="validity != null and validity == '9999-01-01 00:00:00:000'.toString() ">
+                    "fd_validity" = NULL,
+                </when>
+                <when test="validity != null and validity != '9999-01-01 00:00:00:000'.toString() ">
+                    "fd_validity" = #{validity},
+                </when>
+            </choose>
+            <if test="deleteFlag != null ">
+                "fd_delete_flag" = #{deleteFlag},
+            </if>
+        </trim>
+        where "fd_userid" = #{userId}
+    </update>
+
+
+
+</mapper>

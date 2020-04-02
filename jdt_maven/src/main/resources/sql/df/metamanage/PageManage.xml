@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PageManage">
+    <select id="query" parameterType="com.baosight.df.metamanage.entity.PageInfo"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        PAGE_ID as "pageId",
+        PAGE_ENAME as "pageEname",
+        PAGE_CNAME as
+        "pageCname",
+        PAGE_PATH as "pagePath",
+        PAGE_TYPE as "pageType",
+        PAGE_DESC as "pageDesc"
+        from
+        "${tenant}".PAGEMANAGE
+        where 1 = 1
+        <if test="pageId != null">
+            and PAGE_ID = #{pageId}
+        </if>
+        <if test="pageEname != null and pageEname != ''">
+            and PAGE_ENAME like '%${pageEname}%'
+        </if>
+        <if test="pageCname != null and pageCname != ''">
+            and PAGE_CNAME like '%${pageCname}%'
+        </if>
+        <if test="pageType != null and pageType != ''">
+            and PAGE_TYPE = #{pageType}
+        </if>
+        <if test="fieldName != null and ascDesc != null">
+            order by
+            <choose>
+                <when test="fieldName == 'pageId'">
+                    PAGE_ID
+                </when>
+                <when test="fieldName == 'pageEname'">
+                    PAGE_ENAME
+                </when>
+                <when test="fieldName == 'pageCname'">
+                    PAGE_CNAME
+                </when>
+                <when test="fieldName == 'pageType'">
+                    PAGE_TYPE
+                </when>
+            </choose>
+            <if test="ascDesc == 'asc'">
+                asc
+            </if>
+            <if test="ascDesc == 'desc'">
+                desc
+            </if>
+        </if>
+    </select>
+
+    <select id="queryPrecise" parameterType="com.baosight.df.metamanage.entity.PageInfo"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        PAGE_ID as "pageId",
+        PAGE_ENAME as "pageEname",
+        PAGE_CNAME as "pageCname",
+        PAGE_PATH as "pagePath",
+        PAGE_TYPE as "pageType",
+        PAGE_DESC as "pageDesc"
+        from
+        "${tenant}".PAGEMANAGE
+        where 1 = 1
+        <if test="pageEname != null">
+            and PAGE_ENAME = #{pageEname}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from "${tenant}".PAGEMANAGE where 1=1
+        <if test="pageEname != null and pageEname != ''">
+            and PAGE_ENAME like '%${pageEname}%'
+        </if>
+        <if test="pageCname != null and pageCname != ''">
+            and PAGE_CNAME like '%${pageCname}%'
+        </if>
+        <if test="pageType != null and pageType != ''">
+            and PAGE_TYPE = #{pageType}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.baosight.df.metamanage.entity.PageInfo"
+            useGeneratedKeys="true" keyProperty="pageId">
+        insert into
+        "${tenant}".PAGEMANAGE
+        (PAGE_ENAME, PAGE_CNAME, PAGE_PATH,
+        PAGE_TYPE,PAGE_DESC)
+        values
+        (#{pageEname}, #{pageCname},
+        #{pagePath},#{pageType},#{pageDesc})
+    </insert>
+
+    <insert id="insertForUpload" parameterType="java.util.List"
+            useGeneratedKeys="true" keyProperty="pageId">
+        <foreach collection="list" item="item" index="index" separator=";">
+            insert into
+            "${item.tenant}".PAGEMANAGE
+            (PAGE_ENAME, PAGE_CNAME, PAGE_PATH,
+            PAGE_TYPE,PAGE_DESC)
+            values
+            (#{item.pageEname}, #{item.pageCname},
+            #{item.pagePath},#{item.pageType},#{item.pageDesc})
+            ON CONFLICT(PAGE_ENAME) DO UPDATE
+            SET
+            PAGE_CNAME = EXCLUDED.PAGE_CNAME,
+            PAGE_PATH = EXCLUDED.PAGE_PATH,
+            PAGE_TYPE = EXCLUDED.PAGE_TYPE,
+            PAGE_DESC = EXCLUDED.PAGE_DESC
+        </foreach>
+
+    </insert>
+
+    <update id="update" parameterType="com.baosight.df.metamanage.entity.PageInfo">
+        update "${tenant}".PAGEMANAGE
+        SET
+
+        PAGE_ENAME = #{pageEname},
+
+        PAGE_CNAME = #{pageCname},
+
+        PAGE_PATH = #{pagePath},
+
+        PAGE_TYPE = #{pageType},
+
+        PAGE_DESC = #{pageDesc}
+
+        where PAGE_ID = #{pageId}
+    </update>
+
+    <delete id="delete" parameterType="com.baosight.df.metamanage.entity.PageInfo">
+        delete from
+        "${tenant}".PAGEMANAGE where PAGE_ID=#{pageId}
+    </delete>
+
+    <delete id="deletedesign" parameterType="com.baosight.df.metamanage.entity.PageInfo">
+        delete from
+        "${tenant}".designpage where pagename=#{pageEname}
+    </delete>
+
+    <delete id="deletereport" parameterType="com.baosight.df.metamanage.entity.PageInfo">
+        delete from
+        "${tenant}".report_template where report_template_name=#{pageEname}
+    </delete>
+
+    <insert id="insertDesignPage" parameterType="com.baosight.df.metamanage.entity.DesignPage">
+        INSERT INTO "${tenant}".designpage( pagename, htmlstring, jsstring, cssstring, author,delivery_pkg)
+        VALUES ( #{pageName}, #{htmlString}, #{jsString}, #{cssString},
+        #{author},#{deliveryPkg})
+    </insert>
+
+    <delete id="deleteDesignPage" parameterType="com.baosight.df.metamanage.entity.DesignPage">
+        delete from "${tenant}".designpage WHERE pagename = #{pageName}
+    </delete>
+
+</mapper>

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.rest.DataUpload">
+
+
+    <!--根据条件，查询记录-->
+    <select id="getRows" parameterType="java.util.Map" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <trim  suffixOverrides=",">
+            <if test="columnNames != null">
+                <foreach collection="columnNames"  index="key" item="value" separator="," >
+                    "${value}"
+                </foreach>
+            </if>
+        </trim>
+        from "raising"."${tableName}"
+        <trim prefix="Where" prefixOverrides="and">
+            <if test="projectId != null">
+                and pro_id = #{projectId}
+            </if>
+            <if test="keyName != null">
+                and "${keyName}" = '${keyValue}'
+            </if>
+        </trim>
+        <trim prefix="order by">
+            ${orderBy}
+        </trim>
+        <trim prefix="limit">
+            <if test="pageSize != null and pageIndex != null">
+                #{pageSize} offset #{pageIndex}
+            </if>
+        </trim>
+
+    </select>
+    <!--根据条件，增加记录，可同时增加多条记录-->
+    <insert id="addRow" parameterType="java.util.Map" >
+        insert into
+        "raising"."${tableName}"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="columnNames != null">
+                <foreach collection="columnNames" item="value"  index="index"  separator="," >
+                    "${value}"
+                </foreach>
+            </if>
+        </trim>
+        <trim prefix="Values" suffixOverrides=",">
+            <if test="columnValues != null">
+                <foreach collection="columnValues"  item="oneRow" index="index"  separator=",">
+                    <trim prefix="(" suffix=")" suffixOverrides=",">
+                        <if test="oneRow != null">
+                            <foreach collection="oneRow"  item="value" separator=",">
+                                '${value}'
+                            </foreach>
+                        </if>
+                    </trim>
+                </foreach>
+            </if>
+        </trim>
+    </insert>
+    <!--根据条件，修改记录，-->
+    <update id="updateRow" parameterType="java.util.Map" >
+        Update "raising"."${tableName}"
+        <trim prefix="Set" suffixOverrides=",">
+            <if test="columnNames != null">
+                <foreach collection="columnNames" item="item" index="index">
+                    "${item}"=
+                    <foreach collection="oneRow"  item="oneRowValue" index="oneRowIndex" >
+                        <if test="index == oneRowIndex">
+                            '${oneRowValue}',
+                        </if>
+                    </foreach>
+                </foreach>
+            </if>
+        </trim>
+        <trim prefix="Where" prefixOverrides="and">
+            <if test="pro_id != null">
+                and "pro_id" = #{pro_id}
+            </if>
+            <if test="keyName != null">
+                and "${keyName}" = '${keyValue}'
+            </if>
+        </trim>
+    </update>
+    <!--删除 -->
+    <delete id="deleteRow" parameterType="java.util.Map" >
+        delete from
+        "raising"."${tableName}"
+        <trim prefix="Where" >
+            <if test="pro_id != null">
+                pro_id = #{pro_id};
+            </if>
+        </trim>
+
+    </delete>
+    <!--判断表名是否存在 -->
+    <select id="checkTableName" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) from information_schema.tables
+        where table_schema='raising' and table_type='BASE TABLE' and table_name='${tableName}';
+    </select>
+
+    <select id="getColumnName" parameterType="java.util.Map" resultType="java.lang.String">
+        select "column_name" from information_schema.columns
+          where table_schema='${raising}' and table_name='${tableName}';
+    </select>
+
+    <select id="getRowsOfTest" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <trim  suffixOverrides=",">
+            <if test="columnNames != null">
+                <foreach collection="columnNames"  index="key" item="value" separator="," >
+                    "${value}"
+                </foreach>
+            </if>
+        </trim>
+        from "raising"."${tableName}"
+        <trim prefix="Where" prefixOverrides="and">
+            <if test="projectId != null">
+                and "pro_id" = #{projectId}
+            </if>
+            <if test="condition1 != null and condition1 != ''.toString()">
+                and "${condition1}"
+                <if test="condition1Releation == '1'.toString() ">
+                    > '${condition1Value1}'
+                </if>
+                <if test="condition1Releation == '2'.toString() ">
+                    = '${condition1Value1}'
+                </if>
+                <if test="condition1Releation == '3'.toString()">
+                    &lt; '${condition1Value1}'
+                </if>
+                <if test="condition1Releation == '4'.toString() ">
+                    between '${condition1Value1}' and '${condition1Value2}'
+                </if>
+            </if>
+            <if test="condition2 != null and condition2 != ''.toString()">
+                and "${condition2}"
+                <choose>
+                    <when test="condition2Releation == '1'.toString()">
+                        > '${condition2Value1}'
+                    </when>
+                    <when test="condition2Releation == '2'.toString()">
+                        = '${condition2Value1}'
+                    </when>
+                    <when test="condition2Releation == '3'.toString()">
+                        &lt; '${condition2Value1}'
+                    </when>
+                    <when test="condition2Releation == '4'.toString()">
+                        between '${condition2Value1}' and '${condition2Value2}'
+                    </when>
+                </choose>
+            </if>
+        </trim>
+        <trim prefix="order by">
+            ${orderBy}
+        </trim>
+    </select>
+
+    <select id="getCountOfTest" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select
+        count(*)
+        from "raising"."${tableName}"
+        <trim prefix="Where" prefixOverrides="and">
+            <if test="projectId != null">
+                and "pro_id" = #{projectId}
+            </if>
+            <if test="condition1 != null and condition1 != ''.toString()">
+                and "${condition1}"
+                <if test="condition1Releation == '1'.toString() ">
+                    > '${condition1Value1}'
+                </if>
+                <if test="condition1Releation == '2'.toString() ">
+                    = '${condition1Value1}'
+                </if>
+                <if test="condition1Releation == '3'.toString()">
+                    &lt; '${condition1Value1}'
+                </if>
+                <if test="condition1Releation == '4'.toString() ">
+                    between '${condition1Value1}' and '${condition1Value2}'
+                </if>
+            </if>
+            <if test="condition2 != null and condition2 != ''.toString()">
+                and "${condition2}"
+                <choose>
+                    <when test="condition2Releation == '1'.toString()">
+                        > '${condition2Value1}'
+                    </when>
+                    <when test="condition2Releation == '2'.toString()">
+                        = '${condition2Value1}'
+                    </when>
+                    <when test="condition2Releation == '3'.toString()">
+                        &lt; '${condition2Value1}'
+                    </when>
+                    <when test="condition2Releation == '4'.toString()">
+                        between '${condition2Value1}' and '${condition2Value2}'
+                    </when>
+                </choose>
+            </if>
+        </trim>
+    </select>
+
+    
+
+    
+    <update id="createTable" parameterType="java.util.Map">
+        CREATE TABLE "raising"."${tableName}" (
+        "pro_id" int4,
+        /*"table_increment_pk" int4 default nextval('raising.currency_id_seq')  NOT NULL PRIMARY KEY,*/
+        "table_increment_pk" int4 default nextval('raising.${sequence}_id_seq')  NOT NULL PRIMARY KEY,
+        "timestamp" timestamp(6),
+        "id" int4 NOT NULL,
+        "dt" timestamp(6) DEFAULT NULL::timestamp without time zone,
+        "MR_Ring_Num" int4,
+        "CurMS" int4,
+        "MR_Des_A1Mileage" float8,
+        "CurRS" int4,
+        "InitialS" int4,
+        "FTunneling" int4,
+        "FPreparing" int4,
+        "FAssemblying" int4,
+        "FStartCondition" int4,
+        "FEndCondition" int4,
+        "FStart" int4,
+        "FEnd" int4,
+        "FTunnel" int4,
+        "FAssembly" int4,
+        "FLeft" int4,
+        "FRight" int4,
+        "FExtend" int4,
+        "ARData" json,
+        "DRData" json,
+        "AlarmData" json,
+        "RingStartTime" timestamp(6),
+        "RingEndTime" timestamp(6),
+        "RingTotalTime" int8,
+        "RingTunnellingTime" int8,
+        "RingAssemblingTime" int8
+        )
+        WITH (OIDS=FALSE)
+    </update>
+
+    <update id="createSequence" parameterType="com.alibaba.fastjson.JSONObject">
+        create sequence "raising"."${sequence}_id_seq" increment by 1 MINVALUE 1 no MAXVALUE start with 1;
+    </update>
+
+    <update id="createProjectIdIndex" parameterType="com.alibaba.fastjson.JSONObject">
+        CREATE INDEX "${tableName}_pro_id_idx" ON "raising"."${tableName}" USING btree ("pro_id");
+    </update>
+
+    <update id="createMileageIndex" parameterType="com.alibaba.fastjson.JSONObject">
+        CREATE INDEX "${tableName}_mileage_idx" ON "raising"."${tableName}" USING btree ("MR_Des_A1Mileage");
+    </update>
+
+    <update id="createRingNumIndex" parameterType="com.alibaba.fastjson.JSONObject">
+        CREATE INDEX "${tableName}_ring_num_idx" ON "raising"."${tableName}" USING btree ("MR_Ring_Num");
+    </update>
+
+
+
+
+</mapper>

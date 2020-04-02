@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.Setting">
+    <!--获得盾构机履历信息-->
+    <!--<select id="getRows" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+          "name" as "name",
+          "Value" as "value",
+          "pro_id" as "projectId"
+        from
+         "raising"."j_setting"
+        where
+        "pro_id" = #{projectId}
+    </select>-->
+
+
+</mapper>

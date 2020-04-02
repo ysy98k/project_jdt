@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/cache
+        http://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder
+            location="classpath:*.properties,file:/Users/ysy/usr/local/xinsight/jdt/conf/*.properties,file:/Users/ysy/usr/local/xinsight/common/conf/*.properties,
+            file:/Users/ysy/usr/local/xinsight/lms_web/conf/*.properties" file-encoding="UTF-8"/>
+
+    <context:component-scan base-package="com.baosight">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <context:component-scan base-package="com.raising">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    <context:component-scan base-package="com.util">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+    <cache:annotation-driven cache-manager="cacheManager" proxy-target-class="false"/>
+    <!-- cache manager -->
+    <bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcacheManagerFactory"/>
+    </bean>
+
+    <!-- 采用EhCache-->
+    <bean id="ehcacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache/ehcache.xml"/>
+        <property name="shared" value="true"/>
+    </bean>
+
+    <import resource="classpath:spring/framework/applicationContext-myBatis.xml" />
+    <import resource="classpath:spring/framework/applicationContext-shiro.xml" />
+    <import resource="classpath:spring/framework/applicationContext-redis.xml" />
+    <!--<import resource="classpath:spring/framework/applicationContext-workflow.xml" />-->
+
+    <!--二级缓存配置-->
+    <bean class="com.raising.cache.MybatisRedisCacheTransfer">
+        <property name="jedisConnectionFactory" ref="connectionFactory"/>
+    </bean>
+</beans>

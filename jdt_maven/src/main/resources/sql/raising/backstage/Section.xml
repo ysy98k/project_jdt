@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Section">
+    <select id="query" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "id" as "sectionId",
+        "name" as "sectionName",
+        "create_time" as "createTime",
+        "map_coordinate_center" as "mapCoordinateCenter",
+        "ccs_city" as "ccsId",
+        "ccs_section_type" as "ccsSectionType",
+        "map_coordinate_left" as "mapCoordinateLeft",
+        "map_coordinate_right" as "mapCoordinateRight",
+        "update_time" as "updateTime"
+        from
+        "${tenant}"."t_section"
+        where 1 = 1
+        <if test="sectionId != null">
+            and id = #{sectionId}
+        </if>
+        <if test="sectionName != null and sectionName!= ''">
+            and "name" like concat('%',#{sectionName},'%')
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and "createTime" like concat('%',#{createTime},'%')
+        </if>
+        <if test="ccsId != null and ccsId != ''">
+            and "ccs_city" like concat('%',#{ccsId},'%') '
+        </if>
+
+    </select>
+
+    <update id="update" parameterType="com.alibaba.fastjson.JSONObject">
+        update "${tenant}"."t_section"
+        <trim prefix="set" suffixOverrides=",">
+            <if test="sectionName != null">
+                "name" = #{sectionName},
+            </if>
+            <if test="createTime != null">
+                "create_time" = #{createTime},
+            </if>
+            <if test="mapCoordinateCenter != null">
+                "map_coordinate_center" = #{mapCoordinateCenter},
+            </if>
+            <if test="ccsId != null">
+                "ccs_city" = #{ccsId},
+            </if>
+            <if test="ccsSectionType != null">
+                "ccs_section_type" = #{ccsSectionType},
+            </if>
+            <if test="mapCoordinateLeft != null">
+                "map_coordinate_left" = #{mapCoordinateLeft},
+            </if>
+            <if test="mapCoordinateRight != null">
+                "map_coordinate_right" = #{mapCoordinateRight},
+            </if>
+            <if test="updateTime != null">
+                "update_time" = #{updateTime},
+            </if>
+        </trim>
+        where id = #{sectionId}
+    </update>
+    <select id="querySectionType" resultType="java.lang.String" >
+      select fd_item_name
+      from
+      "public".t_code_item
+      where fd_level_code like 'sectionType%'
+
+    </select>
+
+</mapper>

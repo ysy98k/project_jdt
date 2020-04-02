@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.xinsight.template.model.pagemanage">
+
+
+
+
+	<insert id="insertPage" parameterType="com.baosight.df.designer.entity.PageBean">
+		INSERT INTO "${tenant}".pagemanage( page_ename, page_cname, page_path, page_type,
+		page_desc)
+		VALUES ( #{page_ename}, #{page_cname}, #{page_path}, #{page_type},
+		#{page_desc})
+	</insert>
+
+
+
+
+
+</mapper>  
+
+
+

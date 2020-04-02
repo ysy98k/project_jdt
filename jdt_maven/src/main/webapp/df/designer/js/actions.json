@@ -1,0 +1,110 @@
+{
+  "control_actions": [
+    {
+      "type": "page",
+      "actions": [
+        {
+          "name": "OnLoad",
+          "params": "()",
+          "tooltip": "画面结束加载之后触发"
+        }
+      ]
+    },
+    {
+      "type": "bxtree",
+      "actions": [
+        {
+          "name": "OnClick",
+          "params": "()",
+          "tooltip": "控件上发生鼠标点击时触发"
+        },
+        {
+          "name": "OnDblClick",
+          "params": "()",
+          "tooltip": "在控件上发生鼠标双击时触发"
+        }
+      ]
+    },
+    {
+      "type": "bxgrid",
+      "actions": [
+        {
+          "name": "OnClick",
+          "params": "()",
+          "tooltip": "控件上发生鼠标点击时触发"
+        }
+      ]
+    },
+    {
+      "type": "bxcombobox",
+      "actions": [
+        {
+          "name": "OnChange",
+          "params": "()",
+          "tooltip": "选项变化事件"
+        }
+      ]
+    },
+    {
+      "type": "input",
+      "actions": [
+        {
+          "name": "OnChange",
+          "params": "()",
+          "tooltip": "值变化事件"
+        },{
+          "name": "onFocus",
+          "params": "()",
+          "tooltip": "获得焦点事件"
+        },{
+          "name": "onKeyDown",
+          "params": "()",
+          "tooltip": "在输入框中按下键盘时触发"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "actions": [
+        {
+          "name": "OnClick",
+          "params": "()",
+          "tooltip": "控件上发生鼠标点击时触发"
+        },
+        {
+          "name": "OnDblClick",
+          "params": "()",
+          "tooltip": "在控件上发生鼠标双击时触发"
+        },
+        {
+          "name": "OnMouseDown",
+          "params": "()",
+          "tooltip": "当在控件上按下鼠标按钮时触发"
+        },
+        {
+          "name": "OnMouseOver",
+          "params": "()",
+          "tooltip": "当鼠标指针移动到控件上时触发   \n参数：  \n   control 触发该事件的控件"
+        },
+        {
+          "name": "OnMouseUp",
+          "params": "()",
+          "tooltip": "当在控件上释放鼠标按钮时触发"
+        },{
+          "name": "onKeyDown",
+          "params": "()",
+          "tooltip": "在输入框中按下键盘时触发"
+        },{
+          "name": "onSubmit",
+          "params": "()",
+          "tooltip": "提交按钮被点击"
+        },{
+          "name": "onReset",
+          "params": "()",
+          "tooltip": "重置按钮被点击"
+        }
+      ]
+    }
+  ]
+}
+

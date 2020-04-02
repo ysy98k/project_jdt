@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.j.mapper.JMileageData">
+
+
+
+    <select id="getArData" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id" as "projectId",
+        "MR_Ring_Num" as "MR_Ring_Num",
+        "MR_Des_A1Mileage" as "MR_Des_A1Mileage",
+        "dt" as "dt",
+        "CurMS" as "CurMS",
+        "ARData" as "ARData"
+        from
+        "raising"."j_mileagedata_${collectorName}"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId != null">
+                and "pro_id" = #{projectId}
+            </if>
+            <choose>
+                <when test="startMileage != null and endMileage == null">
+                    and "MR_Des_A1Mileage" <![CDATA[ >= ]]> #{startMileage}
+                </when>
+                <when test="startMileage == null and endMileage != null">
+                    and "MR_Des_A1Mileage" <![CDATA[ <= ]]> #{endMileage}
+                </when>
+                <when test="startMileage != null and endMileage != null">
+                    and "MR_Des_A1Mileage" between #{startMileage} and  #{endMileage}
+                </when>
+            </choose>
+        </trim>
+        order by "dt" limit 1000
+    </select>
+
+    <select id="getArDataForGrid" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id" as "projectId",
+        "MR_Ring_Num" as "MR_Ring_Num",
+        "MR_Des_A1Mileage" as "MR_Des_A1Mileage",
+        "dt" as "dt",
+        "CurMS" as "CurMS",
+        "ARData" as "ARData"
+        from
+        "raising"."j_mileagedata_${collectorName}"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId != null">
+                and "pro_id" = #{projectId}
+            </if>
+            <choose>
+                <when test="startMileage != null and endMileage == null">
+                    and "MR_Des_A1Mileage" <![CDATA[ >= ]]> #{startMileage}
+                </when>
+                <when test="startMileage == null and endMileage != null">
+                    and "MR_Des_A1Mileage" <![CDATA[ <= ]]> #{endMileage}
+                </when>
+                <when test="startMileage != null and endMileage != null">
+                    and "MR_Des_A1Mileage" between #{startMileage} and  #{endMileage}
+                </when>
+            </choose>
+        </trim>
+    </select>
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+      select count("table_increment_pk") from
+      "raising"."j_mileagedata_${collectorName}"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId != null">
+                and "pro_id" = #{projectId}
+            </if>
+            <choose>
+                <when test="startMileage != null and endMileage == null">
+                    and "MR_Des_A1Mileage" <![CDATA[ >= ]]> #{startMileage}
+                </when>
+                <when test="startMileage == null and endMileage != null">
+                    and "MR_Des_A1Mileage" <![CDATA[ <= ]]> #{endMileage}
+                </when>
+                <when test="startMileage != null and endMileage != null">
+                    and "MR_Des_A1Mileage" between #{startMileage} and  #{endMileage}
+                </when>
+            </choose>
+        </trim>
+    </select>
+
+    <select id="getMileageRangeData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        max("MR_Des_A1Mileage") ,min("MR_Des_A1Mileage")
+        from
+        "raising"."j_mileagedata_${collectorName}"
+        where "pro_id" = #{projectId}
+    </select>
+
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id","table_increment_pk",
+
+        "timestamp", "id","dt","MR_Ring_Num",
+
+        "CurMS", "MR_Des_A1Mileage","CurRS","InitialS",
+
+        "FTunneling","FPreparing", "FAssemblying","FStartCondition",
+
+        "FEndCondition", "FStart","FEnd","FTunnel",
+
+        "FAssembly", "FLeft", "FRight", "FExtend",
+
+        "ARData","DRData","AlarmData",	"RingStartTime",
+
+        "RingEndTime","RingTotalTime","RingTunnellingTime","RingAssemblingTime"
+
+        from "raising"."${tableName}"
+        where 1 = 1
+        <if test="id != null">
+            and "table_increment_pk" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "table_increment_pk" asc OFFSET 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("table_increment_pk")
+        from "raising"."${tableName}"
+    </select>
+
+</mapper>

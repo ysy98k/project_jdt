@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.ResultTable">
+
+    <resultMap id="BaseResultMap" type="com.raising.forward.entity.ResultsTable">
+        <id column="result_id" property="resultId"/>
+        <result column="result_table_uuid" property="resultTableUUID"/>
+        <result column="result_table_name" property="resultsTableName"/>
+    </resultMap>
+
+    <select id="getResultTableListByResultTableUUID" parameterType="com.alibaba.fastjson.JSONObject"
+            resultMap="BaseResultMap">
+        SELECT * FROM "${tenant}"."result_table"
+        <where>
+            <if test="resultTableUUID != null">
+                result_table_uuid = #{resultTableUUID}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertResultTable" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into
+        "${tenant}"."result_table"(result_id, result_table_uuid, result_table_name)
+        values
+        <foreach collection="resultsTableList" item="reddemCode" separator=",">
+            (
+            #{reddemCode.resultId},
+            #{reddemCode.resultTableUUID},
+            #{reddemCode.resultsTableName}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

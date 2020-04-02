@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.backstage.entity.RoleUser">
+    <sql id="Sql_SelectColumns">
+        gm."id" as "roleMemberId",
+        gm."fd_userid" as "userId",
+        gm."fd_groupid" as "groupId",
+        gm."fd_modify_person_id" as "modifyPersonId"
+    </sql>
+    <sql id="Sql_User_SelectColumns">
+        u."fd_userid" As "userId",
+        u."fd_username" As "username",
+        u."fd_display_name" As "displayName",
+        u."fd_desc" As "description",
+        u."fd_telephone" As "telephone",
+        u."fd_email" As "email",
+        u."fd_employeeid" as "employeeId"
+    </sql>
+
+    <select id="getRowsWithGroups" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.raising.backstage.entity.RoleUser">
+        select
+        <include refid="Sql_SelectColumns"></include>
+        from
+        "public"."t_groupmember" gm left join "public"."t_user" u on gm."fd_userid" = u."fd_userid"
+        where gm."fd_delete_flag" = 0 and u."fd_delete_flag" = 0
+        <if test="groupIds != null">
+            and "fd_groupid" in
+            <foreach collection="groupIds" open="(" separator="," close=")" item="value">
+                '${value}'
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+          <include refid="Sql_SelectColumns"></include>,
+          <include refid="Sql_User_SelectColumns"></include>
+        from
+        "public"."t_groupmember" gm left join "public"."t_user" u
+        on gm."fd_userid" = u."fd_userid"
+        where gm."fd_delete_flag" = 0 and u."fd_delete_flag" = 0
+        <if test="groupId != null">
+            and "fd_groupid" = #{groupId}
+        </if>
+        <if test="username != null">
+            and u."fd_username" like CONCAT('%',#{username},'%')
+        </if>
+        <if test="groupIds != null">
+            and "fd_groupid" in
+            <foreach collection="groupIds" open="(" separator="," close=")" item="value">
+                '${value}'
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getUserIds" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "fd_userid" as "userId",
+        "fd_groupid" as "groupId"
+        from
+        "public"."t_groupmember"
+        where "fd_delete_flag" = 0
+        <if test="currentGroupId != null">
+            and "fd_userid" not in ( select fd_userid from  "public"."t_groupmember"  where "fd_delete_flag" = 0 and "fd_groupid" = #{currentGroupId} )
+        </if>
+        <if test="groupIds != null">
+            and "fd_groupid" in
+            <foreach collection="groupIds" open="(" separator="," close=")" item="value">
+                '${value}'
+            </foreach>
+        </if>
+    </select>
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject" resultType="int">
+        select
+        count(1)
+        from
+        "public"."t_groupmember" gm left join "public"."t_user" u
+        on gm."fd_userid" = u."fd_userid"
+        where gm."fd_delete_flag" = 0 and u."fd_delete_flag" = 0
+        <if test="groupId != null">
+            and "fd_groupid" = #{groupId}
+        </if>
+        <if test="username != null">
+            and u."fd_username" like CONCAT('%',#{username},'%')
+        </if>
+        <if test="groupIds != null">
+            and "fd_groupid" in
+            <foreach collection="groupIds" open="(" separator="," close=")" item="value">
+                '${value}'
+            </foreach>
+        </if>
+    </select>
+
+    <select id="deleteCheck" parameterType="com.alibaba.fastjson.JSONObject" resultType="int">
+        select "fd_userid" from "public"."t_groupmember"
+        where "fd_delete_flag" = 0 and "fd_userid" in
+        <foreach collection="userIds" open="(" separator="," close=")" item="value">
+            '${value}'
+        </foreach>
+        group by "fd_userid" having count("fd_userid") > 1
+    </select>
+
+    <insert id="addRow" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into "public"."t_groupmember"("fd_userid","fd_groupid","fd_modify_person_id")
+        values(#{userId},#{groupId},#{modifyPersonId})
+    </insert>
+
+    <update id="deleteRows" parameterType="com.alibaba.fastjson.JSONObject">
+        update "public"."t_groupmember"
+        set "fd_delete_flag" = #{modifyPersonId},"fd_modify_person_id" = #{modifyPersonId}
+        where
+        "id"  = #{roleMemberId}
+    </update>
+
+
+</mapper>

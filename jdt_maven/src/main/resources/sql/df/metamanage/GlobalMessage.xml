@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GlobalMessage">
+    <select id="query" parameterType="com.baosight.df.metamanage.entity.GlobalMessage"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        MESSAGE_ID as "messageId",
+        MESSAGE_KEY as "messageKey",
+        MESSAGE_VALUE as "messageValue",
+        MESSAGE_DESC as "messageDesc",
+        MESSAGE_LAN as "messageLan",
+        MESSAGE_ENABLE as "messageEnable"
+        from
+        "${tenant}".GLOBALPAGE
+        where
+        1 = 1
+        <if test="messageId != null">
+            and MESSAGE_ID = #{messageId}
+        </if>
+        <if test="messageKey != null and messageKey!= ''">
+            and MESSAGE_KEY = #{messageKey}
+        </if>
+        <if test="messageValue != null and messageValue != ''">
+            and MESSAGE_VALUE like '%${messageValue}%'
+        </if>
+        <if test="messageDesc != null">
+            and MESSAGE_DESC = #{messageDesc}
+        </if>
+        <if test="messageLan != null">
+            and MESSAGE_LAN = #{messageLan}
+        </if>
+        <if test="messageEnable != null">
+            and MESSAGE_ENABLE = #{messageEnable}
+        </if>
+
+        <if test="fieldName != null and ascDesc != null">
+            order by
+            <choose>
+                <when test="fieldName == 'messageKey'">
+                    MESSAGE_KEY
+                </when>
+                <when test="fieldName == 'messageValue'">
+                    MESSAGE_VALUE
+                </when>
+                <when test="fieldName == 'messageDesc'">
+                    MESSAGE_DESC
+                </when>
+                <when test="fieldName == 'messageEnable'">
+                    MESSAGE_ENABLE
+                </when>
+                <when test="fieldName == 'messageLan'">
+                    MESSAGE_LAN
+                </when>
+            </choose>
+            <if test="ascDesc == 'asc'">
+                asc
+            </if>
+            <if test="ascDesc == 'desc'">
+                desc
+            </if>
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from "${tenant}".GLOBALPAGE where 1=1
+        <if test="messageId != null">
+            and MESSAGE_ID = #{messageId}
+        </if>
+        <if test="messageKey != null and messageKey!= ''">
+            and MESSAGE_KEY = #{messageKey}
+        </if>
+        <if test="messageValue != null and messageValue != ''">
+            and MESSAGE_VALUE like '%${messageValue}%'
+        </if>
+        <if test="messageDesc != null">
+            and MESSAGE_DESC = #{messageDesc}
+        </if>
+        <if test="messageLan != null">
+            and MESSAGE_LAN = #{messageLan}
+        </if>
+        <if test="messageEnable != null">
+            and MESSAGE_ENABLE = #{messageEnable}
+        </if>
+    </select>
+
+    <select id="querybatch" parameterType="com.baosight.df.metamanage.entity.GlobalMessage"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        MESSAGE_ID as "messageId",
+        MESSAGE_KEY as "messageKey",
+        MESSAGE_VALUE as "messageValue",
+        MESSAGE_DESC as "messageDesc",
+        MESSAGE_LAN as "messageLan",
+        MESSAGE_ENABLE as "messageEnable"
+        from
+        "${tenant}".GLOBALPAGE
+        where
+        1 = 1
+        <if test="messageId != null">
+            and MESSAGE_ID = #{messageId}
+        </if>
+        <if test="messageKey != null and messageKey != ''">
+            and MESSAGE_KEY in (${messageKey})
+        </if>
+        <if test="messageValue != null and messageKey != ''">
+            and MESSAGE_VALUE = #{messageValue}
+        </if>
+        <if test="messageDesc != null">
+            and MESSAGE_DESC = #{messageDesc}
+        </if>
+        <if test="messageLan != null">
+            and MESSAGE_LAN = #{messageLan}
+        </if>
+        <if test="messageEnable != null">
+            and MESSAGE_ENABLE = #{messageEnable}
+        </if>
+
+        <if test="fieldName != null and ascDesc != null">
+            order by
+            <choose>
+                <when test="fieldName == 'messageKey'">
+                    MESSAGE_KEY
+                </when>
+                <when test="fieldName == 'messageValue'">
+                    MESSAGE_VALUE
+                </when>
+                <when test="fieldName == 'messageDesc'">
+                    MESSAGE_DESC
+                </when>
+                <when test="fieldName == 'messageEnable'">
+                    MESSAGE_ENABLE
+                </when>
+                <when test="fieldName == 'messageLan'">
+                    MESSAGE_LAN
+                </when>
+            </choose>
+            <if test="ascDesc == 'asc'">
+                asc
+            </if>
+            <if test="ascDesc == 'desc'">
+                desc
+            </if>
+        </if>
+    </select>
+
+    <select id="countbatch" resultType="int">
+        select count(*) from "${tenant}".GLOBALPAGE where 1=1
+        <if test="messageId != null">
+            and MESSAGE_ID = #{messageId}
+        </if>
+        <if test="messageKey != null and messageKey !=''">
+            and MESSAGE_KEY in (${messageKey})
+        </if>
+        <if test="messageValue != null and messageValue !=''">
+            and MESSAGE_VALUE = #{messageValue}
+        </if>
+        <if test="messageDesc != null">
+            and MESSAGE_DESC = #{messageDesc}
+        </if>
+        <if test="messageLan != null">
+            and MESSAGE_LAN = #{messageLan}
+        </if>
+        <if test="messageEnable != null">
+            and MESSAGE_ENABLE = #{messageEnable}
+        </if>
+    </select>
+
+    <select id="querykey" parameterType="com.baosight.df.metamanage.entity.GlobalMessage"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select DISTINCT
+        MESSAGE_KEY as "messageKey"
+        from
+        "${tenant}".GLOBALPAGE
+        where
+        1 = 1
+        <if test="messageKey != null and messageKey!= ''">
+            and MESSAGE_KEY like '%${messageKey}%'
+        </if>
+        <if test="messageValue != null and messageValue != ''">
+            and MESSAGE_VALUE like '%${messageValue}%'
+        </if>
+        <if test="messageDesc != null">
+            and MESSAGE_DESC = #{messageDesc}
+        </if>
+        <if test="messageLan != null">
+            and MESSAGE_LAN = #{messageLan}
+        </if>
+        <if test="messageEnable != null">
+            and MESSAGE_ENABLE = #{messageEnable}
+        </if>
+        <if test="fieldName != null and ascDesc != null">
+            order by
+            <choose>
+                <when test="fieldName == 'messageKey'">
+                    MESSAGE_KEY
+                </when>
+                <when test="fieldName == 'messageValue'">
+                    MESSAGE_VALUE
+                </when>
+                <when test="fieldName == 'messageDesc'">
+                    MESSAGE_DESC
+                </when>
+                <when test="fieldName == 'messageEnable'">
+                    MESSAGE_ENABLE
+                </when>
+                <when test="fieldName == 'messageLan'">
+                    MESSAGE_LAN
+                </when>
+            </choose>
+            <if test="ascDesc == 'asc'">
+                asc
+            </if>
+            <if test="ascDesc == 'desc'">
+                desc
+            </if>
+        </if>
+    </select>
+
+    <select id="countkey" resultType="int">
+        select count(DISTINCT MESSAGE_KEY) from "${tenant}".GLOBALPAGE where 1=1
+        <if test="messageKey != null and messageKey!= ''">
+            and MESSAGE_KEY like '%${messageKey}%'
+        </if>
+        <if test="messageValue != null and messageValue != ''">
+            and MESSAGE_VALUE like '%${messageValue}%'
+        </if>
+        <if test="messageDesc != null">
+            and MESSAGE_DESC = #{messageDesc}
+        </if>
+        <if test="messageLan != null">
+            and MESSAGE_LAN = #{messageLan}
+        </if>
+        <if test="messageEnable != null">
+            and MESSAGE_ENABLE = #{messageEnable}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.baosight.df.metamanage.entity.GlobalMessage"
+            useGeneratedKeys="true" keyProperty="messageId">
+        INSERT INTO
+        "${tenant}".GLOBALPAGE
+        (MESSAGE_KEY, MESSAGE_VALUE, MESSAGE_DESC, MESSAGE_LAN, MESSAGE_ENABLE)
+        VALUES
+        (#{messageKey}, #{messageValue},
+        #{messageDesc}, #{messageLan}, #{messageEnable})
+    </insert>
+
+    <update id="update" parameterType="com.baosight.df.metamanage.entity.GlobalMessage">
+        UPDATE "${tenant}".GLOBALPAGE
+        SET
+
+        MESSAGE_KEY = #{messageKey},
+        MESSAGE_VALUE = #{messageValue},
+        MESSAGE_DESC = #{messageDesc},
+        MESSAGE_LAN = #{messageLan},
+        MESSAGE_ENABLE = #{messageEnable}
+
+        WHERE MESSAGE_ID = #{messageId}
+    </update>
+
+    <delete id="delete" parameterType="com.baosight.df.metamanage.entity.GlobalMessage">
+        DELETE FROM
+        "${tenant}".GLOBALPAGE
+        WHERE MESSAGE_ID = #{messageId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,1 @@
+var _baosight_require_include_files=new Array("other/js/require.js","baosightConfig.js");for(var _file in _baosight_require_include_files)bxImportFile(prefix+_baosight_require_include_files[_file]);

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.ZeroConfigMapper">
+    <select id="query" parameterType="com.raising.forward.entity.ZeroConfig"
+            resultType="com.raising.forward.entity.ZeroConfig">
+        select
+        "table_increment_pk" as "id",
+        "dbValue" as "dbValue",
+        "pro_id" as projectId,
+        "UpdateTime" as "updateTime",
+        "dbName" as "dbName",
+        "Id" as "clientId"
+        from
+        "raising"."d_Shield_Configure"
+        where
+        "pro_id" =#{cookieId}
+    </select>
+
+    <select id="queryJson" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "table_increment_pk" as "id",
+        "dbValue" as "dbValue",
+        "pro_id" as projectId,
+        "UpdateTime" as "updateTime",
+        "dbName" as "dbName",
+        "Id" as "clientId"
+        from
+        "raising"."d_Shield_Configure"
+        <trim prefix="Where" prefixOverrides="and">
+            <if test="projectId != null">
+                and "pro_id" = #{projectId}
+            </if>
+            <if test="dbName != null">
+                and "dbName" = #{dbName}
+            </if>
+
+        </trim>
+    </select>
+
+    <update id="update" parameterType="com.raising.forward.entity.ZeroConfig">
+        update "raising"."d_Shield_Configure"
+        <trim prefix="set" suffixOverrides=",">
+            <if test="id != null">
+                "table_increment_pk" = #{id},
+            </if>
+            <if test="dbName != null">
+                "dbName" = #{dbName},
+            </if>
+            <if test="dbValue != null">
+                "dbValue" = #{dbValue},
+            </if>
+            <if test="projectId != null">
+                "pro_id" as projectId,
+            </if>
+            <if test="updateTime != null">
+                "UpdateTime" = #{updateTime},
+            </if>
+            <if test="clientId != null">
+                "Id" = #{clientId},
+            </if>
+        </trim>
+        where "pro_id" = #{zeroConfig.projectId}
+    </update>
+
+    <insert id="insert" parameterType="com.raising.forward.entity.ZeroConfig" useGeneratedKeys="true" keyProperty="zeroConfig.id">
+        insert into  "raising"."d_Shield_Configure"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            "table_increment_pk",
+            "dbName",
+            "dbValue",
+            "pro_id",
+            "UpdateTime",
+            <if test="clientId != null">
+                "Id",
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            #{id},#{dbName},#{dbValue},#{projectId},#{updateTime},
+            <if test="clientId != null">
+                #{clientId},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "table_increment_pk" ,
+        "dbValue" ,
+        "pro_id" ,
+        "UpdateTime" ,
+        "dbName" ,
+        "Id"
+        from "raising"."d_Shield_Configure"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and "table_increment_pk" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "table_increment_pk" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("table_increment_pk")
+        from "raising"."d_Shield_Configure"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+
+</mapper>

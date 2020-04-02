@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.PointAttribute">
+    <resultMap id="BaseResultMap" type="com.raising.forward.entity.PointAttribute">
+        <result column="point_id" property="pointID"/>
+        <result column="engineering_id" property="engineeringID"/>
+        <result column="point" property="point"/>
+        <result column="ring_location" property="ringLocation"/>
+        <result column="initial_height" property="initialHeight"/>
+        <result column="cumulative_variation_cv" property="cumulativeVariationControlValue"/>
+        <result column="change_rate_cv" property="changeRateControlValue"/>
+        <result column="level_of_risk" property="levelOfRisk"/>
+    </resultMap>
+
+    <select id="getPointAttribute" parameterType="com.alibaba.fastjson.JSONObject"
+            resultMap="BaseResultMap">
+        SELECT * FROM "${tenant}"."point_attribute"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="engineeringID != null">
+                and engineering_id=#{engineeringID}
+            </if>
+            <if test="point != null">
+                and "point"=#{point}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insertPointAttribute" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into
+        "${tenant}"."point_attribute"
+        (point_id,engineering_id,point,ring_location,initial_height,cumulative_variation_cv,change_rate_cv,level_of_risk)
+        values
+        <foreach collection="pointAttributes" item="reddemCode" separator=",">
+            (
+            #{reddemCode.pointID},
+            #{reddemCode.engineeringID},
+            #{reddemCode.point},
+            #{reddemCode.ringLocation},
+            #{reddemCode.initialHeight},
+            #{reddemCode.cumulativeVariationControlValue},
+            #{reddemCode.changeRateControlValue},
+            #{reddemCode.levelOfRisk}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updatePointAttribute" parameterType="com.alibaba.fastjson.JSONObject">
+        <foreach collection="pointAttributes" item="item" separator=";">
+            update "${tenant}"."point_attribute"
+            set
+                level_of_risk=#{item.levelOfRisk}
+            where point_id = #{item.pointID}
+        </foreach>
+    </update>
+</mapper>

@@ -1,0 +1,129 @@
+<div data-id="control">
+    <!-- class="box box-element ui-draggable"-->
+    <div class="configView"> <!--id="container-config-view" -->
+        <div class="row">
+            <div class="col-sm-12">
+                <label class="col-sm-12 no-padding smaller-20"> 列属性</label>
+            </div>
+        </div>
+        <div class="hr hr-dotted hr8"></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="title" title="标题"
+                       class="col-sm-5 no-padding smaller-20">标题</label>
+                <input id="title" class="col-sm-7 no-padding smaller-20">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="showStyle" title="主题风格"
+                       class="col-sm-5 no-padding smaller-20">主题风格</label>
+                <select id="showStyle" class="col-sm-7" data-attribute="showCss">
+                </select>
+            </div>
+        </div>
+        <div class="hr hr-dotted hr8"></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="paddingTop" title="上间隔(px)"
+                       class="col-sm-5 no-padding smaller-20">上间隔(px)</label>
+                <input id="paddingTop" data-attribute="paddingTop" data-level="paddingTop" type="text"
+                       class="col-sm-4"/>
+            </div>
+            <div class="col-sm-12">
+                <label for="paddingLeft" title="左间隔(px)"
+                       class="col-sm-5 no-padding smaller-20">左间隔(px)</label>
+                <input id="paddingLeft" data-attribute="paddingLeft" data-level="paddingLeft" type="text"
+                       class="col-sm-4"/>
+            </div>
+
+            <div class="col-sm-12">
+                <label for="paddingRight" title="右间隔(px)"
+                       class="col-sm-5 no-padding smaller-20">右间隔(px)</label>
+                <input id="paddingRight" data-attribute="paddingRight" data-level="paddingRight" type="text"
+                       class="col-sm-4"/>
+            </div>
+
+            <div class="col-sm-12">
+                <label for="paddingBottom" title="下间隔(px)"
+                       class="col-sm-5 no-padding smaller-20">下间隔(px)</label>
+                <input id="paddingBottom" data-attribute="paddingBottom" data-level="paddingBottom" type="text"
+                       class="col-sm-4"/>
+            </div>
+            <!--<div class="col-sm-12">
+                <label for="colHeight" title="高度"
+                       class="col-sm-5 no-padding smaller-20">高度(px)</label>
+                <input id="colHeight" data-attribute="colHeight" data-level="colHeight" type="text"
+                       class="col-sm-4"/>
+            </div>-->
+        </div>
+        <div class="hr hr-dotted hr8"></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="backgroundColor" title="页面背景颜色"
+                       class="col-sm-5 no-padding smaller-20">背景颜色</label>
+                <div class="col-sm-7 no-padding" >
+                    <input id="backgroundColor" data-attribute="backgroundColor" data-level="backgroundColor" type="text" style="width:100px;" class="colorPicker evo-cp0 col-sm-4" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class=" col-sm-12">
+                <label for="backgroundImg" title="页面背景图片" class="smaller-20 col-sm-5 no-padding">背景图片</label>
+                <input placeholder="输入图片地址" id="backgroundImg" class="treeInput col-sm-7" type="text"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class=" col-sm-12">
+                <label for="imgPosition" title="背景图片位置" class="smaller-20 col-sm-5 no-padding">图片位置</label>
+                <select id="imgPosition" class="col-sm-7">
+                    <option value="50% 50%">居中</option>
+                    <option value="50% 0%">居上</option>
+                    <option value="50% 100%">居下</option>
+                    <option value="0% 50%">居左</option>
+                    <option value="100% 50%">居右</option>
+                </select></div>
+        </div>
+        <div class="row">
+            <div class=" col-sm-12">
+                <label for="imgRepeat" title="图片重复形式" class="smaller-20 col-sm-5 no-padding">重复形式</label>
+                <select id="imgRepeat" class="col-sm-7">
+                    <option value="no-repeat">不重复</option>
+                    <option value="repeat">重复</option>
+                    <option value="repeat-x">水平重复</option>
+                    <option value="repeat-y">垂直重复</option>
+                </select></div>
+        </div>
+        <!--<div class="row">-->
+            <!--<div class="col-sm-12">-->
+                <!--<label for="showPadding" title="间隔"-->
+                       <!--class="col-sm-6 no-padding smaller-20">间隔</label>-->
+                <!--<input id="showPadding" class="col-sm-6 no-padding smaller-20">-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+    <div class="custom-column-dialog">
+        <div class="row-fluid">
+            <div class="span4">
+                <span style="margin-left: 7px;">输入自定义布局</span>
+            </div>
+            <div class="span8">
+                <span>格式为：数字 + 空格 + 数字 + ... + 空格 + 数字，数字总和必须等于12。</span>
+            </div>
+        </div>
+        <!--<div class="row-fluid" style="display: none;height: 20px;">-->
+            <!--<div class="span12" style="height: 20px;">-->
+                <!--<span class="label label-warning">数字总和必须等于12</span>-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="row-fluid">
+            <div class="span8" style="margin-top: 10px">
+                <input value="" type="text">
+            </div>
+            <div class="span4" style="margin-top: 5px; height: 30px">
+                <button class="btn btn-xs btn-inverse" style="width:100%;height: 30px">确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

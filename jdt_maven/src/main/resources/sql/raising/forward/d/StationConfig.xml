@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.StationConfigMapper">
+    <select id="query" parameterType="Integer" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        "table_increment_pk" as "stationId",
+        "dbName",
+        "PointX" as "pointX",
+        "PointY" as "pointY",
+        "PointZ" as "pointZ",
+        "UpdateTime" as "updateTime",
+        "pro_id" as "projectId",
+        "timestamp",
+        "Id" as "clientId"
+        FROM "raising"."d_Station_Configure"
+        where
+        pro_id =#{projectId}
+    </select>
+    <select id="count" >
+        select
+          COUNT(1)
+         from
+         "raising"."d_Station_Configure"
+         <trim prefix="where" prefixOverrides="and">
+             and pro_id =#{projectId}
+         </trim>
+    </select>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "table_increment_pk" ,
+        "dbName",
+        "PointX",
+        "PointY",
+        "PointZ",
+        "UpdateTime",
+        "pro_id",
+        "timestamp",
+        "Id"
+        from "raising"."d_Station_Configure"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and "table_increment_pk" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "table_increment_pk" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("table_increment_pk")
+        from "raising"."d_Station_Configure"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+</mapper>

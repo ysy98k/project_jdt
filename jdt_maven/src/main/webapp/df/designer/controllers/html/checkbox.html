@@ -1,0 +1,63 @@
+<div data-id="control">
+	<!-- class="box box-element ui-draggable"-->
+	<div class="view">
+		<div id="control"  class="base-widget-right"style="width: 100%"></div>
+	</div>
+	<div class="configView">
+		<div class="row">
+			<div class="col-sm-12">
+				<label title="ID"
+					class="col-sm-6 no-padding smaller-20">复选框组件ID</label><label
+					id="checkboxId" class="col-sm-6 no-padding smaller-20"></label>
+			</div>
+		</div>
+		<div class="hr hr-dotted hr8"></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="labelWidth" title="宽度"
+                       class="col-sm-6 no-padding smaller-20"> 标签宽度(px)</label><input
+                    id="labelWidth" data-attribute="labelWidth" type="text" class="col-sm-6" />
+            </div>
+        </div>
+		<div id="attribute">
+			<div class="row">
+				<div class="col-sm-12">
+					<label title="标签文字" data-attribute="labelText"
+						data-level="labelText" class="col-sm-6 no-padding smaller-20">标签文字</label><input
+						id="labelText" type="text" class="col-sm-6" />
+				</div>
+			</div>
+			<!--<div class="row">
+				<div class="col-sm-12">
+					<label title="name" data-attribute="name"
+						data-level="name" class="col-sm-6 no-padding smaller-20">name属性值</label><input
+						id="name" type="text" class="col-sm-6" />
+				</div>
+			</div>-->
+			<div class="hr hr-dotted hr8"></div>
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-xs btn-block" id="addDataBtn">
+						<i class="ace-icon fa fa-plus"></i>添加选项
+					</button>
+				</div>
+			</div>
+			<div id="optionAttribute" style="display: none">
+				<div class="hr hr-dotted hr8"></div>
+				<input id="optionList" type="hidden" />
+				<div class="row">
+					<div class=" col-sm-12">
+						<label title="选项名称" class="smaller-20 col-sm-5 no-padding">选项名称</label><input
+							placeholder="如：选项1" id="optionName" class="col-sm-7" type="text"
+							data-attribute="optionName" data-level="optionName" />
+					</div>
+                    <div class=" col-sm-12">
+                        <label title="选项值" class="smaller-20 col-sm-5 no-padding">选项值</label><input
+                            placeholder="如：val1" id="optionVal" class="col-sm-7" type="text"
+                            data-attribute="optionVal" data-level="optionVal" />
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

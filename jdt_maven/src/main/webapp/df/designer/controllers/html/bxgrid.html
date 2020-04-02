@@ -1,0 +1,215 @@
+<div data-id="control">
+    <div class="view">
+        <div id="control"></div>
+    </div>
+
+    <div class="configView">
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="gridId" title="id"
+                       class="col-sm-5 no-padding smaller-20"> 表格组件ID</label><label
+                    id="gridId" class="col-sm-6 no-padding smaller-20"></label>
+            </div>
+        </div>
+        <div class="hr hr-dotted hr8"></div>
+        <div id="attribute">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="hasCaption" title="是否有标题"
+                           class="col-sm-5 no-padding smaller-20">启用标题</label><label><input
+                        id="hasCaption" data-attribute="hasCaption" data-level="hasCaption"
+                        class="ace ace-switch ace-switch-3" type="checkbox"/><span
+                        class="lbl"></span></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="caption" title="标题名称"
+                           class="col-sm-5 no-padding smaller-20">标题名称</label><input
+                        id="caption" data-attribute="caption" data-level="caption" type="text" class="col-sm-7"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="gridheight" title="表格高度"
+                           class="col-sm-5 no-padding smaller-20">表格高度</label><input
+                        id="gridheight" data-attribute="height" data-level="height" type="text" class="col-sm-7"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class=" col-sm-12">
+                    <label for="rowNum" title="每页行数"
+                           class="smaller-20 col-sm-5 no-padding">每页行数</label>
+                    <select id="rowNum" class="col-sm-7" data-attribute="rowNum" data-level="rowNum">
+                        <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hr hr-dotted hr8"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="hasDownload" title="运行态中显示导出按钮"
+                           class="col-sm-5 no-padding smaller-20">excel导出</label><label><input
+                        id="hasDownload" data-attribute="hasDownload" data-level="hasDownload"
+                        class="ace ace-switch ace-switch-3" type="checkbox"/><span class="lbl"></span></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="hasAddBtn" title="运行态中显示增加按钮" class="col-sm-5 no-padding smaller-20">启用增加</label><label><input
+                        id="hasAddBtn" data-attribute="hasAddBtn" data-level="hasAddBtn"
+                        class="ace ace-switch ace-switch-3" type="checkbox"/><span class="lbl"></span></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="hasDelBtn" title="运行态中显示删除按钮" class="col-sm-5 no-padding smaller-20">启用删除</label><label><input
+                        id="hasDelBtn" data-attribute="hasDelBtn" data-level="hasDelBtn"
+                        class="ace ace-switch ace-switch-3" type="checkbox"/><span class="lbl"></span></label>
+                </div>
+            </div>
+            <div class="hr hr-dotted hr8"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="hasLoading" title="查询sql数据源时，是否显示数据正在加载中的提示效果" class="col-sm-5 no-padding smaller-20">启用加载效果</label><label><input
+                        id="hasLoading" data-attribute="loading" data-level="loading"
+                        class="ace ace-switch ace-switch-3" type="checkbox"/><span class="lbl"></span></label>
+                </div>
+                <div class="col-sm-12">
+                    <label for="initQuery" title="初始化时加载数据源" class="col-sm-5 no-padding smaller-20">初始化时加载</label>
+                    <label><input id="initQuery" data-attribute="initQuery" data-level="initQuery"
+                                  class="ace ace-switch ace-switch-3" type="checkbox"/><span class="lbl"></span></label>
+                </div>
+            </div>
+            <div class="hr hr-dotted hr8"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="altRows" title="启动间隔色" class="col-sm-5 no-padding smaller-20">启动间隔色</label><label><input
+                        id="altRows" data-attribute="altRows" data-level="altRows"
+                        class="ace ace-switch ace-switch-3" type="checkbox"/><span class="lbl"></span></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="rowColor" title="行间隔颜色"
+                           class="col-sm-5 no-padding smaller-20">行间隔色</label>
+                    <div class="col-sm-7 no-padding">
+                        <input id="rowColor" data-attribute="rowColor" data-level="rowColor" type="text"
+                               style="width:100px;" class="colorPicker evo-cp0 col-sm-4"/>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="dataConfigView">
+        <div class="row">
+            <div class=" col-sm-12">
+                <label for="gridDsSetting" title="选择表格的数据源关联" class="smaller-20 col-sm-12 no-padding">表格数据源配置</label>
+                <input placeholder="如:..." id="gridDsSetting" class="treeInput col-sm-12" type="text"/>
+            </div>
+        </div>
+        <div class="hr hr-dotted hr8"></div>
+        <div id="dataAttribute">
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="sortname" title="第一次加载时按照此关键字进行排序"
+                       class="col-sm-5 no-padding smaller-20">排序关键字</label><input
+                    id="sortname" data-attribute="sortname" data-level="sortname" type="text" class="col-sm-7"/>
+            </div>
+            <div class=" col-sm-12">
+                <label for="sortorder" title="排序类型"
+                       class="smaller-20 col-sm-5 no-padding">排序类型</label><select
+                    id="sortorder" class="col-sm-7" data-attribute="sortorder" data-level="sortorder">
+                <option value="asc">升序</option>
+                <option value="desc">降序</option>
+            </select>
+            </div>
+        </div>
+        </div>
+        <div class="hr hr-dotted hr8"></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <button class="btn btn-xs btn-block" id="addColBtn">
+                    <i class="ace-icon fa fa-plus"></i>添加列
+                </button>
+            </div>
+        </div>
+        <div id="optionCol" style="display: none">
+            <div class="hr hr-dotted hr8"></div>
+            <input id="colModel" type="hidden"/>
+            <div class="row">
+                <div class=" col-sm-12">
+                    <label title="列显示名" class="smaller-20 col-sm-5 no-padding">列显示名</label><input
+                        placeholder="如：列1" id="colNames" class="col-sm-7" type="text"
+                        data-attribute="colNames" data-level="colNames"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class=" col-sm-12">
+                    <label title="列英文名，唯一且必填" class="smaller-20 col-sm-5 no-padding"><font
+                            color="red">* </font>列英文名</label><input
+                        placeholder="如：col" id="colModelName" class="col-sm-7" type="text"
+                        data-attribute="name" data-level="name"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class=" col-sm-12">
+                    <label title="列宽" class="smaller-20 col-sm-5 no-padding">列宽</label><input
+                        placeholder="如：60" id="colModelWidth" class="col-sm-7" type="text"
+                        data-attribute="width" data-level="width"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class=" col-sm-12">
+                    <label for="edittypeSel" title="列类型" class="smaller-20 col-sm-5 no-padding">列类型</label>
+                    <select id="edittypeSel" class="col-sm-7" data-attribute="edittypeSel" data-level="edittypeSel">
+                        <option value="text">text</option>
+                        <option value="ccs">ccs</option>
+                        <option value="select">select</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" id="editoptions">
+                <div class=" col-sm-12">
+                    <label for="editoptionsVal" title="css类型时，类型参数为ccsId；select类型时，下拉框选项要以逗号分隔，选项的value和label以冒号关联"
+                           class="smaller-20 col-sm-5 no-padding">类型参数</label><input
+                        id="editoptionsVal" class="col-sm-7" type="text" placeholder="v1:选项1,v2:选项2.."
+                        data-attribute="editoptionsVal" data-level="editoptionsVal"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="colModelHidden" title="是否隐藏列"
+                           class="col-sm-5 no-padding smaller-20">是否隐藏列</label><label><input
+                        id="colModelHidden" data-attribute="hidden" data-level="hidden"
+                        class="ace ace-switch ace-switch-3" type="checkbox"/><span
+                        class="lbl"></span></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="sortable" title="是否可排序"
+                           class="col-sm-5 no-padding smaller-20">是否排序</label><label><input
+                        id="sortable" data-attribute="sortable" data-level="sortable"
+                        class="ace ace-switch ace-switch-3" type="checkbox"/><span
+                        class="lbl"></span></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="forbidCopy" title="禁止导出"
+                           class="col-sm-5 no-padding smaller-20">禁止导出</label><label><input
+                        id="forbidCopy" data-attribute="forbidCopy" data-level="forbidCopy"
+                        class="ace ace-switch ace-switch-3" type="checkbox"/><span
+                        class="lbl"></span></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

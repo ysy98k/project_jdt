@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.backstage.entity.Role">
+    <sql id="Sql_SelectColumns">
+        "fd_groupid" as "groupId",
+        "fd_group_name" as "groupName",
+        "fd_display_name" as "displayName",
+        "fd_group_desc" as "groupDescription",
+        "fd_group_parent_id" as "parentId"
+    </sql>
+
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+          <include refid="Sql_SelectColumns"></include>
+        from
+        "public"."t_usergroup"
+        where "fd_delete_flag" = 0
+        <if test="groupId != null">
+            and "fd_groupid" = #{groupId}
+        </if>
+        <if test="groupName != null ">
+            and "fd_group_name"  = #{groupName}
+        </if>
+        <if test="groupNameLike != null ">
+            and "fd_group_name" like CONCAT('%',#{groupNameLike},'%')
+        </if>
+        <if test="displayName != null ">
+            and "fd_display_name" like CONCAT('%',#{displayName},'%')
+        </if>
+        <if test="parentId != null ">
+            and "fd_group_parent_id" = #{parentId}
+        </if>
+    </select>
+
+    <select id="getTree" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        WITH RECURSIVE r AS (
+          SELECT * FROM "public"."t_usergroup"
+          WHERE
+            "fd_delete_flag" = 0
+            <if test="groupId != null">
+                and "fd_groupid" = #{groupId}
+            </if>
+            <if test="groupName != null ">
+                and "fd_group_name" = #{groupName}
+            </if>
+            <if test="groupNames != null ">
+                and "fd_group_name" in
+                <foreach collection="groupNames" open="(" separator="," close=")" item="value">
+                    '${value}'
+                </foreach>
+            </if>
+            <if test="parentId != null ">
+                and "fd_group_parent_id" = #{parentId}
+            </if>
+          union   ALL
+        SELECT ug.* FROM  r  INNER JOIN "public"."t_usergroup" ug  on  ug."fd_group_parent_id" = r."fd_groupid"
+        WHERE
+          ug."fd_delete_flag" = 0 and r."fd_delete_flag" = 0
+        )
+        SELECT <include refid="Sql_SelectColumns"></include> FROM r
+        <trim prefix="where" prefixOverrides="and">
+            <if test="groupNameLike != null">
+                and "fd_group_name" like CONCAT('%',#{groupNameLike},'%')
+            </if>
+            <if test="displayName != null ">
+                and "fd_display_name" like CONCAT('%',#{displayName},'%')
+            </if>
+        </trim>
+        ORDER BY "fd_groupid";
+    </select>
+
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject" resultType="int">
+        WITH RECURSIVE r AS (
+        SELECT * FROM "public"."t_usergroup"
+        WHERE
+        "fd_delete_flag" = 0
+        <if test="groupId != null">
+            and "fd_groupid" = #{groupId}
+        </if>
+        <if test="groupName != null ">
+            and "fd_group_name" like CONCAT('%',#{groupName},'%')
+        </if>
+        <if test="displayName != null ">
+            and "fd_display_name" like CONCAT('%',#{displayName},'%')
+        </if>
+        <if test="parentId != null ">
+            and "fd_group_parent_id" = #{parentId}
+        </if>
+        union   ALL
+        SELECT "public"."t_usergroup".* FROM "public"."t_usergroup", r
+        WHERE
+        "public"."t_usergroup"."fd_group_parent_id" = r."fd_groupid"
+        and "public"."t_usergroup"."fd_delete_flag" = 0 and r."fd_delete_flag" = 0
+        )
+        SELECT count(1) FROM r ORDER BY "fd_groupid";
+    </select>
+
+    <insert id="addRow" parameterType="com.alibaba.fastjson.JSONObject" useGeneratedKeys="true" keyProperty="groupId">
+        insert into "public"."t_usergroup"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">
+                "fd_group_name",
+            </if>
+            <if test="displayName != null">
+                "fd_display_name",
+            </if>
+            <if test="groupDescription != null">
+                "fd_group_desc",
+            </if>
+            <if test="parentId != null">
+                "fd_group_parent_id",
+            </if>
+            <if test="tenantId != null">
+                "fd_tenantid",
+            </if>
+            <if test="modifyPersonId != null">
+                "fd_modify_person_id",
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">
+              #{groupName},
+            </if>
+            <if test="displayName != null">
+                #{displayName},
+            </if>
+            <if test="groupDescription != null">
+                #{groupDescription},
+            </if>
+            <if test="parentId != null">
+               #{parentId},
+            </if>
+            <if test="tenantId != null">
+                #{tenantId},
+            </if>
+            <if test="modifyPersonId != null">
+                #{modifyPersonId},
+            </if>
+        </trim>
+
+    </insert>
+
+    <update id="updateRow" parameterType="com.alibaba.fastjson.JSONObject">
+        update "public"."t_usergroup"
+        <trim prefix="set" suffixOverrides=",">
+            <if test="displayName != null">
+                "fd_display_name" = #{displayName},
+            </if>
+            <if test="groupDescription != null">
+                "fd_group_desc" = #{groupDescription},
+            </if>
+            <if test="parentId != null">
+                "fd_group_parent_id" = #{parentId},
+            </if>
+            <if test="deleteFlag != null">
+                "fd_delete_flag" = #{deleteFlag}
+            </if>
+        </trim>
+        where "fd_groupid" = #{groupId}
+    </update>
+
+
+
+
+</mapper>

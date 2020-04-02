@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SectionManage">
+    <select id="query" parameterType="com.raising.backstage.entity.SectionManage"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "id" as "sectionId",
+        "name" as "sectionName",
+        "create_time" as "createTime",
+        "map_coordinate_center" as "mapCoordinateCenter",
+        "ccs_city" as "ccsId",
+        "owner" as "owner",
+        "ccs_section_type" as "ccsSectionType",
+        "map_coordinate_left" as "mapCoordinateLeft",
+        "map_coordinate_right" as "mapCoordinateRight",
+        "update_time" as "updateTime"
+        from
+        "raising"."t_section"
+        where 1 = 1
+        <if test="sectionId != null">
+            and id = #{sectionId}
+        </if>
+        <if test="sectionNameStrict != null and sectionNameStrict!= ''.toString() ">
+            and "name" = #{sectionNameStrict}
+        </if>
+        <if test="sectionName != null and sectionName!= ''">
+            and "name" like CONCAT('%',#{sectionName},'%')
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and "createTime" like CONCAT('%',#{createTime},'%')
+        </if>
+        <if test="ccsId != null and ccsId != ''">
+            and "ccs_city" like CONCAT('%',#{ccsId},'%')
+        </if>
+        <if test="ccsSectionType != null and ccsSectionType != ''">
+            and "ccs_section_type" = #{ccsSectionType}
+        </if>
+        <if test="owner != null and owner != ''">
+            and "owner" like #{owner}
+        </if>
+        ORDER BY "ccs_city" ,"ccs_section_type"
+
+    </select>
+
+    <select id="queryPrecise" parameterType="com.raising.backstage.entity.SectionManage"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        id as "sectionId",
+        "name" as "sectionName",
+        creat_time as "createTime"
+        from
+        "raising"."t_section"
+        <if test="sectionName != null">
+            and name = #{sectionName}
+        </if>
+    </select>
+    <!--查询ccs_id信息-->
+    <select id="queryCCSId" resultType="com.alibaba.fastjson.JSONObject">
+        select  "ccs_city" as "ccsId"
+        from
+        "raising"."t_section"
+    </select>
+
+
+    <select id="count" resultType="int">
+        select count(*) from "raising"."t_section" where 1=1
+        <if test="sectionName != null and sectionName != ''">
+            and "name" like CONCAT('%',#{sectionName},'%')
+        </if>
+        <if test="creatTime != null and createTime != ''">
+            and "createTime" like CONCAT('%',#{createTime},'%')
+        </if>
+        <if test="ccsId != null and ccsId != ''">
+            and "ccs_city" like CONCAT('%',#{ccsId},'%')
+        </if>
+        <if test="ccsSectionType != null and ccsSectionType != ''">
+            and "ccs_section_type" = #{ccsSectionType}
+        </if>
+        <if test="owner != null and owner != ''">
+            and "owner" like #{owner}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.alibaba.fastjson.JSONObject" >
+        <selectKey resultType="java.lang.Integer"  order="AFTER" keyProperty="sectionId"   >
+            SELECT currval('raising.t_section_id_seq') AS "sectionId"
+        </selectKey>
+        insert into
+        "raising"."t_section"
+        ("name","create_time","owner","ccs_city","ccs_section_type","map_coordinate_center","map_coordinate_left","map_coordinate_right")
+        values
+        (#{sectionName}, #{createTime},#{owner},#{ccsId},#{ccsSectionType},#{mapCoordinateCenter},#{mapCoordinateLeft},#{mapCoordinateRight})
+    </insert>
+
+    <insert id="insertForUpload" parameterType="java.util.List"
+            useGeneratedKeys="true" keyProperty="pageId">
+        <foreach collection="list" item="item" index="index" separator=";">
+            insert into
+            "raising"."t_section"
+            ("name",create_time)
+            values
+            (#{sectionName}, #{createTime})
+            ON CONFLICT("name") DO UPDATE
+            SET
+            "name" = EXCLUDED."name",
+            create_time = EXCLUDED.create_time
+        </foreach>
+
+    </insert>
+
+    <update id="update" parameterType="com.alibaba.fastjson.JSONObject">
+        update "raising"."t_section"
+        <trim prefix="set" suffixOverrides=",">
+            <if test="sectionName != null">
+                "name" = #{sectionName},
+            </if>
+            <if test="owner != null">
+                "owner" = #{owner},
+            </if>
+            <if test="createTime != null">
+                "create_time" = #{createTime},
+            </if>
+            <if test="mapCoordinateCenter != null">
+                "map_coordinate_center" = #{mapCoordinateCenter},
+            </if>
+            <if test="ccsId != null">
+                "ccs_city" = #{ccsId},
+            </if>
+            <if test="ccsSectionType != null">
+                "ccs_section_type" = #{ccsSectionType},
+            </if>
+            <if test="mapCoordinateLeft != null">
+                "map_coordinate_left" = #{mapCoordinateLeft},
+            </if>
+            <if test="mapCoordinateRight != null">
+                "map_coordinate_right" = #{mapCoordinateRight},
+            </if>
+            <if test="updateTime != null">
+                "update_time" = #{updateTime},
+            </if>
+        </trim>
+        where id = #{sectionId}
+    </update>
+
+    <delete id="delete" parameterType="com.alibaba.fastjson.JSONObject">
+        delete from
+        "raising"."t_section" where id=#{sectionId}
+    </delete>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        s."id",
+        s."name",
+        s."create_time",
+        s."map_coordinate_center",
+        s."ccs_city",
+        s."owner",
+        s."ccs_section_type",
+        s."map_coordinate_left",
+        s."map_coordinate_right",
+        s."update_time"
+
+        from
+        "raising"."t_section" s ,"raising"."project" p
+        where
+        p."section_id" = s."id" and
+        p."pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and s."id" <![CDATA[ > ]]> #{id}
+        </if>
+        order by s."id" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("id")
+        from
+        "raising"."t_section" s ,"raising"."project" p
+        where
+        p."section_id" = s."id" and
+        p."pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+</mapper>

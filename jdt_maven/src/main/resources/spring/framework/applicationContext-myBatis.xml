@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean id="dataSource" class="com.baosight.xinsight.datasource.XinsightDataSource" init-method="init" destroy-method="close">
+        <property name="name" value="datasource"/>
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://${postgres.host}/${jdt.database.instance}"/>
+        <property name="username" value="${postgres.user}"/>
+        <property name="password" value="${postgres.password}"/>
+
+        <property name="filters" value="${jdbc.filters}"/>
+
+        <property name="maxActive" value="${jdbc.maxPoolSize}"/>
+        <property name="initialSize" value="${jdbc.initialPoolSize}"/>
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+        <property name="minIdle" value="${jdbc.minPoolSize}"/>
+
+        <property name="testWhileIdle" value="${jdbc.testWhileIdle}"/>
+        <property name="validationQuery" value="${jdbc.validationQuery}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
+
+        <property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
+        <property name="testOnReturn" value="${jdbc.testOnReturn}"/>
+
+        <property name="poolPreparedStatements" value="${jdbc.poolPreparedStatements}"/>
+        <property name="maxOpenPreparedStatements" value="${jdbc.maxOpenPreparedStatements}"/>
+
+        <property name="removeAbandoned" value="false"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+
+        <property name="connectionProperties" value="${connection.properties}" />
+
+        <property name="isEncrypted" value="${jdbc.password.isEncrypted}"/>
+    </bean>
+    <!--配置第二个数据源-->
+    <bean id="aasccsDataSource" class="com.baosight.xinsight.datasource.XinsightDataSource" init-method="init" destroy-method="close">
+        <property name="name" value="aasccsDataSource"/>
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://${postgres.host}/${aas.database.instance}"/>
+        <property name="username" value="${postgres.user}"/>
+        <property name="password" value="${postgres.password}"/>
+
+        <property name="filters" value="${jdbc.filters}"/>
+
+        <property name="maxActive" value="${jdbc.maxPoolSize}"/>
+        <property name="initialSize" value="${jdbc.initialPoolSize}"/>
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+        <property name="minIdle" value="${jdbc.minPoolSize}"/>
+
+        <property name="testWhileIdle" value="${jdbc.testWhileIdle}"/>
+        <property name="validationQuery" value="${jdbc.validationQuery}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
+
+        <property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
+        <property name="testOnReturn" value="${jdbc.testOnReturn}"/>
+
+        <property name="poolPreparedStatements" value="${jdbc.poolPreparedStatements}"/>
+        <property name="maxOpenPreparedStatements" value="${jdbc.maxOpenPreparedStatements}"/>
+
+        <property name="removeAbandoned" value="false"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+
+        <property name="connectionProperties" value="${connection.properties}" />
+
+        <property name="isEncrypted" value="${jdbc.password.isEncrypted}"/>
+    </bean>
+
+    <bean id="multipleDataSource" class="com.util.MultipleDataSource">
+        <property name="defaultTargetDataSource" ref="dataSource"/>
+        <property name="targetDataSources">
+            <map>
+                <entry key="dataSource" value-ref="dataSource"/>
+                <entry key="aasccsDataSource" value-ref="aasccsDataSource"/>
+            </map>
+        </property>
+    </bean>
+
+    <!-- MyBatis配置 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="multipleDataSource"/>
+        <property name="configLocation" value="classpath:mybatis/sqlMapConfig.xml"/>
+        <!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
+        <property name="typeAliasesPackage">
+            <array>
+                <value>classpath:com/baosight/**/entity</value>
+                 <!--<value>classpath:com/raising/**/entity</value>-->
+            </array>
+        </property>
+        <!-- 显式指定Mapper文件位置 -->
+        <property name="mapperLocations">
+            <array>
+                <value>classpath:sql/**/*.xml</value>
+                <!--<value>classpath:com/raising/mapper/*.xml</value>-->
+            </array>
+        </property>
+
+    </bean>
+
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" autowire="byName">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.baosight.df.metamanage.dao,com.baosight.df.license.dao,com.raising.forward.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+
+    <!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口 -->
+    <!-- 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+            <property name="basePackage" value="classpath:com/baosight/**/dao" />
+            <property name="annotationClass"
+                value="classpath:com/baosight/**/dao/MyBatisRepository" />
+        </bean> -->
+
+
+    <!-- 使用annotation定义事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"
+                          proxy-target-class="true"/>
+
+    <!-- 事务管理器, Jdbc单数据源事务 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="multipleDataSource"/>
+    </bean>
+    
+
+	<bean id="pageDao" class="com.baosight.df.designer.dao.PageDaoImpl">
+	    <property name="sqlSession" ref="sqlSessionTemplate"/>
+	</bean>
+		
+
+
+</beans>

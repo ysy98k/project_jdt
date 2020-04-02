@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean id="dataSourceForWfs" class="com.baosight.xinsight.datasource.XinsightDataSource" init-method="init" destroy-method="close">
+        <property name="name" value="datasource"/>
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://${postgres.host}/${wfs.database.instance}"/>
+        <property name="username" value="${postgres.user}"/>
+        <property name="password" value="${postgres.password}"/>
+
+        <property name="filters" value="${jdbc.filters}"/>
+        <property name="maxActive" value="${jdbc.maxPoolSize}"/>
+        <property name="initialSize" value="${jdbc.initialPoolSize}"/>
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+        <property name="minIdle" value="${jdbc.minPoolSize}"/>
+        <property name="testWhileIdle" value="${jdbc.testWhileIdle}"/>
+        <property name="validationQuery" value="${jdbc.validationQuery}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
+        <property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
+        <property name="testOnReturn" value="${jdbc.testOnReturn}"/>
+        <property name="poolPreparedStatements" value="${jdbc.poolPreparedStatements}"/>
+        <property name="maxOpenPreparedStatements" value="${jdbc.maxOpenPreparedStatements}"/>
+        <property name="removeAbandoned" value="false"/>
+        <property name="removeAbandonedTimeout" value="1800"/>
+        <property name="connectionProperties" value="${connection.properties}" />
+        <property name="isEncrypted" value="${jdbc.password.isEncrypted}"/>
+
+    </bean>
+
+    <!-- MyBatis配置 -->
+    <bean id="sqlSessionFactoryForWfs" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceForWfs"/>
+    </bean>
+
+    <!-- 使用annotation定义事务 -->
+    <tx:annotation-driven transaction-manager="transactionManagerForWfs"
+                          proxy-target-class="true"/>
+
+    <!-- 事务管理器, Jdbc单数据源事务 -->
+    <bean id="transactionManagerForWfs"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSourceForWfs"/>
+    </bean>
+
+    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <property name="dataSource" ref="dataSourceForWfs" />
+        <property name="transactionManager" ref="transactionManagerForWfs" />
+        <property name="databaseSchemaUpdate" value="false" />
+        <!-- 启用异步执行器-->
+        <property name="asyncExecutorEnabled" value="true" />
+        <property name="asyncExecutorActivate" value="true" />
+        <!-- 邮件任务的配置-->
+        <property name="mailServerHost" value="smtp.163.com" />
+        <property name="mailServerPort" value="465" />
+        <property name="mailServerDefaultFrom" value="test7012@163.com" />
+        <property name="mailServerUsername" value="test7012@163.com" />
+        <property name="mailServerPassword" value="qwer2018" />
+        <property name="mailServerUseSSL" value="true" />
+        <!-- 全局事件监听器的配置-->
+       <!-- <property name="eventListeners">
+            <list>
+                <bean class="com.baosight.df.example.listener.GlobalEventListener" />
+            </list>
+        </property>-->
+    </bean>
+
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration" />
+    </bean>
+
+    <!-- 7大接口 -->
+    <bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService"/>
+    <bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService"/>
+    <bean id="formService" factory-bean="processEngine" factory-method="getFormService"/>
+    <bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService"/>
+    <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService"/>
+    <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService"/>
+    <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService"/>
+
+    <!-- 工作流bean的配置-->
+    <beans>
+        <bean id="ExpressionBean" class="com.baosight.df.example.listener.ExpressionBean" />
+        <bean id="JDTExecutionListener" class="com.baosight.df.example.listener.JDTExecutionListener"/>
+        <bean id="JDTTaskListener" class="com.baosight.df.example.listener.JDTTaskListener"/>
+        <bean id="AllocateTaskListener" class="com.baosight.df.example.listener.AllocateTaskListener" />
+        <bean id="TimerAllocateListener" class="com.baosight.df.example.listener.TimerAllocateListener"/>
+    </beans>
+
+</beans>

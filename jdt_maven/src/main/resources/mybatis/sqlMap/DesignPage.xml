@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.xinsight.template.model.designpage">
+
+
+	<select id="getDesignPageByName" parameterType="com.baosight.df.designer.entity.DesignPageBean"
+		resultType="com.baosight.df.designer.entity.DesignPageBean">
+		SELECT id, pagename, htmlstring, jsstring, cssstring, author, islocked,
+		version,delivery_pkg FROM "${tenant}".designpage WHERE pagename = #{pagename}
+	</select>
+
+	<insert id="insertDesignPage" parameterType="com.baosight.df.designer.entity.DesignPageBean">
+		INSERT INTO "${tenant}".designpage( pagename, htmlstring, jsstring, cssstring, author,delivery_pkg)
+		VALUES ( #{pagename}, #{htmlstring}, #{jsstring}, #{cssstring},
+		#{author},#{delivery_pkg})
+	</insert>
+
+	<delete id="deleteDesignPage" parameterType="com.baosight.df.designer.entity.DesignPageBean">
+		delete from "${tenant}".designpage WHERE pagename = #{pagename}
+	</delete>
+
+	<update id="updateDesignPage" parameterType="com.baosight.df.designer.entity.DesignPageBean">
+		UPDATE "${tenant}".designpage
+		SET htmlstring= #{htmlstring}, jsstring= #{jsstring}, cssstring=
+		#{cssstring}, author=#{author},delivery_pkg=#{delivery_pkg}
+		WHERE pagename = #{pagename}
+	</update>
+
+	<resultMap id="designPageResultMap" type="com.baosight.df.designer.entity.DesignPageBean">
+		<id column="pagename" property="pagename" jdbcType="VARCHAR" />
+		<result column="htmlstring" property="htmlstring" jdbcType="VARCHAR" />
+		<result column="jsstring" property="jsstring" jdbcType="VARCHAR" />
+		<result column="cssstring" property="cssstring" jdbcType="VARCHAR" />
+		<result column="author" property="author" jdbcType="VARCHAR" />
+		<result column="page_cname" property="page_cname" jdbcType="VARCHAR" />
+		<result column="page_desc" property="page_desc" jdbcType="VARCHAR" />
+		<result column="delivery_pkg" property="delivery_pkg" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getDesignPages" parameterType="com.baosight.df.designer.entity.DesignPageBean"
+			resultMap="designPageResultMap">
+		SELECT d.pagename, d.htmlstring, d.jsstring, d.cssstring, d.author, d.delivery_pkg, p.page_cname, p.page_desc
+		FROM "${tenant}".designpage AS d, "${tenant}".pagemanage AS p
+		WHERE d.pagename = p.page_ename
+		<if test="pagename != null">
+			AND d.pagename = #{pagename}
+		</if>
+		<if test="author != null">
+			AND d.author = #{author}
+		</if>
+		<if test="page_cname != null">
+			AND p.page_cname = #{page_cname}
+		</if>
+
+	</select>
+</mapper>
+
+
+

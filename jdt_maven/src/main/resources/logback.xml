@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--<property file="/usr/local/xinsight/lms_web/conf/log.properties"/>-->
+
+    <!--logback集成logstash.-->
+    <appender name="LOGSTASH" class="com.cwbase.logback.RedisAppender">
+        <source>jdt</source>
+        <type>dev</type>
+        <host>${log.host}</host>
+        <!--<password>${log.password}</password>-->
+        <key>${log.key}</key>
+        <tags>dev</tags>
+        <mdc>true</mdc>
+        <location>true</location>
+        <callerStackIndex>0</callerStackIndex>
+    </appender>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 典型的日志pattern -->
+        <encoder>
+            <pattern>[JDT] [%date{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 演示按时间滚动的策略 -->
+    <!--<appender name="defaultlogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+    <!--<file>/tmp/logs/authmgr.log</file>-->
+    <!-- -->
+    <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+    <!--<fileNamePattern>/tmp/logs/authmgr.%d{yyyy-MM-dd}.log</fileNamePattern>-->
+    <!--&lt;!&ndash; 保留 30天数据，默认无限&ndash;&gt;-->
+    <!--<maxHistory>30</maxHistory>-->
+    <!--</rollingPolicy>-->
+    <!-- -->
+    <!--<encoder>-->
+    <!--<pattern>%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+    <!--</encoder>-->
+    <!--</appender>-->
+
+    <!-- 按文件大小滚动的策略 -->
+    <!--<appender name="metricsLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+    <!--<file>/tmp/logs/metrics.log</file>-->
+    <!-- -->
+    <!--<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">-->
+    <!--<fileNamePattern>/tmp/logs/metrics.%i.log</fileNamePattern>-->
+    <!--&lt;!&ndash; 最多保留10个文件，默认是7 &ndash;&gt;-->
+    <!--<maxIndex>10</maxIndex>-->
+    <!--</rollingPolicy>-->
+    <!-- -->
+    <!--<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
+    <!--<maxFileSize>10MB</maxFileSize>-->
+    <!--</triggeringPolicy>-->
+    <!-- -->
+    <!--<encoder>-->
+    <!--<pattern>%msg%n</pattern>-->
+    <!--</encoder>-->
+    <!--</appender>-->
+
+    <!-- 综合时间与大小的滚动策略，先按小时滚动，小时内的文件大于10mb时再按大小滚动 -->
+    <appender name="logFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/Users/ysy/var/log/local/xinsight/jdt/jdt.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/Users/ysy/var/log/local/xinsight/jdt/jdt-%d{yyyy-MM-dd_HH}.%i.zip</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>[JDT] [%date{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 只打印错误日志 -->
+    <!--
+    <appender name="logErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/log/local/xinsight/jdt/jdt-error.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/local/xinsight/jdt/jdt-error-%d{yyyy-MM-dd_HH}.%i.zip</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>[JDT] [%date{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    -->
+
+    <logger name="com.mchange" level="WARN"/>
+    <logger name="com.baosight" level="DEBUG"/>
+    <logger name="dao" level="DEBUG"/>
+
+    <!-- root -->
+    <root level="WARN">
+        <!--<appender-ref ref="console"/>-->
+        <!--<appender-ref ref="logErrorFile"/>-->
+        <appender-ref ref="logFile"/>
+        <!--<appender-ref ref="LOGSTASH" />-->
+    </root>
+</configuration>

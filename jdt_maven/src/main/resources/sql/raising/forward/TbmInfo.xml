@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.TbmInfoMapper">
+
+
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject" >
+        select
+        t."id" as "tbmId",
+        t."name" as "tbmName",
+        t."factory" as "factory" ,
+        t."ccs_type" as "ccsType" ,
+        t."diameter" as "diameter" ,
+        t."hinge_type" as "hingeType" ,
+        t."contacts" as "contacts" ,
+        t."phone" as "phone" ,
+        t."rms_version" as "rmsVersion" ,
+        t."owner" as "owner",
+        t."produce_time" as "produceTime" ,
+        t."create_time" as "createTime" ,
+        t."update_time" as "updateTime"
+        from
+        "raising"."tbm_info" t
+        where 1 = 1
+        <if test="tbmId != null">
+            and t."id" = #{tbmId}
+        </if>
+        <if test="tbmNameStrict != null and tbmNameStrict != ''.toString() ">
+            and t."name" = #{tbmNameStrict}
+        </if>
+        <if test="tbmName != null and tbmName != '' ">
+            and t."name" like CONCAT('%',#{tbmName},'%')
+        </if>
+        <if test="factory !=null and factory != '' ">
+            and t."factory" like CONCAT('%',#{factory},'%')
+        </if>
+        <if test=" owner == '无'.toString()  ">
+            and t."owner" is null
+        </if>
+        <if test="owner !=null and owner != '' and owner != '无'.toString() ">
+            and t."owner" = #{owner}
+        </if>
+        <if test="rmsVersion == '无'.toString() ">
+            and t."rms_version" is null
+        </if>
+        <if test="rmsVersion !=null and rmsVersion != '' and owner != '无'.toString() ">
+            and t."rms_version" = #{rmsVersion}
+        </if>
+        <if test="ccsType !=null and ccsType != ''">
+            and t."ccs_type" = #{ccsType}
+        </if>
+
+        ORDER BY "factory" ,"name"
+    </select>
+
+    <select id="getTbm" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        t."id" as "tbmId",
+        t."name" as "tbmName",
+        t."factory" as "factory" ,
+        t."ccs_type" as "ccsType" ,
+        t."diameter" as "diameter" ,
+        t."hinge_type" as "hingeType" ,
+        t."contacts" as "contacts" ,
+        t."phone" as "phone" ,
+        t."rms_version" as "rmsVersion" ,
+        t."owner" as "owner",
+        t."produce_time" as "produceTime" ,
+        t."create_time" as "createTime" ,
+        t."update_time" as "updateTime"
+        from
+        "raising"."tbm_info" t
+        <trim prefix="where" prefixOverrides="and">
+            <if test="tbmNameStrict != null and tbmNameStrict != ''.toString() ">
+                and t."name" = #{tbmNameStrict}
+            </if>
+        </trim>
+    </select>
+
+    <!--pro_id = #{tbmId}未写错。tbmId只是用来携带projectId的媒介。tbmId是projectId。不是tbmId-->
+    <select id="getRowWithProjectId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        p."ring_total" as "ringTotal",
+        t."id" as "tbmId",
+        t."name" as "tbmName",
+        t."factory" as "factory" ,
+        t."ccs_type" as "ccsType" ,
+        t."diameter" as "diameter" ,
+        t."hinge_type" as "hingeType" ,
+        t."produce_time" as "produceTime" ,
+        t."create_time" as "createTime" ,
+        t."update_time" as "updateTime"
+        from
+        "raising"."tbm_info" t,"raising"."project" p
+        where
+        p."tbm_id" = t."id"
+        and p."pro_id" = #{tbmId}
+    </select>
+
+
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject" resultType="int">
+        select count(1)
+        from
+        "raising"."tbm_info" t LEFT  JOIN "raising"."project" p on t."id" = p."tbm_id"
+        where
+        1 = 1
+        <if test="tbmId != null">
+            and t."id" = #{tbmId}
+        </if>
+        <if test="tbmName != null and tbmName != '' ">
+            and t."name" like CONCAT('%',#{tbmName},'%')
+        </if>
+        <if test="factory !=null and factory != '' ">
+            and t."factory" like CONCAT('%',#{factory},'%')
+        </if>
+        <if test=" owner == '无'.toString()  ">
+            and t."owner" is null
+        </if>
+        <if test="owner !=null and owner != '' and owner != '无'.toString() ">
+            and t."owner" = #{owner}
+        </if>
+        <if test="rmsVersion == '无'.toString() ">
+            and t."rms_version" is null
+        </if>
+        <if test="rmsVersion !=null and rmsVersion != '' and owner != '无'.toString() ">
+            and t."rms_version" = #{rmsVersion}
+        </if>
+        <if test="ccsType !=null and ccsType != ''">
+            and t."ccs_type" = #{ccsType}
+        </if>
+        <if test="tbmStatus !=null and tbmStatus == '推进'.toString()  ">
+            and p."status" = 'prostatus.building'
+        </if>
+        <if test="tbmStatus !=null and tbmStatus == '闲置'.toString()  ">
+            and p."status" in ('prostatus.nostart','prostatus.finished')
+        </if>
+    </select>
+
+    <select id="checkNames" parameterType="com.alibaba.fastjson.JSONObject" resultType="int">
+        select count(1)
+        from
+        "raising"."tbm_info"
+        where
+        1 = 1
+        <if test="tbmNames != null ">
+            and "name" in
+            <foreach collection="tbmNames" open="(" close=")" item="value" separator=",">
+                '${value}'
+            </foreach>
+        </if>
+    </select>
+
+    <insert id="addRows" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into
+        "raising"."tbm_info"
+        ("name","factory","ccs_type","diameter","hinge_type","contacts","phone","rms_version","owner","produce_time","create_time","update_time")
+        values(#{tbmName},#{factory},#{ccsType},#{diameter},#{hingeType},#{contacts},#{phone},#{rmsVersion},#{owner},#{produceTime},#{createTime},#{updateTime});
+    </insert>
+
+
+    <update id="update" parameterType="com.alibaba.fastjson.JSONObject">
+        update "raising"."tbm_info"
+        <trim prefix="set "  suffixOverrides=",">
+            <if test=' tbmName !=null || tbmName != "" '  >
+                "name" = #{tbmName},
+            </if>
+            <if test='factory !=null || factory != "" '  >
+                "factory" = #{factory},
+            </if>
+            <if test='ccsType !=null || ccsType != "" '  >
+                "ccs_type" = #{ccsType},
+            </if>
+            <if test=' diameter !=null '  >
+                "diameter" = #{diameter},
+            </if>
+            <if test=' hingeType !=null '  >
+                "hinge_type" = #{hingeType},
+            </if>
+            <if test=' contacts !=null '  >
+                "contacts" = #{contacts},
+            </if>
+            <if test=' phone !=null '  >
+                "phone" = #{phone},
+            </if>
+            <if test=' rmsVersion !=null '  >
+                "rms_version" = #{rmsVersion},
+            </if>
+            <if test=' owner !=null '  >
+                "owner" = #{owner},
+            </if>
+            <if test=' produceTime !=null '  >
+                "produce_time" = #{produceTime},
+            </if>
+            <if test=' createTime !=null '  >
+                "create_time" = #{createTime},
+            </if>
+            <if test=' updateTime !=null'  >
+                "update_time" = #{updateTime},
+            </if>
+        </trim>
+        where id = #{tbmId}
+    </update>
+
+    <delete id="delete" parameterType="com.alibaba.fastjson.JSONObject">
+        delete from
+        "raising"."tbm_info" where id=#{tbmId}
+    </delete>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        t."id",t."name",t."factory",t."ccs_type",t."diameter",
+        t."hinge_type",t."contacts",t."phone",t."rms_version",t."owner",
+        t."produce_time",t."create_time",t."update_time"
+        from
+        "raising"."tbm_info" t ,"raising"."project" p
+        where
+        p."tbm_id" = t."id" and
+        p."pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and t."id" <![CDATA[ > ]]> #{id}
+        </if>
+        order by t."id" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max(t."id")
+        from
+        "raising"."tbm_info" t ,"raising"."project" p
+        where
+        p."tbm_id" = t."id" and
+        p."pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+</mapper>

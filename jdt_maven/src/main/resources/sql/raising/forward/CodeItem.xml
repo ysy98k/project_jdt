@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.CodeItemDao">
+
+    <!-- 配置缓存类 -->
+    <cache type="com.raising.cache.MybatisRedisCache"/>
+
+    <sql id="columnSql">
+        i."fd_item_id" as "fdItemId",
+        i."fd_item_code" as "fdItemCode",
+        i."fd_item_name" as "fdItemName",
+        i."fd_item_desc" as "fdItemDesc",
+        i."fd_level_code" as "fdLevelCode",
+        i."fd_level_num" as "fdLevelNum",
+        i."fd_parent_id" as "fdParentId",
+        i."fd_system_id" as "fdSystemId",
+        i."fd_tenantid" as "fdTenantId"
+    </sql>
+
+    <!--根据fdItemCode 查询对应的字符串-->
+    <select id="getFdItemName" resultType="java.lang.String">
+
+      select fd_item_name
+      from
+      "public".t_code_item
+      where fd_level_code = #{fdLevelCode}
+
+    </select>
+
+    <select id="getCCSIds" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject" useCache="true">
+      select
+      "fd_item_name" as "fdItemName",
+      "fd_level_code" as "fdLevelCode"
+      from
+      "public".t_code_item
+    <where>
+        "fd_level_code" in
+        <if test="ccsIds != null">
+            <foreach collection="ccsIds" open="(" separator="," item="value" close=")">
+                #{value}
+            </foreach>
+        </if>
+    </where>
+
+
+    </select>
+
+    <!--根据条件，查询记录-->
+    <select id="getLineTree" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject" >
+        SELECT
+        fd_item_id as "menuCode",
+        fd_item_name as "text" ,
+        fd_level_num as "level" ,
+        fd_level_code as "level_code"
+        FROM
+        "public".t_code_item
+        WHERE
+        fd_enable = 'true'
+        and
+        fd_system_id = 10007
+        <if test="fdParentId != null">
+            and fd_parent_id = #{fdParentId}
+        </if>
+        order by fd_item_id asc
+    </select>
+
+    <!--根据条件，查询记录-->
+    <select id="getLineTree2" resultType="com.alibaba.fastjson.JSONObject" >
+        SELECT
+        fd_item_id as "fdItemId",
+        fd_item_code as "fdItemCode",
+        fd_item_name as "fdItemName",
+        fd_level_num as "fdLevelNum",
+        fd_level_code as "fdLevelCode",
+        "fd_parent_id" as "fdParentId"
+        FROM
+        "public".t_code_item
+        WHERE
+        fd_enable = 'true'
+        and
+        fd_system_id = 10007
+        order by fd_level_num asc
+    </select>
+
+
+    <!--根据条件，查询记录-->
+    <select id="getStartManageSubTree" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject" >
+        SELECT
+        fd_item_id as "menuCode",
+        fd_item_name as "text" ,
+        fd_level_num as "level" ,
+        fd_level_code as "level_code"
+        FROM
+        "public".t_code_item
+        WHERE
+        fd_enable = 'true'
+        and
+        fd_system_id = 10012
+        <if test="fdParentId != null">
+            and fd_parent_id = #{fdParentId}
+        </if>
+        order by fd_item_id asc
+    </select>
+
+
+
+    <select id="getCodeNameFromSystemCode" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+      SELECT "fd_item_name" as "itemName","fd_level_code" as "levelCode" FROM "public"."t_code_item"
+        where "fd_system_id" = (SELECT "fd_system_id" FROM "public"."t_code_system" where "fd_system_code" = #{fdSystemCode} and "fd_enable" = 'true')
+        and "fd_enable" = 'true'
+    </select>
+
+    <select id="getCodeListFromSystemCode" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        s.fd_system_code as "systemCode",
+        i.fd_item_code as "itemCode",
+        i.fd_item_name as "itemName"
+        FROM "public"."t_code_system" s,"public"."t_code_item" i
+        where
+          s.fd_system_id = i.fd_system_id and s.fd_system_code = #{fdSystemCode} and s.fd_enable = 'true' and i.fd_enable = 'true'
+
+    </select>
+
+    <select id="getRows" parameterType="com.raising.forward.entity.CodeItem" resultType="com.alibaba.fastjson.JSONObject">
+      SELECT
+        <include refid="columnSql"></include>
+      from "public"."t_code_item" i
+      where
+        i.fd_enable = 'true'
+        <trim>
+            <if test="fdLevelCode != null and fdLevelCode != '' ">
+                and "fd_level_code" = #{fdLevelCode}
+            </if>
+        </trim>
+    </select>
+
+
+</mapper>

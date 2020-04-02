@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.construction.mapper.TbmTsDataMapper">
+    <sql id="sql_select">
+        "dt" as "dt",
+        round("SP1"::numeric,3) as "SP1",
+        round("SP2"::numeric,3) as "SP2",
+        round("SP3"::numeric,3) as "SP3",
+        round("SP4"::numeric,3) as "SP4",
+
+        round("CRpm"::numeric,3) as "CRpm",
+        "CTor" as "CTor",
+
+        "C1EmC","C2EmC","C3EmC","C4EmC","C5EmC","C6EmC",
+        "C1Tor","C2Tor","C3Tor","C4Tor","C5Tor","C6Tor",
+
+        "JN",
+        round("J1P"::numeric,3) as "J1P",
+        round("J2P"::numeric,3) as "J2P",
+        round("J3P"::numeric,3) as "J3P",
+        round("J4P"::numeric,3) as "J4P",
+        "J1S","J2S","J3S","J4S",
+        "J1V","J2V","J3V","J4V",
+
+        round("SCRpm"::numeric,3) as "SCRpm",
+        "SCTor" as "SCTor",
+        "SCSoilP" as "SCSoilP",
+        "SCSoilPQ","SCSoilPH",
+
+        "HJ1S","HJ2S","HJ3S","HJ4S",
+
+        "BOF1P","BOF2P","BOF3P","BOF4P",
+        "BOF5P","BOF6P","BOF7P","BOF8P",
+        "BOB1P","BOB2P","BOB3P","BOB4P",
+        "BOB5P","BOB6P","BOB7P","BOB8P",
+
+        round("G1P"::numeric,3) as "G1P",
+        round("G2P"::numeric,3) as "G2P",
+        round("G3P"::numeric,3) as "G3P",
+        round("G4P"::numeric,3) as "G4P",
+        round("G1LM"::numeric,3) as "G1LM",
+        round("G2LM"::numeric,3) as "G2LM",
+        round("G3LM"::numeric,3) as "G3LM",
+        round("G4LM"::numeric,3) as "G4LM",
+        round("D0139"::numeric,3) as "D0139",
+        round("D0140"::numeric,3) as "D0140",
+        round("D0141"::numeric,3) as "D0141",
+        round("D0142"::numeric,3) as "D0142",
+
+        round("D0135"::numeric,3) as "D0135",
+        round("D0136"::numeric,3) as "D0136",
+        round("D0137"::numeric,3) as "D0137",
+        round("D0138"::numeric,3) as "D0138",
+        round("FO1P"::numeric,3) as "FO1P",
+        round("FO2P"::numeric,3) as "FO2P",
+        round("FO3P"::numeric,3) as "FO3P",
+        round("FO4P"::numeric,3) as "FO4P",
+        round("FO5P"::numeric,3) as "FO5P",
+        round("FO6P"::numeric,3) as "FO6P",
+
+        "CWSealT","CWEmT","CWBT","CWBL","D0091","D0092",
+
+        "D0130","D0131",
+
+        round("D0129"::numeric,3) as "D0129",
+
+        "MR_Ring_Num"
+
+
+
+    </sql>
+
+    <!--获得信息-->
+    <select id="getTbmTsData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+          <include refid="sql_select"></include>
+        FROM
+        "raising"."j_tbmtsdata"
+        where
+        "pro_id" = #{projectId}
+        <choose>
+            <when test="startTime != null and endTime == null">
+                and "dt" <![CDATA[ >= ]]> #{startTime}
+            </when>
+            <when test="startTime == null and endTime != null">
+                and "dt" <![CDATA[ <= ]]> #{endTime}
+            </when>
+            <when test="startTime != null and endTime != null">
+                and "dt" between #{startTime} and  #{endTime}
+            </when>
+        </choose>
+        <choose>
+            <when test="startTime == null and endTime == null">
+                order by "dt" desc
+            </when>
+            <when test="startTime != null and endTime == null">
+                order by "dt" asc
+            </when>
+            <when test="startTime == null and endTime != null">
+                order by "dt" desc
+            </when>
+            <when test="startTime != null and endTime != null">
+                order by "dt" asc
+            </when>
+        </choose>
+    </select>
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select
+        count("table_increment_pk")
+        FROM
+        "raising"."j_tbmringdata"
+        where
+        "pro_id" = #{projectId}
+        <choose>
+            <when test="startTime != null and endTime == null">
+                and "dt" <![CDATA[ >= ]]> #{startTime}
+            </when>
+            <when test="startTime == null and endTime != null">
+                and "dt" <![CDATA[ <= ]]> #{endTime}
+            </when>
+            <when test="startTime != null and endTime != null">
+                and "dt" between #{startTime} and  #{endTime}
+            </when>
+        </choose>
+    </select>
+
+    <select id="getTimeRange" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select max(dt) ,min(dt) from "raising"."j_tbmtsdata" where "pro_id" = #{projectId}
+    </select>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.j.mapper.JSetting">
+
+    <!--获得盾构机履历信息-->
+    <select id="getTbmRows" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+          "name" as "name",
+          "Value" as "value",
+          "pro_id" as "projectId"
+        from
+         "raising"."j_setting"
+        where
+        "pro_id" = #{projectId}
+    </select>
+
+    <!--获得信息-->
+    <select id="getData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id" as "projectId",
+        "name" as "name",
+        "Value" as "value"
+        FROM
+        "raising"."j_information"
+        where
+        "pro_id" = #{projectId}
+        <if test="name != null">
+            and "name" = #{name}
+        </if>
+        union all
+        select
+            "pro_id" as "projectId",
+            "name" as "name",
+            "Value" as "value"
+        FROM
+          "raising"."j_information"
+        where
+        "pro_id" = -1
+    </select>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "name","Value","pro_id","id","table_increment_pk"
+        from "raising"."j_setting"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and "table_increment_pk" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "table_increment_pk" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("table_increment_pk")
+        from "raising"."j_setting"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+</mapper>

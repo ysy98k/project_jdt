@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.ReportData">
+
+    <resultMap id="ReportResultMap" type="com.raising.forward.entity.ReportData">
+        <result column="result_table_name" property="SheetName"/>
+        <result column="point" property="point"/>
+        <result column="ring_location" property="ringLocation"/>
+        <result column="initial_height" property="initialHeight"/>
+        <result column="height" property="height"/>
+        <result column="change_quantity" property="changeQuantity"/>
+        <result column="change_rate" property="changeRate"/>
+        <result column="cumulative_variation" property="cumulativeVariation"/>
+        <result column="formation_loss_rate" property="formationLossRate"/>
+        <result column="remarks" property="remarks"/>
+        <result column="level_of_risk" property="levelOfRisk"/>
+    </resultMap>
+
+    <resultMap id="LineResultMap" type="com.raising.forward.entity.ReportLineData">
+        <result column="point" property="point"/>
+        <result column="change_rate" property="changeRate"/>
+        <result column="cumulative_variation" property="cumulativeVariation"/>
+        <result column="report_date" property="reportDate"/>
+    </resultMap>
+
+    <select id="getReportSheetByResultID" parameterType="com.alibaba.fastjson.JSONObject"
+            resultMap="ReportResultMap">
+        SELECT * FROM "raising"."result_sheet_view"
+        WHERE
+        result_id=#{resultID}
+    </select>
+
+    <select id="getLastAllReportSheetDataByResultID" parameterType="com.alibaba.fastjson.JSONObject"
+            resultMap="ReportResultMap">
+        select a.* from (select * from "raising"."result_sheet_view"  where uuid = #{engineeringUUID} and result_table_name=#{tableName}) a
+        where not exists(select 1
+        from(select * from "raising"."result_sheet_view"  where uuid = #{engineeringUUID} and result_table_name=#{tableName}) b
+        where b.point=a.point and <![CDATA[ b.report_date>a.report_date ]]>)
+    </select>
+
+    <select id="getPointByPointNameAndEnginnering" parameterType="com.alibaba.fastjson.JSONObject"
+            resultMap="LineResultMap">
+        select d.point,d.report_date,d.change_rate,d.cumulative_variation from "raising"."result_sheet_view" d
+        where d.uuid=#{EngineeringUUID} and d.point=#{point} order by d.report_time asc
+    </select>
+
+
+</mapper>

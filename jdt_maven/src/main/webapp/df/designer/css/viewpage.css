@@ -1,0 +1,285 @@
+.demo .lyrow {
+    height: auto !important;
+}
+
+.demo .box {
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 35px;
+}
+
+select, button, input[type="text"], input[type="password"] {
+    height: 25px;
+    margin-bottom: 10px;
+}
+
+.view select, .view button, .view input[type="text"], .view input[type="password"] {
+    height: 34px;
+    margin-bottom: 0px;
+}
+
+.tree {
+    overflow-x: auto;
+    padding-left: 0px;
+}
+
+.tree:before {
+    border: none;
+}
+
+.row-fluid {
+    padding: 5px;
+}
+
+.btn {
+    border-radius: 0px;
+}
+
+.view iframe {
+    border: 7px inset;
+}
+
+.demo .element-padding {
+    padding-top: 0px;
+}
+
+.base-widget {
+    min-height: 34px;
+}
+
+.base-widget-right {
+    margin-right: 2px;
+    min-height: 34px;
+}
+
+.radio, .checkbox {
+    display: inline-block;
+    min-height: 20px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.radio span, .checkbox span {
+    word-break: break-all;
+    white-space: normal;
+}
+
+.ui-progressbar {
+    min-height: 26px;
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    margin-bottom: 0px;
+}
+
+.input-group {
+    margin-bottom: 1px;
+}
+
+.ui-jqgrid .ui-jqgrid-title {
+    padding: 7px 25px 7px 7px;
+    margin: .1em 0 .2em;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ui-jqgrid {
+    background: #ffffff;
+}
+
+.ui-jqgrid-btable .ui-widget-content.ui-state-hover,
+.ui-jqgrid-btable .ui-widget-content.ui-state-highlight{
+    background-color: #EFF4F7 !important;
+}
+
+.Innerframeborder {
+    border: #dbdbdb solid 1px;
+}
+
+/* colunm 主题风格样式 */
+.demo .column-title {
+    color: #576373;
+    font-size: 13px;
+    font-family: "微软雅黑";
+    position: absolute;
+    top:8px;
+    left:15px;
+    word-wrap:break-word;
+    line-height:20px;
+    width: 90%;
+}
+
+
+.demo .Outermost{
+    /*列高度
+    overflow-y: auto;
+    overflow-x: hidden;*/
+    padding: 10px;
+    position:relative;
+}
+
+.theme-default>.column-title+div,
+.theme-border>.column-title+div,
+.theme-bootstrap> .column-title+div{
+    padding-top:35px ;
+}
+
+.theme-fieldset> .column-title+div{
+    padding-top:10px ;
+}
+
+.column-title.hidden+div{
+    padding-top:0px ;
+}
+
+.theme-default > legend {
+    border-bottom: none;
+}
+
+.theme-border {
+    border: #BBBBBB solid 1px;
+    border-radius: 0px;
+}
+
+.theme-border > legend {
+    border-bottom: none;
+}
+
+.theme-fieldset {
+    border: 1px dotted #BBBBBB;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 1em;
+}
+
+.theme-fieldset > legend {
+    width: auto;
+    height: 0;
+    border-bottom: none;
+    border-top: white 1px solid;
+    padding: 0 3px;
+    margin: 17px 10px 10px;
+    line-height: 1px;
+}
+
+.theme-bootstrap > legend {
+    margin-bottom: 0;
+    line-height: inherit;
+    top:10px !important;
+}
+
+.demo .tabbable > ul.nav > li > span {
+    display: none;
+}
+
+.demo .tabbable > ul.nav > li:last-child {
+    display: none;
+}
+
+.demo .lyrow-tab {
+    padding: 10px;
+}
+
+.demo .tabbable > .tab-content {
+    padding: 0;
+}
+
+.demo .tab-content > .tab-pane,
+.demo .tab-content > .tab-pane > .span12 {
+    width: 100%;
+}
+
+.demo .tab-pane > .column {
+    margin: 0;
+    padding: 15px;
+}
+
+.nav-tabs > li > a {
+    font-size: 13px;
+    font-family: "微软雅黑";
+}
+
+/*
+修改bootstrap-combined.css中span间距
+间距 a = 0.01, x 等分的宽度为 (1+a)/12*x-a;
+*/
+.row-fluid [class*="span"] {
+    margin-left: 0%;
+}
+
+.row-fluid .controls-row [class*="span"] + [class*="span"] {
+    margin-left: 0%;
+}
+
+.row-fluid .span12 {
+    width: 100%;
+}
+
+.row-fluid .span11 {
+    width: 91.66666667%;
+}
+
+.row-fluid .span10 {
+    width: 83.33333333%;
+}
+
+.row-fluid .span9 {
+    width: 75%;
+}
+
+.row-fluid .span8 {
+    width: 66.66666667%;
+}
+
+.row-fluid .span7 {
+    width: 58.33333333%;
+}
+
+.row-fluid .span6 {
+    width: 50%;
+}
+
+.row-fluid .span5 {
+    width: 41.66666667%;
+}
+
+.row-fluid .span4 {
+    width: 33.33333333%;
+}
+
+.row-fluid .span3 {
+    width: 25%;
+}
+
+.row-fluid .span2 {
+    width: 16.66666667%;
+}
+
+.row-fluid .span1 {
+    width: 8.33333333%;
+}
+
+@media screen and (max-width:768px) {
+    .row-fluid>[class*="span"]{
+        width: 100%;
+        margin-left: 0;
+    }
+
+    body{
+        padding: 0;
+    }
+}
+@media screen and (max-device-width:768px) {
+    .row-fluid>[class*="span"]{
+        width: 100%;
+        margin-left: 0;
+    }
+
+    body{
+        padding: 0;
+    }
+}
+

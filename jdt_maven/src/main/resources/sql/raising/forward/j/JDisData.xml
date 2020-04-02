@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.j.mapper.JDisData">
+
+    <!--获得信息-->
+    <select id="getDisData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id" as "projectId",
+        "MR_Ring_Num" as "MR_Ring_Num",
+        "MR_Des_A1Mileage" as "MR_Des_A1Mileage",
+        "dt" as "dt",
+        "CurMS" as "CurMS",
+        "ARData" as "ARData"
+        FROM
+        "raising"."j_disdata_${collectorName}"
+        where
+        "pro_id" = #{projectId}
+        <if test="MR_Ring_Num != null">
+            and "MR_Ring_Num" = #{MR_Ring_Num}
+        </if>
+        order by "CurMS" asc
+    </select>
+
+
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select
+        count("table_increment_pk")
+        FROM
+        "raising"."j_disdata_${collectorName}"
+        where
+        "pro_id" = #{projectId}
+        <if test="MR_Ring_Num != null">
+            and "MR_Ring_Num" = #{MR_Ring_Num}
+        </if>
+    </select>
+
+    <select id="getTripRangeData" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select
+        "MR_Ring_Num"
+        from
+        "raising"."j_disdata_${collectorName}"
+        where "pro_id" = #{projectId} group by "MR_Ring_Num" order by "MR_Ring_Num" asc
+    </select>
+
+    <insert id="addRow" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into "raising"."j_disdata_${collectorName}"
+        ("pro_id","id","MR_Ring_Num","dt","CurMS","ARData","DRData","AlarmData","timestamp")
+        values(#{pro_id},#{id},#{MR_Ring_Num},#{dt},#{CurMS},
+        #{ARData,javaType=Object,jdbcType=OTHER,typeHandler=com.raising.jsonHandler.JsonTypeHandler},
+        #{DRData,javaType=Object,jdbcType=OTHER,typeHandler=com.raising.jsonHandler.JsonTypeHandler},
+        #{AlarmData,javaType=Object,jdbcType=OTHER,typeHandler=com.raising.jsonHandler.JsonTypeHandler},
+        #{timestamp})
+    </insert>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+            "pro_id","table_increment_pk",
+
+            "timestamp", "id","dt","MR_Ring_Num",
+
+            "CurMS", "MR_Des_A1Mileage","CurRS","InitialS",
+
+             "FTunneling","FPreparing", "FAssemblying","FStartCondition",
+
+              "FEndCondition", "FStart","FEnd","FTunnel",
+
+              "FAssembly", "FLeft", "FRight", "FExtend",
+
+            "ARData","DRData","AlarmData",	"RingStartTime",
+
+            "RingEndTime","RingTotalTime","RingTunnellingTime","RingAssemblingTime"
+
+         from "raising"."${tableName}"
+         where 1 = 1
+        <if test="id != null">
+            and "table_increment_pk" <![CDATA[ > ]]> #{id}
+        </if>
+         order by table_increment_pk asc OFFSET 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("table_increment_pk")
+        from "raising"."${tableName}"
+    </select>
+
+
+</mapper>

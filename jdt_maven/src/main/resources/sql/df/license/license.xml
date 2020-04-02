@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.df.license.dao.LicenseDao">
+	<select id="query" parameterType="java.util.Map"
+		resultType="com.baosight.df.license.entity.LicenseEntry">
+		select
+		version as "version",
+		build_date as "buildDate",
+		base_line as "baseLine",
+		delivery_pkg as "deliveryPkg"
+		from
+		root.jdt_version
+		where
+		1 = 1
+	</select>
+
+</mapper>

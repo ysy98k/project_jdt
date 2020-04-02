@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DesignLine">
+    <select id="query" parameterType="com.raising.forward.entity.DesignLine"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id" as "projectId",
+        x,
+        y,
+        z,
+        designmileage
+        from
+        "raising"."d_coordinatelist"
+        where
+        pro_id = #{cookieId}
+        ORDER BY designmileage
+    </select>
+
+    <select id="queryPrecise" parameterType="com.raising.forward.entity.DesignLine"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        pro_id as "projectId",
+        x,
+        y,
+        z,
+        designmileage
+        from
+        "raising"."d_coordinatelist"
+        <if test="sectionId != null">
+            and pro_id = #{cookieId}
+        </if>
+    </select>
+
+    <select id="getMaxAndMinWithProjectId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT max(designmileage) as "max",min(designmileage) as "min" FROM "raising"."d_coordinatelist" where pro_id = #{projectId};
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from "raising"."d_coordinatelist" where pro_id = #{cookieId}
+    </select>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select "table_increment_pk","x","y","z","pro_id","designmileage","amuzith","slope","dist","mapmileage","id"
+        from "raising"."d_coordinatelist"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and "table_increment_pk" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "table_increment_pk" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("table_increment_pk")
+        from "raising"."d_coordinatelist"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+</mapper>
+

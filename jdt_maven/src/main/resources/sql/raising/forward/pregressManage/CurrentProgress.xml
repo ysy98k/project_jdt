@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.progressManage.mapper.currentProgressMapper">
+    <sql id="columnSql">
+        r."dt" as "ringDate",
+        r."MR_Ring_Num" as "ringNum",
+        r."RingStartTime" as "ringStartTime",
+        r."RingEndTime" as "ringEndTime",
+        r."RingTotalTime" as "ringTotalTime",
+        r."RingTunnellingTime" as "tunnellingTime",
+        r."RingAssemblingTime" as "assemblingTime"
+    </sql>
+
+
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid="columnSql"></include>,
+        p."start_time" as "startTime" ,
+        p."end_time" as "endTime" ,
+        p."ring_total" as "ringTotal",
+        p."day_shift_start" as "dayShiftStart",
+        p."day_shift_end" as "dayShiftEnd"
+        from
+        "raising".j_ringdata r,"raising".project p
+        where
+        r."pro_id" = p."pro_id"
+        <trim>
+            <if test="projectId != null">
+                and r."pro_id" = #{projectId}
+            </if>
+            <if test="startTime != null">
+                and r."dt" >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and r."dt" &lt; #{endTime}
+            </if>
+        </trim>
+        order by "dt" asc
+    </select>
+
+    <select id="getARData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid="columnSql"></include>,
+        r."ARData" as "ARData",
+        p."start_time" as "startTime" ,
+        p."end_time" as "endTime" ,
+        p."ring_total" as "ringTotal",
+        p."day_shift_start" as "dayShiftStart",
+        p."day_shift_end" as "dayShiftEnd"
+        from
+        "raising".j_ringdata r,"raising".project p
+        where
+        r."pro_id" = p."pro_id"
+        <trim>
+            <if test="projectId != null">
+                and r."pro_id" = #{projectId}
+            </if>
+            <if test="startTime != null">
+                and r."dt" >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and r."dt" &lt; #{endTime}
+            </if>
+        </trim>
+        order by "dt" asc
+    </select>
+
+    <select id="getCompareTime" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        r."dt" as "dt",
+        p."day_shift_start" as "dayShiftStart",
+        p."day_shift_end" as "dayShiftEnd"
+        from "raising".j_ringdata r,"raising".project p
+        where
+        r."pro_id" = p."pro_id"
+        and r."pro_id" = #{projectId}
+        order by "dt" desc
+        limit 1
+    </select>
+
+    <insert id="addRow">
+        insert into "raising".j_ringdata("dt","MR_Ring_Num","pro_id") values(#{dt},#{ringNum},#{projectId})
+    </insert>
+    <update id="test" parameterType="com.alibaba.fastjson.JSONObject">
+        update "raising".j_ringdata set "ARData" = #{ARData,jdbcType=OTHER, typeHandler=com.raising.forward.mapper.JSONTypeHandlerPg} where "table_increment_pk" = #{id}
+    </update>
+
+    <select id="test2" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid="columnSql"></include>,
+        "table_increment_pk" as "id"
+        from
+        "raising".j_ringdata r
+        order by "dt" asc
+    </select>
+</mapper>

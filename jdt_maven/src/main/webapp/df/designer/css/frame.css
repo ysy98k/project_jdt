@@ -1,0 +1,16 @@
+.Innerframeborder {
+    border: #dbdbdb solid 1px;
+}
+
+.frame-default {
+    border: #dbdbdb solid 1px;
+}
+
+.demo .column-title {
+    margin-bottom: 10px;
+    width: 65% !important;
+    color: #777777;
+    line-height: 32px;
+    padding-left: 10px;
+    font-size: 13px;
+}

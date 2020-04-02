@@ -1,0 +1,666 @@
+@charset "utf-8";
+body {
+    padding: 0 !important;
+}
+
+/*布局*/
+.ui-layout-north {
+    z-index: 1 !important;
+}
+
+.ui-layout-toggler {
+    background: #ffffff !important;
+}
+
+.ui-layout-east, .ui-layout-east .ui-layout-center {
+    padding: 0px !important;
+    background: #DDD !important;
+    border: 0px !important;
+}
+
+/*菜单*/
+.navText {
+    color: #fff;
+    font-size: 14px;
+}
+
+.nav-collapse {
+    margin-top: 3px;
+}
+
+/*弹出框*/
+.fade.in {
+    display: block !important;
+}
+
+.modal {
+    bottom: auto;
+    overflow-y: auto;
+    left: 50%;
+}
+
+.modal-body {
+    overflow-y: hidden;
+}
+
+.modal-footer {
+    margin-top: 0px;
+}
+
+/*属性框*/
+.configView, .dataConfigView {
+    padding-top: 15px;
+}
+
+/*左边框*/
+.nav-list > li {
+    border: none;
+}
+
+.sidebar-nav {
+    position: absolute;
+    background: #ddd;
+    top: 0px;
+    left:5px;
+    bottom: 5px;
+    padding: 0px;
+    width: 195px;
+    overflow: hidden;
+}
+
+.sidebar-nav .loading {
+    position: absolute;
+    width: 50px;
+    height: 100%;
+    left: 75px;
+}
+
+.sidebar-nav .box {
+    width: 64px;
+    height: 70px;
+    margin-bottom: 10px;
+    float: left;
+}
+
+.sidebar-nav .left-box {
+    margin-right: 15px;
+}
+
+.sidebar-nav .preview {
+    display: block;
+    color: #666;
+    font-size: 12px;
+    line-height: 22px;
+    width: 64px;
+    background-repeat: no-repeat;
+    background-origin: content-box;
+    cursor: move;
+}
+
+.sidebar-nav .preview .title {
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    float: left;
+    margin-top: 55px;
+    font-size: 12px;
+}
+
+.sidebar-nav .preview input {
+    background: #ffffff;
+    height: 22px;
+}
+
+.sidebar-nav .preview input.error {
+    background: #fceeee;
+    height: 22px;
+}
+
+.sidebar-nav .box .drag {
+    display: none;
+}
+
+.sidebar-nav .lyrow-tab .drag {
+    display: none;
+}
+
+.demo .drag, .demo .remove {
+    display: block;
+}
+
+/*.ui-widget-content {
+    border: 0;
+    overflow: auto;
+}*/
+
+/*对话框*/
+.rowspace {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #E8E8E8;
+}
+
+.rowLastSpace {
+    padding-top: 5px;
+}
+
+.labelfont {
+    font-size: 12px;
+    text-align: right;
+    color: #666;
+}
+
+#detail {
+    overflow-x: hidden;
+}
+
+#detail select, #detail button, #detail input[type="text"] {
+    height: 34px;
+    margin-bottom: 0px;
+    font-size: 14px;
+}
+
+h3 {
+    font-family: "microsoft yahei", simhei, Geneva, Arial, Helvetica, sans-serif;
+}
+
+.ui-accordion .ui-accordion-content {
+    background: #ffffff;
+    overflow-x: hidden !important;
+}
+
+.ui-accordion .ui-accordion-header .ui-accordion-header-icon {
+    top: 5px;
+}
+
+/*事件编辑器*/
+div[aria-describedby='codeEditorDialog'] .ui-dialog-title {
+    font-size: 13px;
+    padding: 6px 13px;
+    display: block;
+    font-family: "microsoft yahei", simhei, Geneva, Arial, Helvetica, sans-serif;;
+}
+
+div[aria-describedby='codeEditorDialog'] .ui-widget-header {
+    font-weight: bold;
+    letter-spacing: 1px;
+    height: 32px;
+}
+
+.ui-selectmenu-button span.ui-selectmenu-text, .ui-menu .ui-menu-item {
+    color: #daa458;
+}
+
+.ui-selectmenu-button:hover {
+    color: #daa458;
+    background-color: #fef7ec;
+}
+
+.ui-selectmenu-button {
+    height: 100%;
+}
+
+.ace-twilight .ace_marker-layer .ace_active-line {
+    background: rgb(247, 245, 245);
+}
+
+.ace_editor.ace_autocomplete .ace_completion-highlight {
+    color: #DAA472;
+}
+
+/*container*/
+.demo.ui-sortable .ui-draggable.ui-sortable-placeholder {
+    height: 65px !important;
+}
+
+.ui-sortable .lyrow.ui-draggable {
+    height: auto !important;
+}
+
+.demo .lyrow {
+    height: auto !important;
+}
+
+.demo .lyrow-tab {
+    padding-top: 10px;
+}
+
+.demo .box {
+    opacity: 1 !important;
+    height: auto !important;
+}
+
+.demo .box .demoview {
+    display: block;
+    padding-top: 25px;
+}
+
+select, button, input[type="text"], input[type="password"] {
+    height: 25px;
+    margin-bottom: 10px;
+    font-size: 12px;
+}
+
+select, input[type="text"], input[type="password"] {
+    padding-left: 4px !important;
+    padding-right: 0px !important;
+    padding-bottom: 3px;
+}
+
+.view select, .view button, .view input[type="text"], .view input[type="password"] {
+    height: 34px;
+    margin-bottom: 1px;
+}
+
+.tree {
+    overflow-x: auto;
+    padding-left: 0px;
+}
+
+.tree:before {
+    border: none;
+}
+
+.tabbable {
+    height: 100%;
+}
+
+.tab-content {
+    padding: 15px;
+    background: #ffffff;
+    height: 93%;
+}
+
+.demo .tabbable > .tab-content {
+    padding: 0;
+}
+
+.demo .tab-content > .tab-pane {
+    width: 100%;
+}
+
+.demo .tab-pane > .column {
+    margin: 0;
+}
+
+.demo .tabbable > ul.nav > li > span {
+    color: #999;
+    position: absolute;
+    z-index: 1;
+    right: 3px;
+    top: 11px;
+    cursor: pointer;
+}
+
+.demo .tabbable > ul.nav > li > span:hover {
+    color: #d15b47;
+}
+
+.demo .tabbable > ul.nav > li:not(:first-child):not(:last-child) > a {
+    padding-right: 21px;
+}
+
+.smaller-20, .nav-tabs > li > a {
+    font-size: 12px !important;
+}
+
+.ui-layout-west{
+    border: none !important;
+    background: rgb(221, 221, 221) !important;
+    padding: 0px !important;
+}
+
+.ui-layout-center {
+    width: auto !important;
+}
+
+.ui-layout-resizer-north {
+    width: 100% !important;
+}
+
+/*解决左边框架中，移动上去有蓝色边的问题*/
+.nav-list > li:before {
+    width: 0px;
+}
+
+.ace-twilight .ace_marker-layer .ace_selected-word {
+    border: 1px solid rgb(241, 59, 8) !important;
+}
+
+.ace-twilight .ace_marker-layer .ace_selection {
+    background: #BDDDF9;
+}
+
+.black-skin .ace-twilight .ace_marker-layer .ace_selection {
+    background: rgba(221, 240, 255, 0.20);
+}
+
+.demoview iframe {
+    border: 7px inset;
+}
+
+input[type=checkbox].ace.ace-switch.tree + .lbl::before {
+    content: "??\a0\a0\a0\a0\a0\a0???";
+    width: 65px;
+}
+
+input[type=checkbox].ace.ace-switch.tree:checked + .lbl::after {
+    left: 44px;
+}
+
+.custom-container-dialog .row-fluid {
+    height: 40px;
+}
+
+.custom-container-dialog input {
+    /*width: 90px;*/
+    padding: 0 10px;
+    /*background: #bbb;*/
+    font-size: 10px;
+    color: #999;
+    line-height: 20px;
+    /*height: 20px;*/
+    position: relative;
+    top: -1px;
+    background: #F5F5F5;
+}
+
+.custom-container-dialog .dialog-warning-message {
+    float: left;
+    width: 130px;
+    position: absolute;
+    top: 26px;
+}
+
+.base-widget {
+    min-height: 34px;
+}
+
+.base-widget-right {
+    margin-right: 2px;
+    min-height: 34px;
+}
+
+.radio, .checkbox {
+    display: inline-block;
+    min-height: 20px;
+    padding-right: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.ui-layout-east .btn-yellow span {
+    max-width: 175px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float: left;
+    word-break: break-all;
+}
+
+.ui-layout-east .lbl {
+    word-break: normal;
+}
+
+.radio span, .checkbox span {
+    word-break: break-all;
+    white-space: normal;
+}
+
+.ui-progressbar {
+    min-height: 26px;
+    margin-bottom: 0px;
+}
+
+.demoview > div:hover, .demoview > button:hover, .demoview > iframe:hover, .demoview > label:hover {
+    background: #EFF3F8;
+    cursor: pointer;
+}
+
+/* colunm 主题风格样式 */
+.demo .column-title {
+    color: #777777;
+    font-size: 13px;
+    position: absolute;
+    top:2px;
+    left:25px;
+    width: 90%;
+}
+
+.theme-default > legend {
+    border-bottom: none;
+}
+
+.theme-border {
+    border: #dbdbdb solid 1px;
+}
+
+.theme-border > legend {
+    border-bottom: none;
+}
+
+.theme-fieldset {
+    border: 1px dotted #BBBBBB;
+}
+
+.theme-fieldset > legend {
+    width: auto;
+    height: 0;
+    border-bottom: none;
+    border-top: white 1px solid;
+}
+
+.theme-bootstrap > legend {
+    margin-bottom: 0;
+    line-height: inherit;
+}
+
+.ui-icon {
+    font-size: 13px !important;
+}
+
+.ui-jqgrid .ui-jqgrid-title {
+    padding: 7px 25px 7px 7px;
+    margin: .1em 0 .2em;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ui-jqgrid {
+    background: #ffffff;
+}
+
+.ui-jqgrid-btable .ui-widget-content.ui-state-hover,
+.ui-jqgrid-btable .ui-widget-content.ui-state-highlight{
+    background-color: #EFF4F7 !important;
+}
+
+/*color-picker*/
+.evo-pop {
+    right: 0;
+    margin: 24px 0px 0;
+    padding: 0 5px 0 0;
+    background-image: linear-gradient(to bottom, #f8f8f8 0%, #ececec 100%);
+    border: 1px solid #e5e0ec;
+}
+
+.evo-color span {
+    font-size: 12px;
+    margin: -5px 0 4px 3px;
+    float: left;
+}
+
+.evo-palette th,
+.evo-palette-ie th {
+    padding: 5px 0px;
+}
+
+.evo-colorind,
+.evo-colorind-ie,
+.evo-colorind-ff {
+    border: solid 1px #c3c3c3;
+    width: 20px;
+    height: 20px;
+    float: right;
+    margin-right: 8px;
+    margin-top: 3px;
+}
+
+/* 选择树输入框 */
+.treeInput_arround {
+    min-height: 20px;
+    max-height: 300px;
+    max-width: 100%;
+    border: 1px solid #d5d5d5;
+    overflow: auto;
+    display: none;
+    background: #fff;
+    z-index: 1000;
+    position: absolute;
+}
+
+.treeInput_icon {
+    z-index: 3;
+    position: absolute;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.selectinput {
+    height: 20px !important;
+    border: 0pt !important;
+    left: 117px;
+    position: absolute;
+    top: 0px;
+    width: 180px;
+}
+
+.selectinput span {
+    display: none;
+}
+
+.alertdiv {
+    height: 38px;
+    padding: 10px;
+    font-size: 10px;
+}
+
+#refreshSqlCol .fa-refresh,
+#dataSourceEditor .fa-check,
+#dataSourceEditor .fa-plus,
+#dataSourceEditor .fa-trash-o {
+    font-size: 14px;
+    width: 18px;
+}
+
+#refreshSqlCol .fa-refresh:hover,
+#dataSourceEditor .fa-check:hover,
+#dataSourceEditor .fa-plus:hover,
+#dataSourceEditor .fa-trash-o:hover {
+    font-size: 18px;
+}
+
+/*布局临时颜色效果*/
+/*.demo .row-fluid{
+    background-color: unset;
+    border: unset;
+    margin: 0;
+    padding: 12px  14px 0;
+    box-shadow:unset;
+    -moz-box-shadow:unset;
+}
+
+.demo .row-fluid:hover{
+    background-color: #F5F5F5;
+    -moz-box-shadow: inset 0 1px 13px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 1px 13px rgba(0, 0, 0, 0.1);
+    border: 1px solid #DDDDDD;
+}
+
+.edit .demo .row-fluid:before{
+    content:' ';
+    padding: 0px 7px;
+    border: none;
+}
+
+.edit .demo .row-fluid:hover:before{
+    content:'行';
+    border: 1px solid #DDDDDD;
+}
+
+.edit .column:after{
+    content:' ';
+    padding: 0px 7px;
+    border: none;
+}
+
+.edit .column:hover:after{
+    content:'列';
+    border: 1px solid #DDDDDD;
+}
+
+.column{
+    border:none;
+    background-color:unset;
+}
+
+.column:hover{
+    border:1px solid #DDDDDD;
+    background-color:#ffffff;
+}*/
+.edit .demo{
+    margin: 0;
+    padding:15px;
+}
+
+.demo .row-fluid{
+    margin-top: 22px;
+    padding: 5px  14px 0;
+    margin-bottom:0;
+}
+
+.edit .demo .row-fluid:before{
+    content:'\884C';
+    padding: 0px 3px;
+    line-height: 1.5;
+}
+
+.edit .column:after{
+    content:'\5217';
+    padding: 0px 4px;
+}
+
+.edit .demo:after{
+    content:'\5BB9\5668';
+}
+
+.edit .demo .lyrow .drag{
+     border-radius: 4px 0 0 0;
+     right:56px;
+ }
+
+.edit .demo .lyrow .remove{
+    border-radius: 0 4px 0 0;
+    right:3px;
+}
+
+.edit .demo .lyrow> .drag,
+.edit .demo .lyrow> .remove{
+    margin-top: -25px;
+}
+
+.edit .demo .lyrow-tab> .drag,
+.edit .demo .lyrow-tab> .remove{
+    margin-top: 0px;
+}
+
+.column{
+    padding: 10px;
+    min-height: 82px !important;
+   /*列高度
+   overflow-y: auto;
+    overflow-x: hidden;*/
+}

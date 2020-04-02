@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TenantMenu">
+
+
+    <select id="queryHomeAndBackgroundMenu" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        A.PARENT_CODE as "parentCode",
+        R.DISP_NAME as "parentName",
+        A.MENU_ID as "menuId",
+        A.MENU_CODE as "menuCode",
+        A.MENU_TYPE as "menuType",
+        A.DISP_NAME as "dispName",
+        A.LINK_TYPE as "linkType",
+        B.PAGE_PATH as "pagePath",
+        B.PAGE_TYPE as "pageType",
+        A.LINK_PATH as "linkPath",
+        A.LINK_PARAM as "linkParam",
+        A.MENU_ORDER as "menuOrder",
+        A.ICON_TYPE as "iconType",
+        A.ICON_PATH as "iconPath",
+        A.MENU_LEVEL as "menuLevel"
+        FROM
+        "${tenant}".TENANT_MENU A
+        LEFT JOIN
+        "${tenant}".PAGEMANAGE B
+        ON
+        A.LINK_PATH=B.PAGE_ENAME
+        LEFT JOIN
+        "${tenant}".TENANT_MENU R
+        ON
+        R.MENU_CODE=A.PARENT_CODE
+        WHERE 1=1 AND (A.PARENT_CODE != '-1')
+        <if test="menuType != null">
+            and A.MENU_TYPE = #{menuType}
+        </if>
+        <if test="fieldName != null and ascDesc != null">
+            order by A.MENU_LEVEL,A.MENU_ORDER
+        </if>
+    </select>
+
+    <select id="query" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        A.PARENT_CODE as "parentCode",
+        B.DISP_NAME as "parentName",
+        A.MENU_ID as "menuId",
+        A.MENU_CODE as "menuCode",
+        A.MENU_TYPE as "menuType",
+        A.DISP_NAME as "dispName",
+        A.LINK_TYPE as "linkType",
+        A.LINK_PATH as "linkPath",
+        A.LINK_PARAM as "linkParam",
+        A.MENU_ORDER as "menuOrder",
+        A.ICON_TYPE as "iconType",
+        A.ICON_PATH as "iconPath",
+        A.MENU_LEVEL as "menuLevel"
+        FROM
+        "${tenant}".TENANT_MENU A
+        LEFT JOIN
+        "${tenant}".TENANT_MENU B
+        ON
+        B.MENU_CODE=A.PARENT_CODE
+        WHERE 1=1
+        <if test="parentCode != null">
+            and A.PARENT_CODE = #{parentCode}
+        </if>
+        <if test="parentName != null">
+            and B.DISP_NAME LIKE '%${parentName}%'
+        </if>
+        <if test="dispName != null">
+            and A.DISP_NAME LIKE '%${dispName}%'
+        </if>
+        <if test="menuId != null">
+            and A.MENU_ID = #{menuId}
+        </if>
+        <if test="menuCode != null">
+            and A.MENU_CODE LIKE '%${menuCode}%'
+        </if>
+        <if test="menuType != null">
+            and A.MENU_TYPE = #{menuType}
+        </if>
+        <if test="fieldName != null and ascDesc != null">
+            order by
+            <choose>
+                <when test="fieldName == 'menuOrder'">
+                    A.MENU_ORDER
+                </when>
+                <when test="fieldName == 'dispName'">
+                    A.DISP_NAME
+                </when>
+                <when test="fieldName == 'menuCode'">
+                    A.MENU_CODE
+                </when>
+            </choose>
+            <if test="ascDesc == 'asc'">
+                asc
+            </if>
+            <if test="ascDesc == 'desc'">
+                desc
+            </if>
+        </if>
+    </select>
+
+    <select id="queryLink" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        LINK_PATH as "linkPath"
+        FROM
+        "${tenant}".TENANT_MENU WHERE 1=1
+        <if test="menuType != null">
+            and MENU_TYPE = #{menuType}
+        </if>
+        <if test="fieldName != null and ascDesc != null">
+            order by
+            <choose>
+                <when test="fieldName == 'menuOrder'">
+                    MENU_ORDER
+                </when>
+            </choose>
+            <if test="ascDesc == 'asc'">
+                asc
+            </if>
+            <if test="ascDesc == 'desc'">
+                desc
+            </if>
+        </if>
+    </select>
+
+    <select id="queryTree" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        MENU_CODE as "menuCode",
+        MENU_LEVEL as "level",
+        DISP_NAME as "text"
+        FROM
+        "${tenant}".TENANT_MENU WHERE 1=1
+
+        <if test="parentCode != null">
+            and PARENT_CODE = #{parentCode}
+        </if>
+        <if test="menuType != null">
+            and MENU_TYPE = #{menuType}
+        </if>
+        order by MENU_ORDER asc
+    </select>
+
+    <insert id="insert" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO "${tenant}".TENANT_MENU
+        (PARENT_CODE,MENU_CODE,MENU_TYPE,DISP_NAME,LINK_TYPE,LINK_PATH,LINK_PARAM,MENU_ORDER,ICON_TYPE,ICON_PATH,MENU_LEVEL)
+        VALUES
+        (#{parentCode},#{menuCode},#{menuType},#{dispName},#{linkType},#{linkPath},#{linkParam},#{menuOrder},#{iconType},#{iconPath},#{menuLevel})
+    </insert>
+
+    <insert id="insertForUpload" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            INSERT INTO "${item.tenant}".TENANT_MENU
+            (PARENT_CODE,MENU_CODE,MENU_TYPE,DISP_NAME,LINK_TYPE,LINK_PATH,LINK_PARAM,MENU_ORDER,ICON_TYPE,ICON_PATH,MENU_LEVEL)
+            VALUES
+            (#{item.parentCode},#{item.menuCode},#{item.menuType},#{item.dispName},#{item.linkType},#{item.linkPath},#{item.linkParam},#{item.menuOrder},#{item.iconType},#{item.iconPath},(
+            SELECT
+            t.menu_level
+            FROM
+            "${item.tenant}".tenant_menu t
+            WHERE
+            t.MENU_CODE = #{item.parentCode}
+            ) + 1) ON CONFLICT(MENU_CODE) DO UPDATE
+            SET PARENT_CODE=EXCLUDED.PARENT_CODE,
+            MENU_TYPE=EXCLUDED.MENU_TYPE,
+            DISP_NAME=EXCLUDED.DISP_NAME,
+            LINK_TYPE=EXCLUDED.LINK_TYPE,
+            LINK_PATH=EXCLUDED.LINK_PATH,
+            LINK_PARAM=EXCLUDED.LINK_PARAM,
+            MENU_ORDER=EXCLUDED.MENU_ORDER,
+            ICON_TYPE=EXCLUDED.ICON_TYPE,
+            ICON_PATH=EXCLUDED.ICON_PATH,
+            MENU_LEVEL=EXCLUDED.MENU_LEVEL
+        </foreach>
+    </insert>
+
+    <delete id="delete" parameterType="com.alibaba.fastjson.JSONObject">
+        DELETE FROM "${tenant}".TENANT_MENU WHERE
+        MENU_ID =
+        #{menuId}
+    </delete>
+
+    <update id="update" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE "${tenant}".TENANT_MENU
+        SET
+        PARENT_CODE=#{parentCode},
+        MENU_TYPE=#{menuType},
+        DISP_NAME=#{dispName},
+        LINK_TYPE=#{linkType},
+        LINK_PATH=#{linkPath},
+        LINK_PARAM=#{linkParam},
+        MENU_ORDER=#{menuOrder},
+        ICON_TYPE=#{iconType},
+        ICON_PATH=#{iconPath},
+        MENU_LEVEL=#{menuLevel}
+        WHERE
+        MENU_CODE = #{menuCode}
+    </update>
+
+    <update id="updateParent" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE "${tenant}".TENANT_MENU
+        SET
+        PARENT_CODE=#{parentCode},
+        MENU_LEVEL=#{menuLevel}
+        WHERE
+        MENU_CODE = #{menuCode}
+    </update>
+
+    <select id="queryCount" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="int">
+
+        SELECT
+        COUNT(*)
+        FROM
+        "${tenant}".TENANT_MENU A
+        LEFT JOIN
+        "${tenant}".TENANT_MENU B
+        ON
+        B.MENU_CODE=A.PARENT_CODE
+        WHERE 1=1
+        <if test="parentCode != null">
+            and A.PARENT_CODE = #{parentCode}
+        </if>
+        <if test="parentName != null">
+            and B.DISP_NAME LIKE '%${parentName}%'
+        </if>
+        <if test="dispName != null">
+            and A.DISP_NAME LIKE '%${dispName}%'
+        </if>
+        <if test="menuCode != null">
+            and A.MENU_CODE LIKE '%${menuCode}%'
+        </if>
+        <if test="menuId != null">
+            and A.MENU_ID = #{menuId}
+        </if>
+        <if test="menuType != null">
+            and A.MENU_TYPE = #{menuType}
+        </if>
+    </select>
+
+    <select id="queryLeafCount" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        DISP_NAME as "parentName"
+        FROM "${tenant}".TENANT_MENU t
+        WHERE 1=1
+        <if test="menuCode!= null">
+            and t.PARENT_CODE=#{menuCode}
+        </if>
+    </select>
+</mapper>

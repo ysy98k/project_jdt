@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.ReportRelation">
+
+    <resultMap id="BaseResultMap" type="com.raising.forward.entity.ReportRelation">
+        <result column="engineering_uuid" property="engineeringUUID"/>
+        <result column="report_date" property="reportDate"/>
+        <result column="report_time" property="reportTime"/>
+        <result column="result_table_uuid" property="resultTableUUID"/>
+    </resultMap>
+
+    <select id="getReportRelation" parameterType="com.alibaba.fastjson.JSONObject" resultMap="BaseResultMap">
+        SELECT * FROM "${tenant}"."report_relation"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="engineeringUUID != null">
+                and engineering_uuid=#{engineeringUUID}
+            </if>
+            <if test="reportTimes != null">
+                and "report_time"=#{reportTimes}
+            </if>
+            <if test="reportDate != null">
+                and "report_date"=#{reportDate}
+            </if>
+        </trim>
+    </select>
+
+
+    <select id="getLastReportRelationByEngUUID" parameterType="com.alibaba.fastjson.JSONObject"
+            resultMap="BaseResultMap">
+        select * from
+        "${tenant}"."report_relation"
+        where report_date in
+        (select max(report_date)
+        from "${tenant}"."report_relation") and engineering_uuid=#{engineeringUUID}
+    </select>
+
+
+    <insert id="insertReportRelation" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into
+        "${tenant}"."report_relation"
+        (engineering_uuid,
+        report_date,
+        report_time,
+        result_table_uuid)
+        values
+        (#{reportRelation.engineeringUUID},
+        #{reportRelation.reportDate},
+        #{reportRelation.reportTime},
+        #{reportRelation.resultTableUUID})
+    </insert>
+
+</mapper>

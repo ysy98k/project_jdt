@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NewSectionManage">
+    <select id="getSectionManages" parameterType="com.raising.backstage.entity.SectionManage"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        id as "sectionId",
+        "name" as "sectionName",
+        create_time as "createTime",
+        collector_name as "collectorName",
+        ccs_id as "ccsId"
+        from
+        "${tenant}".t_section
+        where 1 = 1
+        <if test="sectionId != null">
+            and id = #{sectionId}
+        </if>
+        <if test="sectionName != null and sectionName!= ''">
+            and "name" like '%${sectionName}%'
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time like '%${createTime}%'
+        </if>
+        <if test="collectorName != null and collectorName != ''">
+            and collector_name = #{collectorName}
+        </if>
+        <if test="ccsId != null and ccsId != ''">
+             and ccs_id like '%${ccsId}%'
+        </if>
+    </select>
+
+</mapper>

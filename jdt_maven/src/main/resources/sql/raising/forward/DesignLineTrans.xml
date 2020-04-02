@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.DesignLineMapper">
+    <select id="query" parameterType="com.raising.forward.entity.DesignLine"
+            resultType="com.raising.forward.entity.DesignLine">
+        select
+        "table_increment_pk" as "id",
+        "x" as "x",
+        "y" as "y",
+        "z" as "z",
+        "pro_id" as "projectId",
+        "designmileage" as "designmileage",
+        "amuzith" as "amuzith",
+        "slope" as "slope",
+        "mapmileage" as "mapmileage",
+        "id" as "clientId"
+        from
+        "${tenant}"."d_coordinatelist"
+        where
+        pro_id =#{cookieId}
+        ORDER BY designmileage
+    </select>
+
+    <select id="validate" parameterType="com.raising.forward.entity.DesignLine" resultType="Integer">
+        <![CDATA[ select count(section_id) from "${tenant}"."d_coordinatelist" where pro_id=#{cookieId} ]]>
+    </select>
+
+    <insert id="insert" parameterType="com.raising.forward.entity.DesignLine"
+            useGeneratedKeys="true" keyProperty="designLine.id">
+        insert into
+        "${tenant}"."d_coordinatelist"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            "pro_id", "x", "y",
+            "z","designmileage","amuzith",
+            "slope","dist","mapmileage",
+            <if test="clientId != null">
+                "id",
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            #{designLine.cookieId}, #{designLine.x},#{designLine.y},#{designLine.z},
+            #{designLine.designmileage},#{designLine.amuzith},#{designLine.slope},
+            #{designLine.dist},#{designLine.mapmileage},
+            <if test="clientId != null">
+                #{clientId},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" parameterType="com.raising.forward.entity.DesignLine">
+        delete from
+        "${tenant}"."d_coordinatelist" where pro_id=#{cookieId}
+    </delete>
+</mapper>

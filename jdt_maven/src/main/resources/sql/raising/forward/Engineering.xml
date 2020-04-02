@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.Engineering">
+
+    <resultMap id="BaseResultMap" type="com.raising.forward.entity.Engineering">
+        <id column="uuid" property="engineeringUUID"/>
+        <result column="engineering_name" property="engineeringName"/>
+        <result column="project_id" property="projectID"/>
+        <result column="project" property="project"/>
+        <result column="construction_company" property="constructionCompany"/>
+        <result column="supervision_company" property="supervisionCompany"/>
+        <result column="monitoring_company" property="monitoringCompany"/>
+        <result column="instrument_model" property="instrumentModel"/>
+    </resultMap>
+
+    <select id="getEngineering" parameterType="com.alibaba.fastjson.JSONObject" resultMap="BaseResultMap">
+        SELECT * FROM "raising"."engineering"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="engineeringName != null">
+                and engineering_name=#{engineeringName}
+            </if>
+            <if test="projectid != null">
+                and "project_id"=#{projectid}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insertEngineering" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into
+        "raising"."engineering"(uuid,engineering_name,project,construction_company,supervision_company,monitoring_company,instrument_model,project_id)
+        values(
+        #{engineering.engineeringUUID},
+        #{engineering.engineeringName},
+        #{engineering.project},
+        #{engineering.constructionCompany},
+        #{engineering.supervisionCompany},
+        #{engineering.monitoringCompany},
+        #{engineering.instrumentModel},
+        #{engineering.projectID}
+        )
+    </insert>
+
+    <update id="updateEngineering" parameterType="com.alibaba.fastjson.JSONObject">
+        update "raising"."engineering"
+        <trim prefix="set" suffixOverrides=",">
+            <if test="engineering.engineeringName != null">engineering_name= #{engineering.engineeringName},</if>
+            <if test="engineering.project != null">project= #{engineering.project},</if>
+            <if test="engineering.constructionCompany != null">construction_company=
+                #{engineering.constructionCompany},
+            </if>
+            <if test="engineering.supervisionCompany != null">supervision_company= #{engineering.supervisionCompany},
+            </if>
+            <if test="engineering.monitoringCompany != null">monitoring_company= #{engineering.monitoringCompany},</if>
+            <if test="engineering.instrumentModel != null">instrument_model= #{engineering.instrumentModel},</if>
+        </trim>
+        where uuid = #{engineering.engineeringUUID}
+    </update>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "uuid","engineering_name","project","construction_company",
+        "supervision_company","monitoring_company","instrument_model","project_id",
+        "id"
+        from "raising"."engineering"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and "id" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "id" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("id")
+        from "raising"."engineering"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+</mapper>

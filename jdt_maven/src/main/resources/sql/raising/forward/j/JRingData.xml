@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.j.mapper.JRingData">
+
+
+    <select id="getArData" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id" as "projectId",
+        "MR_Ring_Num" as "MR_Ring_Num",
+        "dt" as "dt",
+        "CurMS" as "CurMS",
+        "ARData" as "ARData"
+        from
+        "raising"."j_ringdata"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId != null">
+                and "pro_id" = #{projectId}
+            </if>
+            <choose>
+                <when test="MR_Ring_Num != null">
+                    and "MR_Ring_Num" = #{MR_Ring_Num}
+                </when>
+                <when test="startRingNum != null and endRingNum == null">
+                    and "MR_Ring_Num" <![CDATA[ >= ]]> #{startRingNum}
+                </when>
+                <when test="startRingNum == null and endRingNum != null">
+                    and "MR_Ring_Num" <![CDATA[ <= ]]> #{endRingNum}
+                </when>
+                <when test="startRingNum != null and endRingNum != null">
+                    and "MR_Ring_Num" between #{startRingNum} and  #{endRingNum}
+                </when>
+            </choose>
+        </trim>
+        order by "MR_Ring_Num" ,"CurMS"
+    </select>
+
+    <select id="getTaskTime" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "RingTotalTime" as "ringTotalTime",
+        "RingTunnellingTime" as "tunnellingTime",
+        "RingAssemblingTime" as "assemblingTime"
+        from
+        "raising"."j_ringdata"
+        where
+        "pro_id" = #{projectId}
+        and "MR_Ring_Num" = #{MR_Ring_Num}
+    </select>
+
+    <select id="getCount" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select
+        count("table_increment_pk")
+        from
+        "raising"."j_ringdata"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId != null">
+                and "pro_id" = #{projectId}
+            </if>
+            <choose>
+                <when test="MR_Ring_Num != null">
+                    and "MR_Ring_Num" = #{MR_Ring_Num}
+                </when>
+                <when test="startRingNum != null and endRingNum == null">
+                    and "MR_Ring_Num" <![CDATA[ >= ]]> #{startRingNum}
+                </when>
+                <when test="startRingNum == null and endRingNum != null">
+                    and "MR_Ring_Num" <![CDATA[ <= ]]> #{endRingNum}
+                </when>
+                <when test="startRingNum != null and endRingNum != null">
+                    and "MR_Ring_Num" between #{startRingNum} and  #{endRingNum}
+                </when>
+            </choose>
+        </trim>
+    </select>
+
+    <select id="getRingNum" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select
+        "MR_Ring_Num"
+        from
+        "raising"."j_ringdata"
+        where "pro_id" = #{projectId} group by "MR_Ring_Num" order by "MR_Ring_Num" asc
+    </select>
+
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        r."dt" as "ringDate",
+        r."MR_Ring_Num" as "ringNum",
+        r."RingStartTime" as "ringStartTime",
+        r."RingEndTime" as "ringEndTime",
+        r."RingTotalTime" as "ringTotalTime",
+        r."RingTunnellingTime" as "tunnellingTime",
+        r."RingAssemblingTime" as "assemblingTime",
+        r."ARData" as "ARData",
+        p."start_time" as "startTime" ,
+        p."end_time" as "endTime" ,
+        p."ring_total" as "ringTotal",
+        p."day_shift_start" as "dayShiftStart",
+        p."day_shift_end" as "dayShiftEnd"
+        from
+        "raising".j_ringdata r,"raising".project p
+        where
+        r."pro_id" = p."pro_id"
+        <trim>
+            <if test="projectId != null">
+                and r."pro_id" = #{projectId}
+            </if>
+            <if test="startTime != null">
+                and r."dt" >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and r."dt" &lt; #{endTime}
+            </if>
+        </trim>
+        order by "dt" asc
+    </select>
+
+    <select id="getRowsForStatis" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id" as "projectId",
+        "MR_Ring_Num" as "MR_Ring_Num",
+        "dt" as "dt"
+        from
+        "raising".j_ringdata
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectIds != null">
+                and  "pro_id" in
+                <foreach collection="projectIds" open="(" close=")"  index="key" item="value" separator="," >
+                    #{value}
+                </foreach>
+            </if>
+            <if test="startTime != null">
+                and "dt" <![CDATA[ >= ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                and "dt" <![CDATA[ <= ]]> #{endTime}
+            </if>
+            <choose>
+                <when test="MR_Ring_Num != null">
+                    and "MR_Ring_Num" = #{MR_Ring_Num}
+                </when>
+                <when test="startRingNum != null and endRingNum == null">
+                    and "MR_Ring_Num" <![CDATA[ >= ]]> #{startRingNum}
+                </when>
+                <when test="startRingNum == null and endRingNum != null">
+                    and "MR_Ring_Num" <![CDATA[ <= ]]> #{endRingNum}
+                </when>
+                <when test="startRingNum != null and endRingNum != null">
+                    and "MR_Ring_Num" between #{startRingNum} and  #{endRingNum}
+                </when>
+            </choose>
+        </trim>
+        order by "dt" asc
+    </select>
+
+    <!--进度管理，材料消耗-->
+    <select id="getCompareTime" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        r."dt" as "dt",
+        p."day_shift_start" as "dayShiftStart",
+        p."day_shift_end" as "dayShiftEnd"
+        from "raising".j_ringdata r,"raising".project p
+        where
+        r."pro_id" = p."pro_id"
+        and r."pro_id" = #{projectId}
+        order by "dt" desc
+        limit 1
+    </select>
+
+    <!--进度管理，材料消耗-->
+    <select id="getARDataAndProjectInfo" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        r."dt" as "ringDate",
+        r."MR_Ring_Num" as "ringNum",
+        r."RingStartTime" as "ringStartTime",
+        r."RingEndTime" as "ringEndTime",
+        r."RingTotalTime" as "ringTotalTime",
+        r."RingTunnellingTime" as "tunnellingTime",
+        r."RingAssemblingTime" as "assemblingTime",
+        r."ARData" as "ARData",
+        p."start_time" as "startTime" ,
+        p."end_time" as "endTime" ,
+        p."ring_total" as "ringTotal",
+        p."day_shift_start" as "dayShiftStart",
+        p."day_shift_end" as "dayShiftEnd"
+        from
+        "raising".j_ringdata r,"raising".project p
+        where
+        r."pro_id" = p."pro_id"
+        <trim>
+            <if test="projectId != null">
+                and r."pro_id" = #{projectId}
+            </if>
+            <if test="startTime != null">
+                and r."dt" >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and r."dt" &lt; #{endTime}
+            </if>
+        </trim>
+        order by "dt" asc
+    </select>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select "dt","MR_Ring_Num", "CurMS", "CurRS", "InitialS", "FTunneling",
+        "FPreparing", "FAssemblying", "FStartCondition", "FEndCondition", "FStart",
+        "FEnd", "FTunnel", "FAssembly", "FLeft", "FRight", "FExtend","FShorten",
+        "FCorotation","FReverse","pro_id","id","ARData","DRData","AlarmData",
+        "table_increment_pk","timestamp","RingStartTime","RingEndTime","RingTotalTime",
+        "RingTunnellingTime","RingAssemblingTime","MR_Des_A1Mileage"
+         from "raising"."j_ringdata"
+         where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and "table_increment_pk" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "table_increment_pk" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("table_increment_pk")
+        from "raising"."j_ringdata"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+</mapper>

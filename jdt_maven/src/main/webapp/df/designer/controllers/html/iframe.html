@@ -1,0 +1,42 @@
+<div data-id="control">
+	<!-- class="box box-element ui-draggable"-->
+	<div class="view">
+		<iframe id="control"  class="base-widget-right" style="width: 100%"></iframe>
+	</div>
+	<div class="configView">
+		<div class="row">
+			<div class="col-sm-12">
+				<label for="widgetId" title="id"
+					class="col-sm-6 no-padding smaller-20"> iFrame组件ID</label><label
+					id="widgetId" class="col-sm-6 no-padding smaller-20"></label>
+			</div>
+		</div>
+		<div class="hr hr-dotted hr8"></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<label for="height" title="高度支持像素px和百分比%"
+					class="col-sm-6 no-padding smaller-20"> 组件高度</label><input
+					id="height" type="text" class="col-sm-6" />
+			</div>
+		</div>		
+		<div class="row">
+			<div class="col-sm-12">
+				<label for="srcInput" title="页面信息管理中已注册的页面代码"
+					class="col-sm-6 no-padding smaller-20"> 页面代码</label><input
+					id="srcInput" data-attribute="srcInput" type="text"
+					class="col-sm-6" />
+			</div>
+		</div>
+        <div id="attribute">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="nonePadding" title="运行态时有效，启用后无边框无间隔" class="col-sm-6 no-padding smaller-20">是否去边</label><input
+                        id="nonePadding" data-attribute="nonePadding"
+                        class="col-sm-6 ace ace-switch ace-switch-3" data-level="nonePadding" type="checkbox" /><span
+                        class="lbl"></span>
+                </div>
+            </div>
+        </div>
+	</div>
+	<div class="dataConfigView"></div>
+</div>

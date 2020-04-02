@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 这里主要是设置自定义的单Realm应用,若有多个Realm,可使用'realms'属性代替 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="authorizer" ref="aasModularRealmAuthorizer"/>
+        <property name="realm" ref="authServiceRealm"/>
+        <property name="cacheManager" ref="springCacheManager"/>
+    </bean>
+
+    <bean id="springCacheManager" class="com.baosight.aas.auth.cache.SpringCacheManagerWrapper">
+        <property name="cacheManager" ref="ehcacheManager"/>
+    </bean>
+
+    <!-- 继承自AuthorizingRealm的自定义Realm,即指定Shiro验证用户登录的类为自定义的ShiroDbRealm.java -->
+    <bean id="authServiceRealm" class="com.raising.realm.NewAuthServiceRealm">
+        <property name="credentialsMatcher" ref="credentialsMatcher"/>
+        <property name="cachingEnabled" value="false"/>
+        <property name="authenticationCachingEnabled" value="false"/>
+        <property name="authenticationCacheName" value="authenticationCache"/>
+        <property name="authorizationCachingEnabled" value="false"/>
+        <property name="authorizationCacheName" value="authorizationCache"/>
+    </bean>
+
+    <bean id="credentialsMatcher" class="com.baosight.aas.auth.credentials.AasCredentialsMatcher">
+        <property name="loginCredentialsMatcher" ref="loginCredentialsMatcher"/>
+        <property name="tokenCredentialsMatcher" ref="tokenCredentialsMatcher"/>
+    </bean>
+
+    <bean id="loginCredentialsMatcher" class="com.baosight.aas.auth.credentials.UsernameCredentialsMatcher"/>
+
+    <bean id="tokenCredentialsMatcher" class="com.baosight.aas.auth.credentials.TokenCredentialsMatcher"/>
+
+    <bean id="aasModularRealmAuthorizer" class="com.baosight.aas.auth.resolver.AasModularRealmAuthorizer">
+    </bean>
+
+    <bean id="formAuthenticationFilter" class="com.baosight.aas.auth.filter.ClientAuthenticationFilter">
+        <property name="usernameParam" value="inputUserHidden"/>
+        <property name="passwordParam" value="inputPw"/>
+        <property name="loginType" value="loginType"/>
+        <property name="loginUrl" value="/loginCheck.do"/>
+        <property name="successUrl" value="/df/console/frameTop.do"/>
+    </bean>
+
+    <bean id="buttonInfoAccessor" class="com.baosight.df.authaccessor.ButtonInfoAuthAccessor"/>
+
+    <bean id="buttonFilter" class="com.baosight.aas.auth.filter.ButtonAuthFilter">
+        <property name="accessor" ref="buttonInfoAccessor"/>
+    </bean>
+
+    <bean id="forceLogout" class="com.baosight.aas.auth.filter.ForceLogoutFilter"/>
+
+    <bean id="logoutFilter" class="com.baosight.aas.auth.filter.ClientLogoutFilter">
+        <property name="redirectUrl" value="/login.do"/>
+    </bean>
+
+    <bean id="AuthRequestFilter" class="com.baosight.aas.auth.filter.AuthRequestFilter"/>
+
+    <!-- Shiro主过滤器本身功能十分强大,其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行 -->
+    <!-- Web应用中,Shiro可控制的Web请求必须经过Shiro主过滤器的拦截,Shiro对基于Spring的Web应用提供了完美的支持 -->
+    <bean id="shiroFilter" class="com.baosight.aas.auth.filter.factory.ClientShiroFilterFactoryBean">
+        <!-- Shiro的核心安全接口,这个属性是必须的 -->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 要求登录时的链接(可根据项目的URL进行替换),非必须的属性,默认会自动寻找Web工程根目录下的"/login.do"页面 -->
+        <property name="loginUrl" value="/login.do"/>
+        <!-- 登录成功后要跳转的连接() -->
+        <property name="successUrl" value="/df/console/frameTop.do"/>
+        <!-- 用户访问未对其授权的资源时,所显示的连接 -->
+        <property name="unauthorizedUrl" value="/unauthor.jsp"/>
+        <property name="filters">
+            <util:map>
+                <entry key="authc" value-ref="formAuthenticationFilter"/>
+                <entry key="logout" value-ref="logoutFilter"/>
+                <entry key="forceLogout" value-ref="forceLogout"/>
+                <!--<entry key="button" value-ref="buttonFilter"/>-->
+                <!--<entry key="AuthRequest" value-ref="AuthRequestFilter"/>-->
+                <entry key="kickout" value-ref="kickoutSessionControlFilter"/>
+            </util:map>
+        </property>
+        <!-- Shiro连接约束配置,即过滤链的定义 -->
+        <!-- 此处可配合我的这篇文章来理解各个过滤连的作用http://blog.csdn.net/jadyer/article/details/12172839 -->
+        <!-- 下面value值的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的 -->
+        <!-- anon：它对应的过滤器里面是空的,什么都没做,这里.do和.jsp后面的*表示参数,比方说login.jsp?main这种 -->
+        <!-- authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter -->
+        <!-- / = anon-->
+        <property name="filterChainDefinitions">
+            <value>
+                /**/unauthorized.jsp = anon
+                /**/resourceNotExist.jsp = anon
+                /logout = logout
+                /**/*.jpg =anon
+                /**/*.jpeg =anon
+                /**/*.gif =anon
+                /**/*.png = anon
+                /**/*.js = anon
+                /**/*.ico = anon
+                /**/*.css* = anon
+                /**/*.map = anon
+                /**/*.ttf* = anon
+                /**/*.woff* = anon
+                /**/*.eot* = anon
+                /**/*.svg* = anon
+                /index.html = anon
+                /index.jsp = anon
+                /index.do = anon
+                /cvsPage.jsp = anon
+                /logo.jpg = anon
+                /raising/forward/cvsPage.do = anon
+                /raising/data/* = anon
+                /df/metamanage/frameSetting.do/queryLogo.do = anon
+                /bigdatademo/index.do = anon
+                /bigdatademo/detail.do = anon
+                /login.do = anon
+                /loginCheck.do = forceLogout,authc,kickout
+                /rest/api/**/* = anon
+                /test/**/* = anon
+                /raising/forward/uploadFile.do = anon
+                <!--/df/console/frame.do = roles[frame]-->
+                /users/multiImport = anon
+                /raising/backstage/* = perms[frame]
+                /df/console/frame.do = perms[frame]
+                /df/bxwidget/* = perms[frame]
+                /**/*.jsp = forceLogout,authc,kickout
+                /**/*.do = forceLogout,authc,kickout
+                /** = forceLogout,authc
+            </value>
+        </property>
+    </bean>
+
+    <!-- AOP式方法级权限检查 -->
+    <!--<aop:config proxy-target-class="true"/>-->
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- 提供 shiro 权限注解 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <bean id="authManager" class="com.baosight.aas.auth.mgr.DefaultAuthManager">
+        <property name="invoker" ref="authInvoker"/>
+    </bean>
+
+    <bean id="authInvoker" class="com.baosight.aas.auth.invoker.DefaultServiceInvoker">
+        <property name="serviceAddress" value="http://${aas.host}/${aas.rest_service_name}"/>
+    </bean>
+
+
+
+    <!--并发登录控制-->
+    <bean id="kickoutSessionControlFilter" class="com.baosight.common.filter.KickoutSessionControlFilter">
+        <property name="cacheManager" ref="springCacheManager"/>
+        <property name="kickoutAfter" value="false"/>
+        <property name="maxSession" value="1"/>
+        <property name="kickoutUrl" value="/login.do"/>
+    </bean>
+</beans>

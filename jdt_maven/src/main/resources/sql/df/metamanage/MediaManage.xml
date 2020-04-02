@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MediaManage">
+
+    <select id="query" parameterType="com.baosight.df.metamanage.entity.MediaManage"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        MEDIA_ID as "mediaId",
+        MEDIA_NAME as "mediaName",
+        MEDIA_TYPE as "mediaType",
+        MEDIA_DESC as "mediaDesc",
+        MEDIA_PATH as "mediaPath",
+        MEDIA_CREATOR as "mediaCreator",
+        MEDIA_CREATETIME as "mediaCreateTime",
+        MEDIA_MODIFIER as "mediaModifier",
+        MEDIA_MODITIME as "mediaModitime"
+        from
+        "${tenant}".MEDIAMANAGE
+        where 1 = 1
+        <if test="mediaId != null">
+            and MEDIA_ID = #{mediaId}
+        </if>
+        <if test="mediaName != null and mediaName != ''">
+            and MEDIA_NAME like '%${mediaName}%'
+        </if>
+        <if test="mediaType != null and mediaType != ''">
+            and MEDIA_TYPE = #{mediaType}
+        </if>
+        <if test="fieldName != null and ascDesc != null">
+            order by
+            <choose>
+                <when test="fieldName == 'mediaId'">
+                    MEDIA_ID
+                </when>
+                <when test="fieldName == 'mediaName'">
+                    MEDIA_NAME
+                </when>
+                <when test="fieldName == 'mediaType'">
+                    MEDIA_TYPE
+                </when>
+            </choose>
+            <if test="ascDesc == 'asc'">
+                asc
+            </if>
+            <if test="ascDesc == 'desc'">
+                desc
+            </if>
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from "${tenant}".MEDIAMANAGE where 1=1
+        <if test="mediaName != null and mediaName != ''">
+            and MEDIA_NAME like '%${mediaName}%'
+        </if>
+        <if test="mediaType != null and mediaType != ''">
+            and MEDIA_TYPE = #{mediaType}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.baosight.df.metamanage.entity.MediaManage"
+            useGeneratedKeys="true" keyProperty="mediaId">
+        insert into
+        "${tenant}".MEDIAMANAGE
+        (MEDIA_NAME, MEDIA_TYPE,MEDIA_DESC,MEDIA_CREATOR,MEDIA_CREATETIME)
+        values
+        (#{mediaName}, #{mediaType},#{mediaDesc},#{mediaCreator},#{mediaCreateTime})
+    </insert>
+
+    <update id="uploadUpdate" parameterType="com.baosight.df.metamanage.entity.MediaManage">
+        update "${tenant}".MEDIAMANAGE
+        SET
+        MEDIA_PATH = #{mediaPath}
+        WHERE
+        MEDIA_ID = #{mediaId}
+
+    </update>
+
+    <delete id="delete" parameterType="com.baosight.df.metamanage.entity.MediaManage">
+        delete from
+        "${tenant}".MEDIAMANAGE where MEDIA_ID=#{mediaId}
+    </delete>
+
+    <update id="update" parameterType="com.baosight.df.metamanage.entity.MediaManage">
+        update "${tenant}".MEDIAMANAGE
+        <set>
+            <if test="mediaName != null">
+                MEDIA_NAME = #{mediaName},
+            </if>
+            <if test="mediaDesc != null">
+                MEDIA_DESC = #{mediaDesc},
+            </if>
+            <if test="mediaType != null">
+                MEDIA_TYPE = #{mediaType},
+            </if>
+            <if test="mediaModifier != null">
+                MEDIA_MODIFIER = #{mediaModifier},
+            </if>
+            <if test="mediaModitime != null">
+                MEDIA_MODITIME = #{mediaModitime},
+            </if>
+        </set>
+        where MEDIA_ID = #{mediaId}
+    </update>
+
+
+</mapper>

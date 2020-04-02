@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.ProjectInfoMapper">
+    <sql id="sql_select">
+        p."pro_id" as "projectId",
+        p."pro_name" as "projectName",
+        p."collector_name" as "collectorName" ,
+        p."tunnel_direction" as "tunnelDrection" ,
+        p."tbm_id" as "tbmId" ,
+        p."total_length" as "totalLength" ,
+        p."pro_situation" as "projectSituation" ,
+        p."pro_location" as "projectLocation" ,
+        p."start_time" as "startTime" ,
+        p."end_time" as "endTime" ,
+        p."geology_info" as "geologyInfo" ,
+        p."section_id" as "sectionId" ,
+        p."create_time" as "createTime" ,
+        p."update_time" as "updateTime" ,
+        p."status" as "status" ,
+        p."template_name" as "templateName",
+        p."build_unit" as "buildUnit",
+        p."supervisor" as "supervisor",
+        p."ring_total" as "ringTotal",
+        p."start_mileage" as "startMileage",
+        p."end_mileage" as "endMileage",
+        p."day_shift_start" as "dayShiftStart",
+        p."day_shift_end" as "dayShiftEnd"
+    </sql>
+
+    <select id="getRowsForBackstage" parameterType="com.raising.forward.entity.ProjectInfo" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid="sql_select"></include>,
+        s."name" as "sectionName",
+        s."owner" as "sectionOwner",
+        s."ccs_city" as "sectionCcsId",
+        s."ccs_section_type" as "ccsSectionType",
+        t."name" as "tbmName",
+        t."factory" as "factory",
+        t."owner" as "tbmOwner",
+        t."rms_version" as "rmsVersion",
+        t."ccs_type" as "tbmCcsType"
+        from
+        "raising"."project" p LEFT JOIN "raising"."tbm_info" t on p."tbm_id" = t."id" LEFT JOIN
+        "raising"."t_section" s on p."section_id" = s."id"
+        where
+        1 = 1
+        <if test="projectId != null">
+            and p."pro_id" = #{projectId}
+        </if>
+        <if test="projectName != null and projectName!= ''">
+            and p."pro_name" like concat('%',#{projectName},'%')
+        </if>
+        <if test="collectorName != null and collectorName != ''">
+            and p."collector_name" like concat('%',#{collectorName},'%')
+        </if>
+        <if test="buildUnit != null and  buildUnit != ''">
+            and p."build_unit" like concat('%',#{buildUnit},'%')
+        </if>
+        <if test="supervisor != null and supervisor!= ''">
+            and p."supervisor" like concat('%',#{supervisor},'%')
+        </if>
+        <if test="sectionName != null and sectionName != ''">
+            and s."name" LIKE concat('%',#{sectionName},'%')
+        </if>
+        <if test="sectionOwner != null and sectionOwner != ''">
+            and s."owner" = #{sectionOwner}
+        </if>
+        <if test="sectionCcsId != null and sectionCcsId != ''">
+            and s."ccs_city" = #{sectionCcsId}
+        </if>
+        <if test="ccsSectionType != null and ccsSectionType != ''">
+            and s."ccs_section_type" = #{ccsSectionType}
+        </if>
+        <if test="tbmName != null and tbmName != ''">
+            and t."name" LIKE concat('%',#{tbmName},'%')
+        </if>
+        <if test="factory != null and factory != ''">
+            and t."factory" = #{factory}
+        </if>
+        <if test="tbmOwner != null and tbmOwner != ''">
+            and t."owner" = #{tbmOwner}
+        </if>
+        <if test="rmsVersion != null and rmsVersion != ''">
+            and t."rms_version" = #{rmsVersion}
+        </if>
+        <if test="tbmCcsType != null and tbmCcsType != ''">
+            and t."ccs_type" = #{tbmCcsType}
+        </if>
+    </select>
+
+    <select id="getTemplate" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+       select "project"."template_name" as "templateName",
+       "project"."total_length" as "totalLength",
+       "project"."end_mileage" as "totalMileage",
+       "project"."pro_name" as "selected_name",
+       "project"."ring_total" as "ringTotal",
+       "project"."tbm_id" as "tbmId"
+        from "raising"."project"
+        where "collector_name" = #{collectorName}
+    </select>
+
+    <select id="getTbmName" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+       select "tbm_info"."name" as "tbmName"
+        from "raising"."tbm_info"
+        where "id" = #{tbmId}
+    </select>
+
+    <select id="countForBackstage" parameterType="com.raising.forward.entity.ProjectInfo" resultType="int">
+        select
+        count(1)
+        from
+        "raising"."project" p LEFT JOIN "raising"."tbm_info" t on p."tbm_id" = t."id" LEFT JOIN
+        "raising"."t_section" s on p."section_id" = s."id"
+        where
+        1 = 1
+        <if test="projectId != null">
+            and p."pro_id" = #{projectId}
+        </if>
+        <if test="projectName != null and projectName!= ''">
+            and p."pro_name" like concat('%',#{projectName},'%')
+        </if>
+        <if test="collectorName != null and collectorName != ''">
+            and p."collector_name" like concat('%',#{collectorName},'%')
+        </if>
+        <if test="buildUnit != null and  buildUnit != ''">
+            and p."build_unit" like concat('%',#{buildUnit},'%')
+        </if>
+        <if test="supervisor != null and supervisor!= ''">
+            and p."supervisor" like concat('%',#{supervisor},'%')
+        </if>
+        <if test="sectionName != null and sectionName != ''">
+            and s."name" LIKE concat('%',#{sectionName},'%')
+        </if>
+        <if test="sectionOwner != null and sectionOwner != ''">
+            and s."owner" = #{sectionOwner}
+        </if>
+        <if test="sectionCcsId != null and sectionCcsId != ''">
+            and s."ccs_city" = #{sectionCcsId}
+        </if>
+        <if test="ccsSectionType != null and ccsSectionType != ''">
+            and s."ccs_section_type" = #{ccsSectionType}
+        </if>
+        <if test="tbmName != null and tbmName != ''">
+            and t."name" LIKE concat('%',#{tbmName},'%')
+        </if>
+        <if test="factory != null and factory != ''">
+            and t."factory" = #{factory}
+        </if>
+        <if test="tbmOwner != null and tbmOwner != ''">
+            and t."owner" = #{tbmOwner}
+        </if>
+        <if test="rmsVersion != null and rmsVersion != ''">
+            and t."rms_version" = #{rmsVersion}
+        </if>
+        <if test="tbmCcsType != null and tbmCcsType != ''">
+            and t."ccs_type" = #{tbmCcsType}
+        </if>
+    </select>
+
+    <select id="getRowsWithResources" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid="sql_select"></include>,
+        t."name" as "tbmName",
+        t."id" as "tbmId",
+        t."factory" as "factory",
+        t."ccs_type" as "tbmCCSId",
+        s."ccs_city" as "ccsId",
+        s."name" as "sectionName",
+        s."map_coordinate_center" as "mapCoordinateCenter",
+        s."map_coordinate_left" as "mapCoordinateLeft",
+        s."map_coordinate_right" as "mapCoordinateRight"
+        from
+        "raising"."project" p LEFT JOIN "raising"."tbm_info" t on p."tbm_id" = t."id" LEFT JOIN
+        "raising"."t_section" s on p."section_id" = s."id"
+        where
+        1 = 1
+        <if test="collectorNameList != null">
+            and "collector_name"
+            <trim prefix="in(" suffix=")">
+                <foreach collection="collectorNameList" item="value" separator=",">
+                    #{value}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+    <select id="getResourcesAndOrderBy" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid="sql_select"></include>,
+        t."name" as "tbmName",
+        t."id" as "tbmId",
+        t."factory" as "factory",
+        t."ccs_type" as "tbmCCSId",
+        s."ccs_city" as "ccsId",
+        s."owner" as "sectionOwner",
+        s."name" as "sectionName"
+        from
+        "raising"."project" p LEFT JOIN "raising"."tbm_info" t on p."tbm_id" = t."id" LEFT JOIN
+        "raising"."t_section" s on p."section_id" = s."id"
+        where
+        1 = 1
+        <if test="collectorNameList != null">
+            and "collector_name"
+            <trim prefix="in(" suffix=")">
+                <foreach collection="collectorNameList" item="value" separator=",">
+                    #{value}
+                </foreach>
+            </trim>
+        </if>
+        order by s."ccs_city"
+    </select>
+
+    <select id="getDefaultProject" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        p."pro_id" as "projectId",
+        p."pro_name" as "projectName",
+        p."collector_name" as "collectorName",
+        p."total_length" as "totalLength" ,
+        p."start_mileage" as "startMileage",
+        p."end_mileage" as "endMileage",
+        p."ring_total" as "ringTotal",
+        t."name" as "tbmName"
+        from
+        "raising"."project" p, "raising"."tbm_info" t
+        where
+        t."id" = p."tbm_id"
+        <if test="collectorNameList != null">
+            and "collector_name"
+            <trim prefix="in(" suffix=")">
+                <foreach collection="collectorNameList" item="value" separator=",">
+                    #{value}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+    <select id="getTotalInfos" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid="sql_select"></include>,
+        t."name" as "tbmName",
+        t."factory" as "factory",
+        t."ccs_type" as "tbmCCSId",
+        s."ccs_city" as "cityCCSId",
+        s."name" as "sectionName",
+        s."owner" as "sectionOwner"
+        from
+        "raising"."project" p LEFT JOIN "raising"."tbm_info" t on p."tbm_id" = t."id" LEFT JOIN
+        "raising"."t_section" s on p."section_id" = s."id"
+        where
+        1 = 1
+        <if test="collectorNameList != null">
+            and "collector_name"
+            <trim prefix="in(" suffix=")">
+                <foreach collection="collectorNameList" item="value" separator=",">
+                    #{value}
+                </foreach>
+            </trim>
+        </if>
+
+    </select>
+
+    <select id="getSections" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id" as "projectId",
+        s."name" as "sectionName",
+        p."section_id" as "sectionId"
+        from
+        "raising"."project" p,"raising"."t_section" s
+        where
+        p."section_id" = s."id"
+    </select>
+
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid="sql_select"></include>,
+        s."name" as "sectionName",
+        t."name" as "tbmName"
+        from
+        "raising"."project" p LEFT JOIN "raising"."tbm_info" t on p."tbm_id" = t."id" LEFT JOIN
+        "raising"."t_section" s on p."section_id" = s."id"
+        where
+        1 = 1
+        <if test="projectId != null">
+            and p."pro_id" = #{projectId}
+        </if>
+        <if test="sectionId != null">
+            and p."section_id" = #{sectionId}
+        </if>
+        <if test="projectName != null and projectName!= ''">
+            and p."pro_name" like concat('%',#{projectName},'%')
+        </if>
+        <if test="projectNameEq != null and projectNameEq != ''">
+            and p."pro_name" = #{projectNameEq}
+        </if>
+        <if test="collectorName != null and collectorName != ''">
+            and p."collector_name" like concat('%',#{collectorName},'%')
+        </if>
+        <if test="buildUnit != null ">
+            and p."build_unit" like concat('%',#{buildUnit},'%')
+        </if>
+
+        <if test="tbmId != null and tbmId != ''">
+            and p."tbm_id" = #{tbmId}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(1) from "raising"."project"
+    </select>
+    <!--根据名称，查询sectionId,tbmId-->
+    <select id="getSectionId" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        (
+		  select "id" from "raising"."t_section" where "name" = #{sectionName}
+	    ) as "sectionId"
+        from "raising"."project"
+        LIMIT 1 OFFSET 0
+
+    </select>
+
+    <insert id="addRows" parameterType="com.alibaba.fastjson.JSONObject"
+            useGeneratedKeys="true" keyProperty="sectionId">
+        insert into
+        "raising"."project"
+        <trim suffixOverrides="," prefix="(" suffix=")">
+            <if test='projectName !=null'>
+                "pro_name",
+            </if>
+            <if test='collectorName !=null '>
+                "collector_name",
+            </if>
+            <if test='tunnelDrection !=null '>
+                "tunnel_direction" ,
+            </if>
+            <if test='tbmId !=null '>
+                "tbm_id" ,
+            </if>
+            <if test='totalLength !=null  '>
+                "total_length" ,
+            </if>
+            <if test='projectSituation !=null '>
+                "pro_situation" ,
+            </if>
+            <if test='projectLocation !=null '>
+                "pro_location" ,
+            </if>
+            <if test='startTime !=null'>
+                "start_time" ,
+            </if>
+            <if test='endTime !=null '>
+                "end_time",
+            </if>
+            <if test='geologyInfo !=null'>
+                "geology_info" ,
+            </if>
+            <if test='sectionId !=null'>
+                "section_id" ,
+            </if>
+            <if test='templateName !=null'>
+                "template_name" ,
+            </if>
+            <if test='createTime !=null '>
+                "create_time" ,
+            </if>
+            <if test='updateTime !=null '>
+                "update_time",
+            </if>
+            <if test='status !=null'>
+                "status",
+            </if>
+            <if test='buildUnit !=null '>
+                "build_unit" ,
+            </if>
+            <if test='supervisor !=null '>
+                "supervisor",
+            </if>
+            <if test='ringTotal !=null'>
+                "ring_total",
+            </if>
+            <if test='startMileage !=null'>
+                "start_mileage",
+            </if>
+            <if test='endMileage !=null'>
+                "end_mileage",
+            </if>
+            <if test='dayShiftStart !=null'>
+                "day_shift_start",
+            </if>
+            <if test='dayShiftEnd !=null'>
+                "day_shift_end",
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test='projectName !=null'>
+                #{projectName},
+            </if>
+            <if test='collectorName !=null '>
+                #{collectorName},
+            </if>
+            <if test='tunnelDrection !=null '>
+                #{tunnelDrection},
+            </if>
+            <if test='tbmId !=null '>
+                #{tbmId},
+            </if>
+            <if test='totalLength !=null  '>
+                #{totalLength},
+            </if>
+            <if test='projectSituation !=null '>
+                #{projectSituation},
+            </if>
+            <if test='projectLocation !=null '>
+                #{projectLocation},
+            </if>
+            <if test='startTime !=null'>
+                #{startTime},
+            </if>
+            <if test='endTime !=null '>
+                #{endTime},
+            </if>
+            <if test='geologyInfo !=null'>
+                #{geologyInfo},
+            </if>
+            <if test='sectionId !=null'>
+                #{sectionId},
+            </if>
+            <if test='templateName !=null'>
+                #{templateName},
+            </if>
+            <if test='createTime !=null '>
+                #{createTime},
+            </if>
+            <if test='updateTime !=null '>
+                #{updateTime},
+            </if>
+            <if test='status !=null'>
+                #{status},
+            </if>
+            <if test='buildUnit !=null '>
+                #{buildUnit},
+            </if>
+            <if test='supervisor !=null '>
+                #{supervisor}
+                ,
+            </if>
+            <if test='ringTotal !=null'>
+                #{ringTotal},
+            </if>
+            <if test='startMileage !=null'>
+                #{startMileage},
+            </if>
+            <if test='endMileage !=null'>
+                #{endMileage},
+            </if>
+            <if test='dayShiftStart !=null'>
+                #{dayShiftStart},
+            </if>
+            <if test='dayShiftEnd !=null'>
+                #{dayShiftEnd},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.alibaba.fastjson.JSONObject">
+        update "raising"."project"
+        <trim prefix="set " suffixOverrides=",">
+            <if test='projectName !=null and projectName != "" '>
+                "pro_name" = #{projectName},
+            </if>
+            <if test='collectorName !=null and collectorName != "" '>
+                "collector_name" = #{collectorName},
+            </if>
+            <if test='tunnelDrection !=null and tunnelDrection != "" '>
+                "tunnel_direction" = #{tunnelDrection},
+            </if>
+            <if test='tbmId !=null '>
+                "tbm_id" = #{tbmId},
+            </if>
+            <if test='totalLength !=null  '>
+                "total_length" = #{totalLength},
+            </if>
+            <if test='projectSituation !=null and projectSituation != "" '>
+                "pro_situation" = #{projectSituation},
+            </if>
+            <if test='projectLocation !=null and projectLocation != "" '>
+                "pro_location" = #{projectLocation},
+            </if>
+            <if test='startTime !=null'>
+                "start_time" = #{startTime},
+            </if>
+            <if test='endTime !=null '>
+                "end_time" = #{endTime},
+            </if>
+            <if test='geologyInfo !=null and geologyInfo != "" '>
+                "geology_info" = #{geologyInfo},
+            </if>
+            <if test='sectionId !=null'>
+                "section_id" = #{sectionId},
+            </if>
+            <if test='templateName !=null'>
+                "template_name" = #{templateName},
+            </if>
+            <if test='createTime !=null '>
+                "create_time" = #{createTime},
+            </if>
+            <if test='updateTime !=null '>
+                "update_time" = #{updateTime},
+            </if>
+            <if test='status !=null and status != "" '>
+                "status" = #{status},
+            </if>
+            <if test='buildUnit !=null and buildUnit != "" '>
+                "build_unit" = #{buildUnit},
+            </if>
+            <if test='supervisor !=null and supervisor != "" '>
+                "supervisor" = #{supervisor},
+            </if>
+            <if test='ringTotal !=null'>
+                "ring_total" = #{ringTotal},
+            </if>
+            <if test='startMileage !=null'>
+                "start_mileage" = #{startMileage},
+            </if>
+            <if test='endMileage !=null'>
+                "end_mileage" = #{endMileage},
+            </if>
+            <if test='dayShiftStart !=null'>
+                "day_shift_start" = #{dayShiftStart},
+            </if>
+            <if test='dayShiftEnd !=null'>
+                "day_shift_end" = #{dayShiftEnd},
+            </if>
+        </trim>
+        where "pro_id" = #{projectId}
+    </update>
+
+    <delete id="delete" parameterType="com.alibaba.fastjson.JSONObject">
+        delete from
+        "raising"."project" where "pro_id"=#{projectId}
+    </delete>
+
+    <select id="getProjectByID" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select pro_id as projectId,pro_name as projectName from
+        "raising"."project"
+        where pro_id=#{id}
+    </select>
+
+    <select id="getInitSelect" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "build_unit" as "buildUnit",
+        "supervisor" as "supervisor"
+        from
+        "raising"."project"
+
+    </select>
+
+    <select id="getDefaultProjectInfoOfMap" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        distinct s."id",
+        s."ccs_city" as "sectionCcsId",
+        s."ccs_section_type" as "ccsSectionType",
+        s."map_coordinate_center" as "mapCoordinateCenter",
+        s."map_coordinate_left" as "mapCoordinateLeft",
+        s."map_coordinate_right" as "mapCoordinateRight",
+        p."tunnel_direction" as "tunnelDirection"
+        from
+        "raising"."project" p ,"raising"."t_section" s
+        where
+        p."section_id" = s."id" and
+        p."pro_id" = #{projectId}
+    </select>
+
+    <select id="getProjectStatusByTbm" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select status,tbm_id from "raising".project where tbm_id = #{tbmId} and start_time = (
+	        select max(start_time) from  "raising".project where tbm_id = #{tbmId}
+        )
+    </select>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        p."pro_id",
+        p."pro_name",
+        p."collector_name",
+        p."tunnel_direction",
+        p."tbm_id",
+        p."total_length",
+        p."pro_situation",
+        p."pro_location",
+        p."start_time",
+        p."end_time",
+        p."geology_info",
+        p."section_id",
+        p."create_time" ,
+        p."update_time" ,
+        p."status" ,
+        p."template_name" ,
+        p."build_unit",
+        p."supervisor",
+        p."ring_total" ,
+        p."start_mileage" ,
+        p."end_mileage",
+        p."day_shift_start",
+        p."day_shift_end"
+        from
+        "raising"."project" p
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and "pro_id" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "pro_id" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("pro_id")
+        from "raising"."project" p
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+</mapper>

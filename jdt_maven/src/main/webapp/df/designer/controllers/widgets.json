@@ -1,0 +1,293 @@
+{
+  "groups": [
+    {
+      "name": "信息化组件",
+      "tooltip" : "信息化组件",
+      "widgets": [
+        {
+          "index": 1,
+          "icon" : "./img/htmlicon/input.png",
+          "name": "文本框",
+          "type": "input",
+          "html": "controllers/html/input.html",
+          "js": "controllers/js/input.js"
+        },
+        {
+          "index": 2,
+          "icon" : "./img/htmlicon/bxgrid.png",
+          "name": "表格",
+          "type": "bxgrid",
+          "html": "controllers/html/bxgrid.html",
+          "js": "controllers/js/bxgrid.js"
+        },
+        {
+          "index": 3,
+          "icon" : "./img/htmlicon/bxtree.png",
+          "name": "树组件",
+          "type": "bxtree",
+          "html": "controllers/html/bxtree.html",
+          "js": "controllers/js/bxtree.js"
+        },
+        {
+          "index": 4,
+          "icon" : "./img/htmlicon/bxcombobox.png",
+          "name": "下拉框",
+          "type": "bxcombobox",
+          "html": "controllers/html/bxcombobox.html",
+          "js": "controllers/js/bxcombobox.js"
+        },
+        {
+          "index": 5,
+          "icon" : "./img/htmlicon/iframe.png",
+          "name": "IFrame",
+          "type": "iframe",
+          "html": "controllers/html/iframe.html",
+          "js": "controllers/js/iframe.js"
+        },
+        {
+          "index": 6,
+          "icon" : "./img/htmlicon/button.png",
+          "name": "按钮",
+          "type": "button",
+          "html": "controllers/html/button.html",
+          "js": "controllers/js/button.js"
+        },
+        {
+          "index": 7,
+          "icon" : "./img/htmlicon/label.png",
+          "name": "标签",
+          "type": "label",
+          "html": "controllers/html/label.html",
+          "js": "controllers/js/label.js"
+        },
+        {
+          "index": 8,
+          "icon" : "./img/htmlicon/radio.png",
+          "name": "单选框",
+          "type": "radio",
+          "html": "controllers/html/radio.html",
+          "js": "controllers/js/radio.js"
+        },
+        {
+          "index": 9,
+          "icon" : "./img/htmlicon/checkbox.png",
+          "name": "复选框",
+          "type": "checkbox",
+          "html": "controllers/html/checkbox.html",
+          "js": "controllers/js/checkbox.js"
+        },
+        {
+          "index": 10,
+          "icon" : "./img/htmlicon/switch.png",
+          "name": "开关按钮",
+          "type": "switch",
+          "html": "controllers/html/switch.html",
+          "js": "controllers/js/switch.js"
+        },
+        {
+          "index": 11,
+          "icon" : "./img/htmlicon/bxtimepicker.png",
+          "name": "日期框",
+          "type": "bxtimepicker",
+          "html": "controllers/html/bxtimepicker.html",
+          "js": "controllers/js/bxtimepicker.js"
+        },
+        {
+          "index": 12,
+          "icon" : "./img/htmlicon/bxprogressbar.png",
+          "name": "进度条",
+          "type": "bxprogressbar",
+          "html": "controllers/html/bxprogressbar.html",
+          "js": "controllers/js/bxprogressbar.js"
+        },
+        {
+          "index": 13,
+          "icon" : "./img/htmlicon/textarea.png",
+          "name": "文本域",
+          "type": "textarea",
+          "html": "controllers/html/textarea.html",
+          "js": "controllers/js/textarea.js"
+        },
+        {
+          "index": 14,
+          "icon" : "./img/htmlicon/image.png",
+          "name": "图片",
+          "type": "image",
+          "html": "controllers/html/image.html",
+          "js": "controllers/js/image.js"
+        }
+      ]
+    },
+    {
+      "name": "柱状图",
+      "tooltip" : "柱状图",
+      "widgets": [
+        {
+          "index": 1,
+          "icon" : "./img/bar/stand.png",
+          "name": "标准柱状图",
+          "type": "chartCol",
+          "html": "controllers/html/chart/bar/bxchartsbar.html",
+          "js": "controllers/js/chart/bar/bxchartsbarstand.js"
+        },  
+        {
+          "index": 2,
+          "icon" : "./img/bar/stack.png",
+          "name": "堆积柱状图",
+          "type": "chartColT",
+          "html": "controllers/html/chart/bar/bxchartsbar.html",
+          "js": "controllers/js/chart/bar/bxchartsbarstack.js"
+        },                
+        {
+         "index": 3,
+          "icon" : "./img/bar/standhorizontal.png",
+          "name": "标准条形图",
+          "type": "chartBar",
+          "html": "controllers/html/chart/bar/bxchartsbar.html",
+          "js": "controllers/js/chart/bar/bxchartsbarstandhorizontal.js"
+        },
+        {
+         "index": 4,
+          "icon" : "./img/bar/standhorizontalstack.png",
+          "name": "堆积条形图",
+          "type": "chartBarT",
+          "html": "controllers/html/chart/bar/bxchartsbar.html",
+          "js": "controllers/js/chart/bar/bxchartsbarstandhorizontalstack.js"
+        }
+      ]
+    },
+    {
+      "name": "折线图",
+      "tooltip" : "折线图",
+      "widgets": [
+        {
+          "index": 1,
+          "icon" : "./img/line/bxchartslinestand.png",
+          "name": "标准折线图",
+          "type": "chartLine",
+          "html": "controllers/html/chart/line/bxchartsline.html",
+          "js": "controllers/js/chart/line/bxchartslinestand.js"
+        },
+        {
+          "index": 2,
+          "icon" : "./img/line/bxchartslinestack.png",
+          "name": "堆积折线图",
+          "type": "chartLineT",
+          "html": "controllers/html/chart/line/bxchartsline.html",
+          "js": "controllers/js/chart/line/bxchartslinestack.js"
+        },
+        {
+          "index": 3,
+          "icon" : "./img/line/bxchartslinesmooth.png",
+          "name": "平滑折线图",
+          "type": "chartLineS",
+          "html": "controllers/html/chart/line/bxchartsline.html",
+          "js": "controllers/js/chart/line/bxchartslinesmooth.js"
+        },
+        {
+          "index": 4,
+          "icon" : "./img/line/bxchartslinearea.png",
+          "name": "标准面积图",
+          "type": "chartArea",
+          "html": "controllers/html/chart/line/bxchartsline.html",
+          "js": "controllers/js/chart/line/bxchartslinearea.js"
+        },
+        {
+          "index": 5,
+          "icon" : "./img/line/bxchartslineareastack.png",
+          "name": "堆积面积图",
+          "type": "chartAreaT",
+          "html": "controllers/html/chart/line/bxchartsline.html",
+          "js": "controllers/js/chart/line/bxchartslineareastack.js"
+        }              
+      ]
+    },
+    {
+      "name": "饼图",
+      "tooltip" : "饼图",
+      "widgets": [
+        {
+          "index": 1,
+          "icon" : "./img/pie/bxchartspiestand.png",
+          "name": "标准饼图",
+          "type": "chartPie",
+          "html": "controllers/html/chart/pie/bxchartspie.html",
+          "js": "controllers/js/chart/pie/bxchartspiestand.js"
+        },
+        {
+          "index": 2,
+          "icon" : "./img/pie/bxchartspiecircular.png",
+          "name": "标准环形图",
+          "type": "chartPieC",
+          "html": "controllers/html/chart/pie/bxchartspie.html",
+          "js": "controllers/js/chart/pie/bxchartspiecircular.js"
+        }   
+      ]
+    },
+    {
+	      "name": "仪表盘",
+	      "tooltip" : "仪表盘",
+	      "widgets": [
+	        {
+	          "index": 1,
+	          "icon" : "./img/gauge/gaugestand.png",
+	          "name": "标准仪表盘",
+	          "type": "chartGauge",
+	          "html": "controllers/html/chart/gauge/bxchartsgauge.html",
+	          "js": "controllers/js/chart/gauge/bxchartsgaugestand.js"
+	        } 
+	      ]
+     },
+     {
+	      "name": "地图",
+	      "tooltip" : "地图",
+	      "widgets": [
+	        {
+	          "index": 1,
+	          "icon" : "./img/map/bxchartsmapstand.png",
+	          "name": "中国地图",
+	          "type": "chartMap",
+	          "html": "controllers/html/chart/map/bxchartsmap.html",
+	          "js": "controllers/js/chart/map/bxchartsmapstand.js"
+	        }             
+	      ]
+     },
+     {
+	      "name": "雷达图",
+	      "tooltip" : "雷达图",
+	      "widgets": [
+	        {
+	          "index": 1,
+	          "icon" : "./img/radar/bxchartsradarstand.png",
+	          "name": "标准雷达",
+	          "type": "chartRadar",
+	          "html": "controllers/html/chart/radar/bxchartsradar.html",
+	          "js": "controllers/js/chart/radar/bxchartsradarstand.js"
+	        },
+	        {
+	          "index": 2,
+	          "icon" : "./img/radar/bxchartsradarfill.png",
+	          "name": "雷达填充",
+	          "type": "chartRadarF",
+	          "html": "controllers/html/chart/radar/bxchartsradar.html",
+	          "js": "controllers/js/chart/radar/bxchartsradarfill.js"
+	        }          
+	      ]
+     },
+     {
+	      "name": "散点图",
+	      "tooltip" : "散点图",
+	      "widgets": [
+	        {
+	          "index": 1,
+	          "icon" : "./img/scatter/bxchartsscatterstand.png",
+	          "name": "标准散点图",
+	          "type": "chartScat",
+	          "html": "controllers/html/chart/scatter/bxchartsscatter.html",
+	          "js": "controllers/js/chart/scatter/bxchartsscatterstand.js"
+	        }        
+	      ]
+     }          
+  ]
+}
+

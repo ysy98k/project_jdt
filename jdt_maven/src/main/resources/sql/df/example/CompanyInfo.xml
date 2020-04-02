@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CompanyInfo">
+	<select id="query" parameterType="com.baosight.df.example.entity.CompanyInfo"
+		resultType="com.alibaba.fastjson.JSONObject">
+		select
+		COMPANY_ID as "companyId",
+		COMPANY_CODE as "companyCode",
+		COMPANY_NAME as "companyName",
+		COMPANY_DESC as "companyDesc",
+		AREA_CODE as "areaCode"
+		from
+		"${tenant}".COMPANY
+		where
+		1 = 1
+		<if test="companyId != null">
+			and COMPANY_ID = #{companyId}
+		</if>
+		<if test="companyCode != null">
+			and COMPANY_CODE like '%${companyCode}%'
+		</if>
+		<if test="companyName != null">
+			and COMPANY_NAME like '%${companyName}%'
+		</if>
+		<if test="companyDesc != null">
+			and COMPANY_DESC = #{companyDesc}
+		</if>
+		<if test="areaCode != null and areaCode != ''">
+			and AREA_CODE = #{areaCode}
+		</if>
+		<if test="fieldName != null and ascDesc != null">
+			order by
+			<choose>
+				<when test="fieldName == 'companyCode'">
+					COMPANY_CODE
+				</when>
+			</choose>
+			<if test="ascDesc == 'asc'">
+				asc
+			</if>
+			<if test="ascDesc == 'desc'">
+				desc
+			</if>
+		</if>
+	</select>
+
+	<select id="count" resultType="int">
+		select count(*) from "${tenant}".COMPANY where 1=1
+		<if test="companyId != null">
+			and COMPANY_ID = #{companyId}
+		</if>
+		<if test="companyCode != null">
+			and COMPANY_CODE like '%${companyCode}%'
+		</if>
+		<if test="companyName != null">
+			and COMPANY_NAME like '%${companyName}%'
+		</if>
+		<if test="companyDesc != null">
+			and COMPANY_DESC = #{companyDesc}
+		</if>
+		<if test="areaCode != null">
+			and AREA_CODE = #{areaCode}
+		</if>
+	</select>
+
+	<insert id="insert" parameterType="com.baosight.df.example.entity.CompanyInfo"
+		useGeneratedKeys="true" keyProperty="companyId">
+		insert into
+		"${tenant}".COMPANY
+		(COMPANY_CODE, COMPANY_NAME, COMPANY_DESC,
+		AREA_CODE)
+		values
+		(#{companyCode}, #{companyName},
+		#{companyDesc},#{areaCode})
+	</insert>
+
+	<update id="update" parameterType="com.baosight.df.example.entity.CompanyInfo">
+		update "${tenant}".COMPANY
+		SET
+
+		COMPANY_CODE = #{companyCode},
+
+		COMPANY_NAME = #{companyName},
+
+		COMPANY_DESC = #{companyDesc},
+
+		AREA_CODE = #{areaCode}
+
+		where COMPANY_ID = #{companyId}
+	</update>
+
+	<delete id="delete" parameterType="com.baosight.df.example.entity.CompanyInfo">
+		delete from
+		"${tenant}".COMPANY where COMPANY_ID=#{companyId}
+	</delete>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.FaultTreat">
+    <select id="query" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "id" as "faultId",
+        "tbm_id" as "tbmId",
+        "create_time" as "createTime",
+        "product_name"  as "productName",
+        "rseason" as "rseason",
+        "warranty_time" as "warrantyTime",
+        "brokerage" as "brokerage",
+        "brokerage_phone"  as "brokeragePhone",
+        "contacts" as "contacts",
+        "contacts_phone" as "contactsPhone",
+        "process_mode" as "processMode",
+        "place"  as "place"
+        from
+        "${tenant}"."fault_treat"
+        where 1 = 1
+        <if test="tbmId != null">
+            and "tbm_id" = #{tbmId}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and to_char(createtime,'yyyy-MM-dd') like CONCAT('%',#{createTime},'%')
+        </if>
+        <trim prefix="order by">
+            <if test="fieldName != null">
+                #{fieldName}
+            </if>
+            <if test="ascDesc == 'asc'">
+                asc
+            </if>
+            <if test="ascDesc == 'desc'">
+                desc
+            </if>
+        </trim>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from "${tenant}"."fault_treat" where 1=1
+        <if test="tbmId != null">
+            and "tbm_id" = #{tbmId}
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="com.raising.forward.entity.tbmManage.FaultTreat" >
+        insert into
+        "${tenant}"."fault_treat"
+        ("tbm_id","create_time", "product_name", "rseason",  "warranty_time","brokerage","brokerage_phone"
+        ,"contacts","contacts_phone","process_mode","place")
+        values(#{tbmId},#{createTime},#{productName},#{rseason},#{warrantyTime}
+        ,#{brokerage},#{brokeragePhone},#{contacts},#{contactsPhone},#{processMode}
+        ,#{place})
+    </insert>
+
+
+    <update id="update" parameterType="com.alibaba.fastjson.JSONObject">
+        update "${tenant}"."fault_treat"
+        <trim prefix="set" suffixOverrides=",">
+            <if test="createTime != null">
+                "create_time" = #{createTime},
+            </if>
+            <if test="productName != null">
+                "product_name" = #{productName},
+            </if>
+            <if test="rseason != null">
+                "rseason" = #{rseason},
+            </if>
+            <if test="warrantyTime != null">
+                "warranty_time" = #{warrantyTime},
+            </if>
+            <if test="brokerage != null">
+                "brokerage" = #{brokerage},
+            </if>
+            <if test="brokeragePhone != null">
+                "brokerage_phone" = #{brokeragePhone},
+            </if>
+            <if test="contacts != null">
+                "contacts" = #{contacts},
+            </if>
+            <if test="contactsPhone != null">
+                "contacts_phone" = #{contactsPhone},
+            </if>
+            <if test="processMode != null">
+                "process_mode" = #{processMode},
+            </if>
+            <if test="place != null">
+                "place" = #{place},
+            </if>
+        </trim>
+        where id = #{faultId}
+    </update>
+
+    <delete id="delete" parameterType="com.alibaba.fastjson.JSONObject">
+        delete from
+        "${tenant}"."fault_treat" where id=#{faultId}
+    </delete>
+</mapper>

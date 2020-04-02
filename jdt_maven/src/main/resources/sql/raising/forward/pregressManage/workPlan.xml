@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.progressManage.mapper.workPlanMapper">
+    <sql id="columnSql">
+        w."id" as "planId",
+        w."pro_id" as "projectId",
+        w."time" as "planTime",
+        w."schedule" as "schedule",
+        w."ring_num" as "ringNum",
+        w."remark" as "remark"
+    </sql>
+
+    <!--根据fdItemCode 查询对应的字符串-->
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+      select
+      <include refid="columnSql"></include>,
+        p."start_time" as "startTime" ,
+        p."end_time" as "endTime" ,
+        p."ring_total" as "ringTotal"
+      from
+      "raising".p_work_plan w,"raising".project p
+      where
+        w."pro_id" = p."pro_id"
+      <trim>
+          <if test="projectId != null">
+              and w."pro_id" = #{projectId}
+          </if>
+      </trim>
+        order by "time" asc
+    </select>
+
+    <select id="getPervioueRow" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        <include refid="columnSql"></include>
+        from "raising".p_work_plan w
+        <trim prefix="where" prefixOverrides="and">
+            <if test="planTime != null">
+                and #{planTime} > w."time"
+            </if>
+            <if test="projectId != null">
+                and w."pro_id" = #{projectId}
+            </if>
+            <if test="planId != null">
+                and id != #{planId}
+            </if>
+        </trim>
+        order by "time" desc limit 1
+
+    </select>
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject" resultType="int">
+        select
+        count(1)
+        from
+        "raising".p_work_plan w,"raising".project p
+        where
+        w."pro_id" = p."pro_id"
+        <trim>
+            <if test="projectId != null">
+                and w."pro_id" = #{projectId}
+            </if>
+        </trim>
+    </select>
+
+    <insert id="addRow" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into
+        "raising"."p_work_plan"
+        ("pro_id","time","schedule","ring_num","remark")
+        values(#{projectId},#{planTime},#{schedule},#{ringNum},#{remark});
+    </insert>
+
+
+    <update id="updateRow" parameterType="com.alibaba.fastjson.JSONObject">
+        update "raising"."p_work_plan"
+        <trim prefix="set "  suffixOverrides=",">
+            <if test=' planTime !=null || planTime != "" '  >
+                "time" = #{planTime},
+            </if>
+            <if test='schedule !=null || schedule != "" '  >
+                "schedule" = #{schedule},
+            </if>
+            <if test='ringNum !=null || ringNum != "" '  >
+                "ring_num" = #{ringNum},
+            </if>
+            <if test=' remark !=null '  >
+                "remark" = #{remark},
+            </if>
+        </trim>
+        where id = #{planId}
+    </update>
+
+    <delete id="deleteRow" parameterType="com.alibaba.fastjson.JSONObject">
+        delete from
+        "raising"."p_work_plan"
+        where "id"= #{planId}
+    </delete>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select "id","time","schedule","ring_num","remark","pro_id" 
+        from "raising"."p_work_plan"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and "id" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "id" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("id")
+        from "raising"."p_work_plan"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+</mapper>

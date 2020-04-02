@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.backstage.entity.Mobile">
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "id" as "mobileId",
+        "name" as "name",
+        "open_id" as "openId",
+        "tenant_id" as "tenantId",
+        "user_id" as "userId",
+        "enable" as "enable",
+        "is_bind" as "bind",
+        "phone" as "phone",
+        "group_name" as "groupName"
+        from
+        "${tenant}"."t_mobile"
+        where 1 = 1
+        <if test="mobileId != null">
+            and id = #{mobileId}
+        </if>
+        <if test="name != null ">
+            and "name" like CONCAT('%',#{name},'%')
+        </if>
+        <if test="phone != null ">
+            and "phone" = #{phone}
+        </if>
+    </select>
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject" resultType="int">
+        select
+        COUNT (1)
+        from
+        "${tenant}"."t_mobile"
+        where 1 = 1
+        <if test="name != null ">
+            and "name" like CONCAT('%',#{name},'%')
+        </if>
+    </select>
+
+    <insert id="add" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into "${tenant}"."t_mobile"
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                "name",
+            </if>
+            <if test="openId != null">
+                "open_id",
+            </if>
+            <if test="tenantId != null">
+                "tenant_id",
+            </if>
+            <if test="userId != null">
+                "user_id",
+            </if>
+            <if test="enable != null">
+                "enable",
+            </if>
+            <if test="bind != null">
+                "is_bind",
+            </if>
+            <if test="phone != null">
+                "phone",
+            </if>
+            <if test="groupName != null">
+                "group_name",
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+              #{name},
+            </if>
+            <if test="openId != null">
+                #{tenantId},
+            </if>
+            <if test="tenantId != null">
+                #{tenantId},
+            </if>
+            <if test="userId != null">
+               #{userId},
+            </if>
+            <if test="enable != null">
+               #{enable},
+            </if>
+            <if test="bind != null">
+               #{bind},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="groupName != null">
+                #{groupName},
+            </if>
+        </trim>
+
+    </insert>
+
+    <update id="update" parameterType="com.alibaba.fastjson.JSONObject">
+        update "${tenant}"."t_mobile"
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">
+                "name" = #{name},
+            </if>
+            <if test="openId != null">
+                "open_id" = #{tenantId},
+            </if>
+            <if test="tenantId != null">
+                "tenant_id" = #{tenantId},
+            </if>
+            <if test="userId != null">
+                "user_id" = #{userId},
+            </if>
+            <if test="enable != null">
+                "enable" = #{enable},
+            </if>
+            <if test="phone != null">
+                "phone" = #{phone},
+            </if>
+            <if test="groupName != null">
+                "group_name" = #{groupName},
+            </if>
+        </trim>
+        where id = #{mobileId}
+    </update>
+
+    <delete id="delete">
+        delete from
+        "${tenant}"."t_mobile" where id=#{mobileId}
+    </delete>
+
+
+    <!--根据条件，查询记录-->
+    <select id="getUsers"  resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "id" As "userId",
+        "name" As "username",
+        "phone" As "phone",
+        "open_id" As "openId",
+        "group_name" As "groupName"
+        from "raising"."t_mobile"
+        <trim prefix="Where" prefixOverrides="and" >
+            <if test="id != null ">
+                and "id" = #{id}
+            </if>
+            <if test="openId != null ">
+                and "open_id" = #{openId}
+            </if>
+            <if test="phone != null ">
+                and "phone" = #{phone}
+            </if>
+        </trim>
+    </select>
+
+    <!--此sql包含敏感信息，只供MobileService,login方法使用-->
+    <select id="login" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "user_id" As "userId",
+        "name" As "username",
+        "phone" As "phone",
+        "open_id" As "openId",
+        "group_name" As "groupName",
+        "pwd" as "pwd"
+        from "raising"."t_mobile"
+        where  "open_id" = #{openId}
+
+    </select>
+
+    <update id="bindingOpenId" parameterType="com.alibaba.fastjson.JSONObject">
+        update "raising"."t_mobile"
+        <trim prefix="set" suffixOverrides="," >
+            <if test="openId != null ">
+                "open_id" = #{openId},
+            </if>
+            <if test="pwd != null ">
+                "pwd" = #{pwd},
+            </if>
+            <if test="bind != null ">
+                "is_bind" = #{bind},
+            </if>
+        </trim>
+        <trim prefix="Where" prefixOverrides="and" >
+            <if test="id != null ">
+                and "id" = #{id}
+            </if>
+            <if test="phone != null ">
+                and "phone" = #{phone}
+            </if>
+        </trim>
+    </update>
+
+
+    <sql id="getGroupName">
+        (select "group_name"
+        from "raising"."t_mobile"
+        where  open_id = #{open_id}
+        ) as "groupName"
+    </sql>
+
+    <sql id="Sql_SelectColumns">
+        "id" As "userId",
+        "name" As "username",
+        "phone" As "phone",
+        "open_id" As "openId",
+        "group_name" As "groupName"
+    </sql>
+</mapper>

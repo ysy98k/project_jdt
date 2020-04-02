@@ -1,0 +1,165 @@
+p[class='alert alert-info'],p[class='alert alert-success']{
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.mts-widget-header{
+    text-align: center;
+    font-size: 18px;
+    background-color: #ffb432 !important;
+    color: white;
+    height: 35px;
+    line-height:35px;
+}
+/*  */
+.infoDiv{
+    border:1px solid #1665E2;
+    position: absolute;
+    width: 300px;
+}
+.infoTitle{
+    background: linear-gradient(to right, #0066CC , #0A1D35); /* 标准的语法 */
+    height:35px;
+    line-height: 35px;
+    color:white;
+    font-size: 18px;
+}
+.title_i{
+    margin: 0px 10px 0px 5px;
+}
+.contentDiv{
+    background-color: #071A4D;
+    clear: both;
+    height: calc(100% - 35px);
+    padding: 20px 5px;
+}
+/**/
+/*修饰边框开始*/
+.decorate-border{
+    position: absolute;
+    z-index: 11;
+    width:20px;
+    height: 20px;
+    border: 4px solid #1665E2;
+}
+.decorate-border-leftTop{
+    border-bottom-width: 0px;
+    border-right-width: 0px;
+}
+.decorate-border-rightTop{
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+}
+.decorate-border-leftBottom{
+    border-top-width: 0px;
+    border-right-width: 0px;
+}
+.decorate-border-rightBottom{
+    border-top-width: 0px;
+    border-left-width: 0px;
+}
+/*修饰边框开始*/
+/*ztree 开始*/
+.ztree {
+    padding: 0;
+}
+.ztree * {
+    font-size: 14px;
+    font-family: "microsoft yahei";
+}
+
+.ztree li a {
+    display: block;
+    padding: 4px 18px;
+    color: #fff;
+}
+.ztree li a:hover {
+    /*background: #484848;
+    border: 1px #484848 solid;*/
+    text-decoration: none;
+}
+.ztree span, .ztree li ul.line {
+    background: none;
+}
+.ztree li a.curSelectedNode {
+    padding-top: 4px;
+    background-color: transparent;
+    color: white;
+    border: 0px white solid;
+    opacity: 0.8;
+}
+.ztree li ul {
+    padding: 0;
+}
+.ztree > li > a {
+    padding-left: 36px;
+}
+.ztree > li > ul > li > a {
+    padding-left: 54px;
+}
+.ztree > li > ul > li > ul > li > a {
+    padding-left: 72px;
+}
+.ztree li a span.ico_open, .ztree li a span.ico_close, .ztree li a span.ico_docu {
+    background: none;
+}
+.ztree li a span.ico_open::after {
+    width: 0;
+    height: 0;
+    border: 4px solid transparent;
+    border-left: 4px solid white;
+    content: "";
+    margin: 0;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    left: 0px;
+    top: 6px;
+    transform: rotate(90deg);
+}
+.ztree li a span.ico_close::after {
+    width: 0;
+    height: 0;
+    border: 4px solid transparent;
+    border-left: 4px solid white;
+    content: "";
+    margin: 0;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    left: 2px;
+    top: 4px;
+    transform: rotate(0deg);
+}
+.ztree li ul {
+    margin: 0;
+    padding: 0 0 0 18px;
+}
+.switch {
+    display: none !important;
+}
+/*ztree 结束*/
+
+/*table开始*/
+.mts_table{
+    color:#4C76CD;
+    text-align: center;
+    font-size:14px ;
+    line-height: 24px;
+}
+.mts_tr_head td{
+    color:white;
+    background-color: #2D4D94;
+    border-right: 2px solid #4C76CD;
+}
+.mts_tr_head td:last-child{
+    border-right-width: 0px;
+}
+.mts_table td{
+    height: 30px;
+}
+.onLineSpan{
+    height: 21px;
+}
+/*table结束*
+
+

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.df.metamanage.dao.ButtonManageDao">
+    <resultMap id="BaseResultMap" type="com.baosight.df.metamanage.entity.ButtonManage">
+        <id column="button_id" jdbcType="INTEGER" property="buttonId"/>
+        <result column="button_name" jdbcType="VARCHAR" property="buttonName"/>
+        <result column="button_displayname" jdbcType="VARCHAR" property="buttonDisplayname"/>
+        <result column="page_id" jdbcType="INTEGER" property="pageId"/>
+        <result column="page_ename" jdbcType="VARCHAR" property="pageEname"/>
+        <result column="page_cname" jdbcType="VARCHAR" property="pageCname"/>
+        <result column="page_path" jdbcType="VARCHAR" property="pagePath"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+        button_id, button_name, button_displayname, page_id
+    </sql>
+    <select id="query" parameterType="com.baosight.df.metamanage.entity.ButtonManage"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        button_id as "buttonId",
+        button_name as "buttonName",
+        button_displayname as "buttonDisplayname",
+        buttonmanage.page_id as "pageId",
+        pagemanage.page_ename as "pageEname",
+        pagemanage.page_cname as "pageCname",
+        pagemanage.page_path as "pagePath"
+        from "${tenant}".buttonmanage
+        inner join "${tenant}".pagemanage on buttonmanage.page_id= pagemanage.page_id
+        <where>
+            <if test="buttonId != null">
+                and button_id = #{buttonId}
+            </if>
+            <if test="buttonName != null and buttonName != ''">
+                and button_name like '%${buttonName}%'
+            </if>
+            <if test="buttonDisplayname != null and buttonDisplayname != ''">
+                and button_displayname like '%${buttonDisplayname}%'
+            </if>
+            <if test="pageName != null and pageName != ''">
+                and pagemanage.page_ename = #{pageName}
+            </if>
+        </where>
+        <if test="fieldName != null and ascDesc != null">
+            order by
+            <choose>
+                <when test="fieldName == 'buttonId'">
+                    button_id
+                </when>
+                <when test="fieldName == 'buttonName'">
+                    button_name
+                </when>
+                <when test="fieldName == 'buttonDisplayname'">
+                    button_displayname
+                </when>
+            </choose>
+            <if test="ascDesc == 'asc'">
+                asc
+            </if>
+            <if test="ascDesc == 'desc'">
+                desc
+            </if>
+        </if>
+    </select>
+
+    <select id="count" parameterType="com.baosight.df.metamanage.entity.ButtonManage" resultType="int">
+        select count(*)
+        from "${tenant}".buttonmanage
+        inner join "${tenant}".pagemanage on buttonmanage.page_id= pagemanage.page_id
+        <where>
+            <if test="buttonId != null">
+                and button_id = #{buttonId}
+            </if>
+            <if test="buttonName != null">
+                and button_name like '%${buttonName}%'
+            </if>
+            <if test="buttonDisplayname != null">
+                and button_displayname like '%${buttonDisplayname}%'
+            </if>
+            <if test="pageName != null">
+                and pagemanage.page_ename = #{pageName}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByExample" parameterType="com.baosight.df.metamanage.entity.ButtonManageExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from "${tenant}".buttonmanage
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="offset > -1">
+            offset ${offset}
+        </if>
+        <if test="limit > -1">
+            limit ${limit}
+        </if>
+    </select>
+
+    <select id="selectPageButtonByExample" parameterType="com.baosight.df.metamanage.entity.ButtonManageExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        button_id, button_name, button_displayname, buttonmanage.page_id,
+        pagemanage.page_ename, pagemanage.page_cname, pagemanage.page_path
+        from "${tenant}".buttonmanage
+        inner join "${tenant}".pagemanage on buttonmanage.page_id= pagemanage.page_id
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <if test="offset > -1">
+            offset ${offset}
+        </if>
+        <if test="limit > -1">
+            limit ${limit}
+        </if>
+    </select>
+
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from "${tenant}".buttonmanage
+        where button_id = #{buttonId,jdbcType=INTEGER}
+    </select>
+
+    <delete id="delete" parameterType="com.baosight.df.metamanage.entity.ButtonManage">
+        delete from
+        "${tenant}".buttonmanage WHERE button_id = #{buttonId,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM "${tenant}".buttonmanage
+        WHERE button_id = #{buttonId,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByExample" parameterType="com.baosight.df.metamanage.entity.ButtonManageExample">
+        delete from "${tenant}".buttonmanage
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+
+    <insert id="insertSelective" parameterType="com.baosight.df.metamanage.entity.ButtonManage" useGeneratedKeys="true"
+            keyProperty="buttonId">
+        insert into "${tenant}".buttonmanage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="buttonName != null">
+                button_name,
+            </if>
+            <if test="buttonDisplayname != null">
+                button_displayname,
+            </if>
+            <if test="pageId != null">
+                page_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="buttonName != null">
+                #{buttonName,jdbcType=VARCHAR},
+            </if>
+            <if test="buttonDisplayname != null">
+                #{buttonDisplayname,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null">
+                #{pageId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="countByExample" parameterType="com.baosight.df.metamanage.entity.ButtonManageExample"
+            resultType="java.lang.Long">
+        select count(*) from "${tenant}".buttonmanage
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update "${tenant}".buttonmanage
+        <set>
+            <if test="record.buttonId != null">
+                button_id = #{record.buttonId,jdbcType=INTEGER},
+            </if>
+            <if test="record.buttonName != null">
+                button_name = #{record.buttonName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.buttonDisplayname != null">
+                button_displayname = #{record.buttonDisplayname,jdbcType=VARCHAR},
+            </if>
+            <if test="record.pageId != null">
+                page_id = #{record.pageId,jdbcType=INTEGER},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update "${tenant}".buttonmanage
+        set button_id = #{record.buttonId,jdbcType=INTEGER},
+        button_name = #{record.buttonName,jdbcType=VARCHAR},
+        button_displayname = #{record.buttonDisplayname,jdbcType=VARCHAR},
+        page_id = #{record.pageId,jdbcType=INTEGER}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.baosight.df.metamanage.entity.ButtonManage">
+        update "${tenant}".buttonmanage
+        <set>
+            <if test="buttonName != null">
+                button_name = #{buttonName,jdbcType=VARCHAR},
+            </if>
+            <if test="buttonDisplayname != null">
+                button_displayname = #{buttonDisplayname,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null">
+                page_id = #{pageId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where button_id = #{buttonId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.baosight.df.metamanage.entity.ButtonManage">
+        UPDATE "${tenant}".buttonmanage
+        SET button_name = #{buttonName,jdbcType=VARCHAR},
+        button_displayname = #{buttonDisplayname,jdbcType=VARCHAR},
+        page_id = #{pageId,jdbcType=INTEGER}
+        WHERE button_id = #{buttonId,jdbcType=INTEGER}
+    </update>
+</mapper>

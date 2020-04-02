@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- 配置jedis连接池 -->
+    <!--<bean class="redis.clients.jedis.JedisPool">-->
+    <bean class="com.baosight.common.utils.JdtJedisPool">
+        <constructor-arg name="host" value="${redis.host}"/>
+        <constructor-arg name="password" value="${redis.password}"/>
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
+        <constructor-arg name="timeout" value="${redis.timeout}"/>
+    </bean>
+
+
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${redis.maxIdle}"/> <!-- 最大能够保持idel状态的对象数  -->
+        <property name="maxTotal" value="${redis.maxTotal}"/> <!-- 最大分配的对象数 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${redis.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}"/>
+    </bean>
+
+    <!--链接redis-->
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${jdt.redis.host}"></property>
+        <property name="password" value="${redis.password}"></property>
+        <property name="timeout" value="${redis.timeout}"></property>
+        <property name="poolConfig" ref="jedisPoolConfig"></property>
+    </bean>
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"  >
+        <property name="connectionFactory" ref="connectionFactory"></property>
+        <!--以下针对各种数据进行序列化方式的选择-->
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" >
+            </bean>
+        </property>
+        <property name="hashKeySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </property>
+    </bean>
+
+
+    <!-- 配置缓存 -->
+    <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+        <constructor-arg ref="redisTemplate" />
+    </bean>
+
+    <bean class="com.baosight.common.utils.RedisUtils"/>
+
+
+    <!--数据上传消息消费者-->
+    <bean id="dataUploadSubscriber" class="com.raising.mq.DataUploadSubscriber" />
+    <!--消息消费者适配器-->
+    <bean id="dataUploadAdapter" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
+        <constructor-arg ref="dataUploadSubscriber"></constructor-arg>
+    </bean>
+    <!--监听的频道  频道名通过构造参数传入，此处为 dataUploadChannel-->
+    <bean id="dataUploadChannel" class="org.springframework.data.redis.listener.ChannelTopic">
+        <constructor-arg value="dataUploadChannel"/>
+    </bean>
+
+    <!--技术服务管理，文件上传消息消费者-->
+    <bean id="tbmUploadFileSubscriber" class="com.raising.mq.TBMUploadFileSubscriber" />
+    <!--技术服务管理适配器-->
+    <bean id="tbmUploadFileAdapter" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
+        <constructor-arg ref="tbmUploadFileSubscriber"></constructor-arg>
+    </bean>
+    <!--监听的频道  频道名通过构造参数传入，此处为 dataUploadChannel-->
+    <bean id="tbmUploadFileChannel" class="org.springframework.data.redis.listener.ChannelTopic">
+        <constructor-arg value="tbmUploadFileChannel"/>
+    </bean>
+
+    <!--消息监听容器-->
+    <bean id="redisMessageListenerContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer" >
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="messageListeners">
+            <map>
+                <!--定义消息消费者 订阅的频道-->
+                <entry key-ref="dataUploadAdapter" value-ref="dataUploadChannel" />
+                <entry key-ref="tbmUploadFileAdapter" value-ref="tbmUploadFileChannel" />
+            </map>
+        </property>
+        <property name="taskExecutor"><!--此处有个奇怪的问题，无法正确使用其他类型的Executor-->
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="poolSize" value="3"></property>
+            </bean>
+        </property>
+    </bean>
+
+</beans>

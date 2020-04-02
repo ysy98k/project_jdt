@@ -1,0 +1,1 @@
+var _baosight_fuelux_include_files=new Array("fuelux/fuelux.wizard.js");for(var _file in _baosight_fuelux_include_files)bxImportFile(prefix+_baosight_fuelux_include_files[_file]);

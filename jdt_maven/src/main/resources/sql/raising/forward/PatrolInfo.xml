@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.PatrolInfo">
+
+    <resultMap id="BaseResultMap" type="com.raising.forward.entity.PatrolInfo">
+        <result column="patrol_content" property="patrolContent"/>
+        <result column="patrol_result" property="patrolResult"/>
+        <result column="remark" property="remark"/>
+        <result column="place_mark" property="placeMark"/>
+    </resultMap>
+
+    <select id="checkPatrolSheetByResultTableID" parameterType="com.alibaba.fastjson.JSONObject" resultType="Integer">
+        SELECT
+        count(*) FROM "${tenant}"."patrol_table"
+        WHERE
+        result_id=#{resultTableID}
+
+    </select>
+
+    <select id="getPatrolSheetByResultTableID" parameterType="com.alibaba.fastjson.JSONObject"
+            resultMap="BaseResultMap">
+        SELECT * FROM "${tenant}"."patrol_table"
+        WHERE
+        result_id=#{resultTableID}
+
+    </select>
+
+
+    <insert id="insertPatrolInfo" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into
+        "${tenant}"."patrol_table"
+        (result_id,patrol_content,patrol_result,remark,place_mark)
+        values
+        <foreach collection="patrolInfoList" item="reddemCode" separator=",">
+            (
+            #{resultTableID},
+            #{reddemCode.patrolContent},
+            #{reddemCode.patrolResult},
+            #{reddemCode.remark},
+            #{reddemCode.placeMark}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

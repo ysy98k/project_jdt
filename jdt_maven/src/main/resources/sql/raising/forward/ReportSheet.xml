@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.ReportSheet">
+
+    <resultMap id="BaseResultMap" type="com.raising.forward.entity.ReportSheet">
+        <result column="result_id" property="reportUUID"/>
+        <result column="result_table_name" property="SheetName"/>
+        <result column="point" property="point"/>
+        <result column="change_quantity" property="changeQuantity"/>
+        <result column="change_rate" property="changeRate"/>
+        <result column="cumulative_variation" property="cumulativeVariation"/>
+        <result column="formation_loss_rate" property="formationLossRate"/>
+        <result column="remarks" property="remarks"/>
+        <result column="height" property="height"/>
+    </resultMap>
+
+    <insert id="insertReportSheet" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into
+        "${tenant}"."report_sheet"
+        (result_id,point,height,change_quantity,change_rate,cumulative_variation,formation_loss_rate,remarks)
+        values
+        <foreach collection="reportSheets" item="reddemCode" separator=",">
+            (
+            #{resultTableID},
+            #{reddemCode.point},
+            #{reddemCode.height},
+            #{reddemCode.changeQuantity},
+            #{reddemCode.changeRate},
+            #{reddemCode.cumulativeVariation},
+            #{reddemCode.formationLossRate},
+            #{reddemCode.remarks}
+            )
+        </foreach>
+    </insert>
+</mapper>

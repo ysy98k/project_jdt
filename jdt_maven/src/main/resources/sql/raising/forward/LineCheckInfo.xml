@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.LineCheckInfo">
+
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        l."pro_id" as "projectId",
+        l."drawing_id" as "drawingId",
+        l."person_name" as "personName",
+        l."person_title" as "personTitle",
+        l."telephone" as "telephone",
+        l."remarks" as "remarks",
+        l."review" as "review",
+        l."create_time" as "createTime",
+        l."id" as "lineId",
+        l."person_company" as "personCompany",
+        d."name" as "drawingName"
+        FROM "raising"."line_check_info" l
+        LEFT JOIN "raising"."t_drawing" d on  l."drawing_id" = d."id"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId != null">
+                and l."pro_id" = #{projectId}
+            </if>
+            <if test="drawingId != null">
+                and l."drawing_id" = #{drawingId}
+            </if>
+        </trim>
+    </select>
+    <select id="getRows2" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        l."pro_id" as "projectId",
+        l."drawing_id" as "drawingId",
+        l."person_name" as "personName",
+        l."person_title" as "personTitle",
+        l."telephone" as "telephone",
+        l."remarks" as "remarks",
+        l."review" as "review",
+        l."create_time" as "createTime",
+        l."id" as "lineId",
+        l."person_company" as "personCompany",
+        d."name" as "drawingName"
+        FROM "raising"."line_check_info" l
+        LEFT JOIN "raising"."t_drawing" d on  l."drawing_id" = d."id"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="projectId != null">
+                and l."pro_id" = #{projectId}
+            </if>
+            <if test="drawingIds != null">
+                and l."drawing_id"
+                <trim prefix="in(" suffix=")">
+                  <foreach collection="drawingIds" index="key" item="value" separator=",">
+                      #{value}
+                  </foreach>
+                </trim>
+            </if>
+        </trim>
+    </select>
+
+    <select id="compare" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+         "mileage" as "mileage",
+        "x" as "x",
+        "y" as "y",
+        "z" as "z",
+        "design_mileage" as "designMileage",
+        "design_x" as "designX",
+        "design_y" as "designY",
+        "design_z" as "designZ",
+        round(("mileage" - "design_mileage")*1000) as "dmileage",
+        round(("x" - "design_x")*1000) as "dx",
+        round(("y" - "design_y")*1000) as "dy",
+        round(("z" - "design_z")*1000) as "dz"
+        FROM
+        "raising"."t_coordinate_info"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="lineId != null">
+                and "check_id" = #{lineId}
+            </if>
+            <if test="display != null and display == true">
+                and
+                (
+                round(("mileage" - "design_mileage")*1000) > 0
+                or round(("x" - "design_x")*1000) >#{error}
+                or round(("y" - "design_y")*1000) > #{error}
+                or round(("z" - "design_z")*1000) > #{error}
+                )
+            </if>
+        </trim>
+        <if test="pageSize != null and pageIndex != null">
+            LIMIT #{pageSize} offset #{pageIndex}
+        </if>
+    </select>
+
+
+    <select id="compareCount" resultType="int">
+        SELECT
+        count(1)
+        FROM
+        "raising"."t_coordinate_info"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="lineId != null">
+                and "check_id" = #{lineId}
+            </if>
+            <if test="display != null and display == true">
+                and
+                (
+                round(("mileage" - "design_mileage")*1000) > 0
+                or round(("x" - "design_x")*1000) >#{error}
+                or round(("y" - "design_y")*1000) > #{error}
+                or round(("z" - "design_z")*1000) > #{error}
+                )
+            </if>
+        </trim>
+    </select>
+
+    <insert id="insert" parameterType="com.alibaba.fastjson.JSONObject">
+        <selectKey resultType="java.lang.Integer"  order="AFTER" keyProperty="lineId"   >
+            SELECT currval('raising.line_check_info_id_seq') as "lineId"
+        </selectKey>
+       insert into
+       "raising"."line_check_info"("pro_id","drawing_id","person_name",
+       "person_title","telephone","remarks","review","create_time","update_time","person_company")
+      values(#{projectId},#{drawingId},#{personName},#{personTitle},
+      #{telephone},#{remarks},#{review},#{createTime},#{updateTime},#{personCompany})
+    </insert>
+
+    <update id="update" parameterType="com.alibaba.fastjson.JSONObject">
+        update "raising"."line_check_info" set "review" = #{review} where "id" = #{lineId}
+    </update>
+
+    <delete id="delete" parameterType="com.alibaba.fastjson.JSONObject">
+        delete from "raising"."line_check_info" where "id" = #{lineId}
+    </delete>
+
+
+</mapper>

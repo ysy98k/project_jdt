@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.ringData">
+    <select id="queryRingData" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id" as "projectId",
+        "RD_point" as "RD_point",
+        "RD_up" as "RD_up",
+        "RD_down" as "RD_down",
+        "RD_left" as "RD_left",
+        "RD_right" as "RD_right",
+        "RD_RingNum" as "RD_RingNum",
+        "RD_X" as "RD_X",
+        "RD_Y" as "RD_Y",
+        "RD_Z" as "RD_Z",
+        "RD_Mileage" as "RD_Mileage",
+        "RD_Normal_X" as "RD_Normal_X",
+        "RD_Normal_Y" as "RD_Normal_Y",
+        "RD_Normal_Z" as "RD_Normal_Z",
+        "RD_Segment_HD" as "RD_Segment_HD",
+        "RD_Segment_VD" as "RD_Segment_VD",
+        "RD_CreatTime" as "RD_CreatTime"
+        from
+        "${tenant}"."d_RingData"
+        where 1 = 1
+        <if test="projectId != null">
+            and pro_id = #{projectId}
+        </if>
+    </select>
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="int">
+        select
+        count(*)
+        from "${tenant}"."d_RingData"
+        where pro_id = #{projectId}
+    </select>
+
+
+</mapper>

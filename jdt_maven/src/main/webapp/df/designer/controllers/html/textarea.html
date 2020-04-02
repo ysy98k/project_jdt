@@ -1,0 +1,70 @@
+<div data-id="control">
+    <!-- class="box box-element ui-draggable"-->
+    <div class="view">
+        <textarea id="control" maxlength=""></textarea>
+    </div>
+    <div class="configView">
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="txa_Id" title="ID"
+                       class="col-sm-6 no-padding smaller-20"> 文本域组件ID</label>
+                <label id="txa_Id" class="col-sm-6 no-padding smaller-20"></label>
+            </div>
+        </div>
+        <div class="hr hr-dotted hr8"></div>
+        <div id="attribute">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="txa_placeholder" title="文本域提示值"
+                           class="col-sm-6 no-padding smaller-20">文本域提示值</label>
+                    <input id="txa_placeholder" type="text" class="col-sm-6" maxlength="360"
+                           data-attribute="placeholder" data-level="attr.placeholder"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="txa_height" title="高度值" class="col-sm-6 no-padding smaller-20">高度值</label>
+                    <input id="txa_height" type="text" class="col-sm-6" maxlength="32"
+                           data-attribute="height" data-level="css.height"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="txa_resize" title="纵向拉伸" class="col-sm-6 no-padding smaller-20">纵向拉伸</label>
+                    <label>
+                        <input id="txa_resize" class="col-sm-6 ace ace-switch ace-switch-3" type="checkbox"
+                               data-attribute="resize" data-level="resize"/>
+                        <span class="lbl"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="txa_readonly" title="只读" class="col-sm-6 no-padding smaller-20">只读</label>
+                    <label>
+                        <input id="txa_readonly" type="checkbox" class="col-sm-6 ace ace-switch ace-switch-3"
+                               data-attribute="readonly" data-level="attr.readonly" />
+                        <span class="lbl"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="txa_maxlength" title="最大字符数" class="col-sm-6 no-padding smaller-20">最大字符数</label>
+                    <input id="txa_maxlength" type="number" min="0" max="99999999" maxlength="8" class="col-sm-6"
+                           placeholder="无限制" oninput="if(value.length>8)value=value.slice(0,8)"
+                           data-attribute="maxlength" data-level="attr.maxlength"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dataConfigView">
+        <div class="row">
+            <div class=" col-sm-12">
+                <label for="txa_Ds" title="选择文本域的数据源关联" class="smaller-20 col-sm-12 no-padding">文本域数据源配置</label>
+                <input placeholder="如:..." id="txa_Ds" class="treeInput col-sm-12" type="text"/>
+            </div>
+        </div>
+    </div>
+</div>

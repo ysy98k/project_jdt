@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.TbmServiceInfoMapper">
+    <select id="getRows" parameterType="com.raising.forward.entity.tbmManage.TbmServiceInfo"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select * from (
+            select
+            "id" as "id",
+            "tbm_id" as "tbmId",
+            "brokerage" as "brokerage" ,
+            "brokerage_phone" as "brokeragePhone" ,
+            "contacts" as "contacts" ,
+            "contacts_phone" as "contactsPhone" ,
+            "type" as "type" ,
+            "create_time" as "createTime",
+            "remarks" as remarks
+            from
+            "${tenant}"."t_tbm_service_info"
+            where 1 = 1
+            <if test="tbmId != null">and "tbm_id" = #{tbmId}
+            </if>
+            union all
+            select
+            "id" as "id",
+            "tbm_id" as
+            "tbmId",
+            "brokerage" as "brokerage" ,
+            "brokerage_phone" as "brokeragePhone" ,
+            "contacts" as "contacts" ,
+            "contacts_phone" as "contactsPhone" ,
+            '故障处理' as "type" ,
+            "create_time" as "createTime",
+            "rseason" as remarks
+            from
+            "${tenant}"."fault_treat"
+            where 1 = 1
+            <if test="tbmId != null">
+                and "tbm_id" = #{tbmId}
+            </if>
+        )  as t
+        <trim prefix="order by">
+            <if test="fieldName != null">
+                "createTime"
+            </if>
+            <if test="ascDesc == 'asc'">
+                asc
+            </if>
+            <if test="ascDesc == 'desc'">
+                desc
+            </if>
+        </trim>
+    </select>
+
+    <select id="getRow" parameterType="com.raising.forward.entity.tbmManage.TbmServiceInfo"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "id" as "id",
+        "tbm_id" as "tbmId",
+        "brokerage" as "brokerage" ,
+        "brokerage_phone" as "brokeragePhone" ,
+        "contacts" as "contacts" ,
+        "contacts_phone" as "contactsPhone" ,
+        "type" as "type" ,
+        "create_time" as "createTime",
+        "remarks" as remarks
+        from
+        "${tenant}"."t_tbm_service_info"
+        where 1 = 1
+        <if test="tbmId != null">
+            and "tbm_id" = #{tbmId}
+        </if>
+        <if test="type != null">
+            and "type" = #{type}
+        </if>
+    </select>
+
+
+
+
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject" resultType="int">
+        select count(1)
+        from
+            (select '1' as a
+            FROM
+            "${tenant}"."t_tbm_service_info"
+            <trim prefix="where" >
+                <if test="tbmId != null">
+                    "tbm_id" = #{tbmId}
+                </if>
+            </trim>
+            union all select '1' as a
+            from
+            "${tenant}"."fault_treat"
+            <trim prefix="where">
+                <if test="tbmId != null">
+                   "tbm_id" = #{tbmId}
+                </if>
+            </trim>
+        ) as b
+    </select>
+
+
+
+    <insert id="addRows" parameterType="com.raising.forward.entity.tbmManage.TbmServiceInfo">
+        insert into
+        "${tenant}"."t_tbm_service_info"
+        ("tbm_id","brokerage","brokerage_phone","contacts","contacts_phone","type","create_time","remarks")
+        values(#{tbmId},#{brokerage},#{brokeragePhone},#{contacts},#{contactsPhone},#{type},#{createTime},#{remarks});
+    </insert>
+
+    <update id="updateRow" parameterType="com.raising.forward.entity.tbmManage.TbmServiceInfo">
+        update "${tenant}"."t_tbm_service_info"
+        <trim prefix="set "  suffixOverrides=",">
+            <if test='brokerage !=null'  >
+                "brokerage" = #{brokerage},
+            </if>
+            <if test='brokeragePhone !=null  '  >
+                "brokerage_phone" = #{brokeragePhone},
+            </if>
+            <if test='contacts !=null and contacts != "" '  >
+                "contacts" = #{contacts},
+            </if>
+            <if test='contactsPhone !=null '  >
+                "contacts_phone" = #{contactsPhone},
+            </if>
+            <if test='createTime !=null  '  >
+                "create_time" = #{createTime},
+            </if>
+            <if test='remarks !=null '  >
+                "remarks" = #{remarks},
+            </if>
+        </trim>
+        where "tbm_id" = #{tbmId} and "type" = #{type}
+    </update>
+
+
+
+
+
+</mapper>

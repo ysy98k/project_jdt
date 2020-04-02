@@ -1,0 +1,47 @@
+<div data-id="control">
+    <!-- class="box box-element ui-draggable"-->
+    <div class="view">
+        <img id="control" onerror="this.src=''"/>
+    </div>
+    <div class="configView">
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="widgetId" title="id"
+                       class="col-sm-6 no-padding smaller-20">图片组件ID</label><label
+                    id="widgetId" class="col-sm-6 no-padding smaller-20"></label>
+            </div>
+        </div>
+        <div class="hr hr-dotted hr8"></div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <label for="imgWidth" title="图片宽度（像素值，百分比或自适应）"
+                       class="col-sm-6 no-padding smaller-20">宽度(px,%,auto)</label>
+                <input id="imgWidth" type="text" class="col-sm-6"/>
+            </div>
+            <div class="col-sm-12">
+                <label for="imgHeight" title="图片高度（像素值，百分比或自适应）"
+                       class="col-sm-6 no-padding smaller-20">高度(px,%,auto)</label>
+                <input id="imgHeight" type="text" class="col-sm-6"/>
+            </div>
+            <div class="col-sm-12">
+                <label for="align" title="对齐方式" class="col-sm-6 no-padding smaller-20">对齐方式</label>
+                <select id="align" class="col-sm-6">
+                    <option value="center">居中</option>
+                    <option value="left">居左</option>
+                    <option value="right">居右</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="dataConfigView">
+        <div class="row">
+            <div class=" col-sm-12">
+                <label for="src" title="图片数据源配置" class="smaller-20 col-sm-12 no-padding">图片数据源配置</label>
+                <input placeholder="输入图片地址" id="src" class="treeInput col-sm-12" type="text"/>
+            </div>
+        </div>
+    </div>
+
+</div>

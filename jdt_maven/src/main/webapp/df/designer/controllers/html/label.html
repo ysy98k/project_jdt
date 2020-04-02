@@ -1,0 +1,90 @@
+<div data-id="control">
+	<!-- class="box box-element ui-draggable"-->
+	<div class="view">
+		<label id="control"  class="base-widget-right" style="width: 100%"></label>
+	</div>
+	<div class="configView">
+		<div class="row">
+			<div class="col-sm-12">
+				<label for="labelId" title="ID"
+					class="col-sm-5 no-padding smaller-20"> 标签组件ID</label><label
+					id="labelId" class="col-sm-7 no-padding smaller-20"></label>
+			</div>
+		</div>
+		<div class="hr hr-dotted hr8"></div>
+		<div id="heightWidth">
+			<div class="row">
+				<div class="col-sm-12">
+					<label for="width" title="宽度"
+						class="col-sm-5 no-padding smaller-20"> 组件宽度(px)</label><input
+						id="width" data-attribute="width" type="text" class="col-sm-7" />
+				</div>
+			</div>
+		</div>
+
+        <div id="styleAttr">
+            <div class="hr hr-dotted hr8"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="fontFamily" title="字体"
+                           class="col-sm-5 no-padding smaller-20">字体</label>
+                    <select id="fontFamily" class="col-sm-7" data-attribute="font-family" data-level="style.font-family">
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="fontStyle" title="常规，斜体"
+                           class="col-sm-5 no-padding smaller-20">字体样式</label>
+                    <select id="fontStyle" class="col-sm-7" data-attribute="font-style" data-level="style.font-style">
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="fontColor" title="字体颜色"
+                           class="col-sm-5 no-padding smaller-20">字体颜色</label>
+                    <div class="col-sm-7 no-padding" >
+                        <input id="fontColor" data-attribute="color" data-level="style.color" type="text" style="width:100px;" class="colorPicker evo-cp0 col-sm-4" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="fontSize" title="字体大小"
+                           class="col-sm-5 no-padding smaller-20">字体大小</label>
+                    <select id="fontSize" class="col-sm-7" data-attribute="font-size" data-level="style.font-size">
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="fontWeight" title="字体加粗"
+                           class="col-sm-5 no-padding smaller-20">字体粗细</label>
+                    <select id="fontWeight" class="col-sm-7" data-attribute="font-weight" data-level="style.font-weight">
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="textAlign" title="水平位置"
+                           class="col-sm-5 no-padding smaller-20">水平位置</label>
+                    <select id="textAlign" class="col-sm-7" data-attribute="text-align" data-level="style.text-align">
+                        <option value="left">靠左</option>
+                        <option value="center">居中</option>
+                        <option value="right">靠右</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+	</div>
+
+    <div class="dataConfigView">
+        <div class="row">
+            <div class=" col-sm-12">
+                <label for="labelDsSetting" title="选择标签的数据源关联" class="smaller-20 col-sm-12 no-padding">标签数据源配置</label>
+                <input placeholder="如:..." id="labelDsSetting" class="treeInput col-sm-12" type="text"/>
+            </div>
+        </div>
+    </div>
+</div>

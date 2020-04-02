@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.mapper.measureResult">
+    <select id="queryMeasureResult" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "pro_id" as "projectId",
+        "MR_Ring_Number" as "MR_Ring_Number",
+        "MR_Des_A1Mileage" as "MR_Des_A1Mileage",
+        "MR_Act_A1X" as "MR_Act_A1X",
+        "MR_Act_A1Y" as "MR_Act_A1Y",
+        "MR_Act_A1Z" as "MR_Act_A1Z",
+        "MR_Act_A1HD" as "MR_Act_A1HD",
+        "MR_Act_A1VD" as "MR_Act_A1VD",
+        "MR_Des_A3Mileage" as "MR_Des_A3Mileage",
+        "MR_Act_A3X" as "MR_Act_A3X",
+        "MR_Act_A3Y" as "MR_Act_A3Y",
+        "MR_Act_A3Z" as "MR_Act_A3Z",
+        "MR_Act_A3HD" as "MR_Act_A3HD",
+        "MR_Act_A3VD" as "MR_Act_A3VD",
+        "MR_Des_A5Mileage" as "MR_Des_A5Mileage",
+        "MR_Act_A5X" as "MR_Act_A5X",
+        "MR_Act_A5Y" as "MR_Act_A5Y",
+        "MR_Act_A5Z" as "MR_Act_A5Z",
+        "MR_Act_A5HD" as "MR_Act_A5HD",
+        "MR_Act_A5VD" as "MR_Act_A5VD",
+        "MR_Des_A9Mileage" as "MR_Des_A9Mileage",
+        "MR_Act_A9X" as "MR_Act_A9X",
+        "MR_Act_A9Y" as "MR_Act_A9Y",
+        "MR_Act_A9Z" as "MR_Act_A9Z",
+        "MR_Act_A9HD" as "MR_Act_A9HD",
+        "MR_Act_A9VD" as "MR_Act_A9VD",
+        "MR_F_HT" as "MR_F_HT",
+        "MR_F_VT" as "MR_F_VT",
+        "MR_F_RollAngle" as "MR_F_RollAngle",
+        "MR_F_PitchAngle" as "MR_F_PitchAngle",
+        "MR_F_AzimuthAngle" as "MR_F_AzimuthAngle",
+        "MR_B_HT" as "MR_B_HT",
+        "MR_B_VT" as "MR_B_VT",
+        "MR_B_RollAngle" as "MR_B_RollAngle",
+        "MR_B_PitchAngle" as "MR_B_PitchAngle",
+        "MR_B_AzimuthAngle" as "MR_B_AzimuthAngle"
+        from
+        "raising"."d_MeasureResult"
+        where 1 = 1
+        <if test="projectId != null">
+            and pro_id = #{projectId}
+        </if>
+        <if test="projectIds != null">
+            and "pro_id" in
+            <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+                #{value}
+            </foreach>
+        </if>
+        <if test="id != null">
+            and "id" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "id" asc
+        offset 0 limit 1000
+    </select>
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="int">
+        select
+        count("table_increment_pk")
+        from "raising"."d_MeasureResult"
+        where pro_id = #{projectId}
+    </select>
+
+    <select id="getDuidanceData" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        select
+          "MR_Act_A1HD" as "incisionHorizontalDeviation",/*切口姿态变化曲线水平偏差——切口水平*/
+          "MR_Act_A1VD" as "incisionVerticalDeviation",/*切口姿态变化曲线垂直偏差——切口垂直*/
+          "MR_Des_A1Mileage" as "mileage",/*切口姿态变化曲线里程——切口里程*/
+
+          "MR_Ring_Number" as "ringNumber",/*盾尾环号*/
+          "MR_Act_A3HD" as "activeArticulationHorizontalDeviation",/*铰接水平偏差-主动*/
+          "MR_Act_A3VD" as "activeArticulationVerticalDeviation",/*铰接垂直偏差-主动*/
+          "MR_Act_A5HD" as "passiveArticulationHorizontalDeviation",/*铰接水平偏差-被动*/
+          "MR_Act_A5VD" as "passiveArticulationVerticalDeviation",/*铰接垂直偏差-被动*/
+          "MR_Act_A9HD" as "shieldTailHorizontalDeviation",/*盾尾水平偏差*/
+          "MR_Act_A9VD" as "shieldVerticalDeviation",/*盾尾垂直偏差*/
+
+          "MR_F_RollAngle" as "rollingAngle",/*滚动角*/
+          "MR_F_PitchAngle" as "pitchAngle",/*俯仰角*/
+          "TBM_DigLength" as "drivingLength",/*掘进长度*/
+
+          "MR_F_HT" as "horizontalTrend",/*水平趋向*/
+          "MR_F_VT" as "veticalTrend"/*垂直趋向*/
+        from "raising"."d_MeasureResult"
+        where
+        pro_id = #{projectId}
+        and
+        "MR_Ring_Number" = (select max("MR_Ring_Number") from "raising"."d_MeasureResult" where pro_id = #{projectId})
+        order by "MR_CreatTime" asc
+    </select>
+
+    <select id="getReportSegementData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "MR_Ring_Number",
+        "MR_Act_A8X",
+        "MR_Act_A8Y",
+        "MR_Act_A8Z",
+        "MR_Des_A8X",
+        "MR_Des_A8Y",
+        "MR_Des_A8Z",
+        "MR_Des_A8Mileage",
+        "MR_Act_A8HD",
+        "MR_Act_A8VD"
+        from
+        "raising"."d_MeasureResult"
+        where
+        "pro_id" = #{projectId}
+        <choose>
+            <when test="startRing != null and endRing != null">
+                and "MR_Ring_Number" BETWEEN #{startRing} and #{endRing}
+                and "MR_CreatTime" in
+                (
+                    select max("MR_CreatTime" ) from "raising"."d_MeasureResult"
+                    where pro_id = #{projectId} and "MR_Ring_Number" BETWEEN #{startRing} and #{endRing}
+                    group by "MR_Ring_Number"
+                    limit 10 offset 0
+                )
+            </when>
+            <otherwise>
+                and "MR_Ring_Number"  <![CDATA[ <= ]]>
+                (
+                  select "MR_Ring_Number" from "raising"."d_MeasureResult"
+                  where pro_id = #{projectId} group by "MR_Ring_Number" limit 1 offset 9
+                )
+                and "MR_CreatTime" in
+                (
+                    select max("MR_CreatTime" ) from "raising"."d_MeasureResult"
+                    where pro_id = #{projectId} and "MR_Ring_Number" <![CDATA[ <= ]]>
+                    (
+                      select "MR_Ring_Number" from "raising"."d_MeasureResult"
+                      where pro_id = #{projectId} group by "MR_Ring_Number" limit 1 offset 9
+                    )
+                    group by  "MR_Ring_Number"
+                )
+            </otherwise>
+        </choose>
+        order by   "MR_Ring_Number"
+    </select>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "id",
+        "pro_id",
+        "MR_Ring_Number",
+        "MR_Des_A1Mileage",
+        "MR_Act_A1X",
+        "MR_Act_A1Y",
+        "MR_Act_A1Z",
+        "MR_Act_A1HD",
+        "MR_Act_A1VD",
+        "MR_Des_A3Mileage",
+        "MR_Act_A3X",
+        "MR_Act_A3Y",
+        "MR_Act_A3Z",
+        "MR_Act_A3HD",
+        "MR_Act_A3VD",
+        "MR_Des_A5Mileage",
+        "MR_Act_A5X",
+        "MR_Act_A5Y",
+        "MR_Act_A5Z" ,
+        "MR_Act_A5HD" ,
+        "MR_Act_A5VD",
+        "MR_Des_A9Mileage",
+        "MR_Act_A9X",
+        "MR_Act_A9Y",
+        "MR_Act_A9Z",
+        "MR_Act_A9HD",
+        "MR_Act_A9VD",
+        "MR_F_HT",
+        "MR_F_VT",
+        "MR_F_RollAngle",
+        "MR_F_PitchAngle",
+        "MR_F_AzimuthAngle",
+        "MR_B_HT",
+        "MR_B_VT",
+        "MR_B_RollAngle",
+        "MR_B_PitchAngle",
+        "MR_B_AzimuthAngle"
+        from
+        "raising"."d_MeasureResult"
+        where 1 = 1
+        <if test="projectIds != null">
+            and "pro_id" in
+            <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+                #{value}
+            </foreach>
+        </if>
+        <if test="id != null">
+            and "id" <![CDATA[ > ]]> #{id}
+        </if>
+        order by "id" asc
+        offset 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("id")
+        from "raising"."d_MeasureResult"
+        where
+        "pro_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+
+    </select>
+
+</mapper>

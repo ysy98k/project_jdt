@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.construction.mapper.AlarmCodeMapper">
+    <sql id="sql_select">
+        c."id" as "alarmCodeId",
+        c."alarm_name" as "alarmName",
+        c."alarm_name_str" as "alarmNameStr",
+        c."alarm_type" as "alarmType",
+        c."alarm_level" as "alarmLevel",
+        c."alarm_code" as "alarmCode"
+    </sql>
+    <!--获得盾构机履历信息-->
+    <select id="getRows" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+      select
+        <include refid="sql_select"></include>
+       from "raising"."t_alarm_code" c
+        <trim prefix="where" prefixOverrides="and">
+            <if test="alarmName != null and alarmName != ''.toString() ">
+                and "alarm_name" like concat('%',#{alarmName},'%')
+            </if>
+            <if test="alarmTypesArr != null">
+                and "alarm_type" in
+                <foreach collection="alarmTypesArr" open="(" separator="," close=")" item="value">
+                    #{value}
+                </foreach>
+            </if>
+        </trim>
+    </select>
+
+
+    <select id="getCount" resultType="java.lang.Integer">
+        select
+          count("id")
+        from "raising"."t_alarm_code"
+        <trim prefix="where" prefixOverrides="and">
+            <if test="alarmName != null and alarmName != ''.toString() ">
+                and "alarm_name" like concat('%',#{alarmName},'%'),
+            </if>
+            <if test="alarmTypesArr != null">
+                and "alarm_type" in
+                <foreach collection="alarmTypesArr" open="(" separator="," close=")" item="value">
+                    #{value}
+                </foreach>
+            </if>
+        </trim>
+    </select>
+
+    <select id="getAlarm" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid="sql_select"></include>,
+        b."pro_id" as "projectId",
+        b."alarm_value" as "alarmValue",
+        b."alarm_uuid" as "alarmUuid",
+        b."update_time" as "updateTime",
+        b."alarm_type" as "anAlarm"
+        from "raising"."t_alarm_code" c INNER JOIN "raising"."d_alarm" b
+        on c."alarm_code" = b."alarm_code"
+        where
+        b."pro_id" = #{projectId}
+        and b."alarm_uuid" not in (/*排除报警历史记录的数据*/
+                select alarm_uuid from "raising"."t_alarm" where "start_time" is not null and "end_time" is not null
+            )
+
+        order by b."alarm_uuid" ,"update_time" asc
+    </select>
+
+    <insert id="addRow" parameterType="com.alibaba.fastjson.JSONObject" >
+        insert into "raising"."t_alarm_code"("alarm_name","alarm_name_str","alarm_type","alarm_code")
+        values
+        <foreach collection="alarmCodeArr" separator="," item="value">
+            (#{value.alarmName},#{value.alarmNameStr},#{value.alarmType},#{value.alarmCode})
+        </foreach>
+    </insert>
+
+    <update id="updateRow" parameterType="com.alibaba.fastjson.JSONObject" >
+        update "raising"."t_alarm_code" set
+        <trim suffixOverrides=",">
+            <if test="alarmName != null and alarmName != ''.toString() ">
+                "alarm_name" = #{alarmName},
+            </if>
+            <if test="alarmNameStr != null and alarmNameStr != ''.toString() ">
+                "alarm_name_str" = #{alarmNameStr},
+            </if>
+            <if test="alarmType != null  ">
+                "alarm_type" = #{alarmType},
+            </if>
+            <if test="alarmCode != null ">
+                "alarm_code" = #{alarmCode},
+            </if>
+        </trim>
+        where "id" = #{alarmCodeId}
+    </update>
+
+    <delete id="deleteRow" parameterType="com.alibaba.fastjson.JSONObject">
+      delete from "raising"."t_alarm_code" where "id" = #{alarmCodeId}
+    </delete>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "id","alarm_name","alarm_name_str", "alarm_type","alarm_level",
+        "alarm_code"
+
+        from "raising"."t_alarm_code"
+        where 1 = 1
+        <if test="id != null">
+            and "id" <![CDATA[ > ]]> #{id}
+        </if>
+        order by id asc OFFSET 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("id")
+        from "raising"."t_alarm_code"
+    </select>
+
+</mapper>

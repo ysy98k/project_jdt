@@ -1,0 +1,236 @@
+<div data-id="control">
+	<!-- class="box box-element ui-draggable"-->
+	<div class="view">
+		<div id="control" style="width: 100%; height: 400px;min-width: 10px;"></div>
+	</div>
+	<div class="configView">
+		<div class="row">
+			<div class="col-sm-12">
+				<label for="chartId" title="id"
+					class="col-sm-5 no-padding smaller-20"> 图形ID</label><label
+					id="chartId" class="col-sm-7 no-padding smaller-20"></label>
+			</div>
+		</div>
+		<div class="hr hr-dotted hr8"></div>
+		<div id="widgetSize">
+			<div class="row">
+				<div class="col-sm-12">
+					<label for="height" title="高度"
+						class="col-sm-5 no-padding smaller-20"> 图形高度(px)</label><input
+						id="height" type="text" class="col-sm-7" />
+				</div>
+			</div>
+		</div>
+		<div class="hr hr-dotted hr8"></div>
+		<div id="chartAttribute">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="theme" title="主题" class="col-sm-5 no-padding smaller-20">主题</label>
+                    <select id="theme" class="col-sm-7" data-attribute="theme" data-level="theme">
+                        <option value="macarons">macarons</option>
+                        <option value="chalk">chalk</option>
+                        <option value="dark">dark</option>
+                        <option value="essos">essos</option>
+                        <option value="halloween">halloween</option>
+                        <option value="infographic">infographic</option>
+                        <option value="purple-passion">purple-passion</option>
+                        <option value="roma">roma</option>
+                        <option value="vintage">vintage</option>
+                        <option value="westeros">westeros</option>
+                        <option value="walden">walden</option>
+                        <option value="wonderland">wonderland</option>
+                        <option value="shine">shine</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hr hr-dotted hr8"></div>
+			<div id="title">
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="text" title="一级标题"
+							class="col-sm-5 no-padding smaller-20">一级标题</label><input
+							id="text" data-attribute="text" data-level="title.text"
+							type="text" class="col-sm-7" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="subtext" title="二级标题"
+							class="col-sm-5 no-padding smaller-20">二级标题</label><input
+							id="subtext" data-attribute="subtext" data-level="title.subtext"
+							type="text" class="col-sm-7" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="titleX" title="水平位置" class="col-sm-5 no-padding smaller-20">标题水平位置</label><select
+							id="titleX" class="col-sm-7" data-attribute="x" data-level="title.x">
+							<option value="center">居中</option>
+							<option value="left">靠左</option>
+							<option value="right">靠右</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="titleY" title="垂直位置" class="col-sm-5 no-padding smaller-20">标题垂直位置</label><select
+							id="titleY" class="col-sm-7" data-attribute="y" data-level="title.y">
+							<option value="center">居中</option>
+							<option value="top">顶端</option>
+							<option value="bottom">底端</option>
+						</select>
+					</div>
+				</div>
+			</div>
+            <div id="Unit">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="xUnit" title="X轴单位名称" class="col-sm-5 no-padding smaller-20">X轴单位名称</label>
+                        <input id="xUnit" data-attribute="name" data-level="xAxis.name"
+                               type="text" class="col-sm-7" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="yUnit" title="Y轴单位名称" class="col-sm-5 no-padding smaller-20">Y轴单位名称</label>
+                        <input id="yUnit" data-attribute="name" data-level="yAxis.name"
+                               type="text" class="col-sm-7" />
+                    </div>
+                </div>
+            </div>
+			<div id="legend">
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="x" title="水平位置" class="col-sm-5 no-padding smaller-20">图例水平位置</label><select
+							id="x" class="col-sm-7" data-attribute="x" data-level="legend.x">
+							<option value="center">居中</option>
+							<option value="left">靠左</option>
+							<option value="right">靠右</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="y" title="垂直位置" class="col-sm-5 no-padding smaller-20">图例垂直位置</label><select
+							id="y" class="col-sm-7" data-attribute="y" data-level="legend.y">
+							<option value="center">居中</option>
+							<option value="top">顶端</option>
+							<option value="bottom">底端</option>
+						</select>
+					</div>
+				</div>
+                <div class="hr hr-dotted hr8"></div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="dataView" title="数据视图工具，可以展现当前图表所用的数据，编辑后可以动态更新"
+                               class="col-sm-5 no-padding smaller-20">启用数据视图</label>
+                        <label><input id="dataView" data-attribute="show"  data-level="toolbox.feature.dataView.show"
+                                      class="ace ace-switch ace-switch-3" type="checkbox" /><span class="lbl"></span></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label for="saveAsImage" title="图片下载工具，可以将当前图表保存为*.png图片"
+                               class="col-sm-5 no-padding smaller-20">启用图片下载</label>
+                        <label><input id="saveAsImage" data-attribute="show"  data-level="toolbox.feature.saveAsImage.show"
+                                      class="ace ace-switch ace-switch-3" type="checkbox" /><span class="lbl"></span></label>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+
+    <div class="dataConfigView">
+		<div class="fixed-only">
+			<div class="row">
+				<div class=" col-sm-12">
+					<button class="btn btn-xs btn-block" id="addSeriesBtn">
+						<i class="ace-icon fa fa-plus"></i>  添加系列
+					</button>
+					<button class="btn btn-xs btn-block" id="dynaSeriesOn">
+						<i class="ace-icon fa fa-eye"></i> 启用动态系列
+					</button>
+				</div>
+			</div>
+
+			<div id="seriesAttribute" style="display: none">
+				<div class="hr hr-dotted hr8"></div>
+				<div class="row">
+					<div class=" col-sm-12">
+						<label for="seriesName" title="系列名称" class="smaller-20 col-sm-5 no-padding">系列名称</label>
+						<input placeholder="如:系列1" id="seriesName" class="col-sm-12" type="text"
+							   data-attribute="name" data-level="series.name"/>
+					</div>
+				</div>
+				<div class="row">
+					<div class=" col-sm-12">
+						<label for="seriesDataX" title="系列X轴只支持数字类型，数字间以逗号间隔，数量与Y轴保持一致"
+							   class="smaller-20 col-sm-5 no-padding">系列X轴</label>
+						<input placeholder="如:1,2," id="seriesDataX" type="text" class="treeInput col-sm-12"
+							   data-attribute="data" data-level="series.dataX">
+					</div>
+				</div>
+				<div class="row">
+					<div class=" col-sm-12">
+						<label for="seriesDataY" title="系列Y轴只支持数字类型，数字间以逗号间隔，数量与X轴保持一致"
+							   class="smaller-20 col-sm-5 no-padding">系列Y轴</label>
+						<input placeholder="如:1,2," id="seriesDataY" type="text" class="treeInput col-sm-12"
+							   data-attribute="data" data-level="series.dataY">
+					</div>
+				</div>
+				<div class="row" >
+					<div class="col-sm-12">
+						<label for="max" title="计算最大/小值" class="col-sm-5 no-padding smaller-20">计算最大值</label><label><input
+							id="max" data-attribute="markPoint" data-level="series.markPoint"
+							class="col-sm-7 ace ace-switch ace-switch-3" type="checkbox" /><span
+							class="lbl"></span></label>
+					</div>
+					<div class="col-sm-12">
+						<label for="average" title="计算平均值" class="col-sm-5 no-padding smaller-20">计算平均值</label><label><input
+							id="average" data-attribute="markLine" data-level="series.markLine"
+							class="col-sm-7 ace ace-switch ace-switch-3" type="checkbox" /><span
+							class="lbl"></span></label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="dyna-only">
+			<div class="row">
+				<div class="col-sm-12">
+					<label for="dynaSeriesData" title="动态系列数据源配置"
+						   class="smaller-20 col-sm-12 no-padding">动态系列数据源配置</label>
+					<input placeholder='如:[{"key1":"2,5","key2":"3,2"}]' id="dynaSeriesData" type="text"
+						   class="treeInput treeInput-tab col-sm-12">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<label title="计算最大/小值" class="col-sm-5 no-padding smaller-20">计算最值</label>
+					<label>
+						<input data-level="markPoint"
+							   class="col-sm-7 ace ace-switch ace-switch-3" type="checkbox"/>
+						<span class="lbl"></span>
+					</label>
+				</div>
+				<div class="col-sm-12">
+					<label title="计算平均值" class="col-sm-5 no-padding smaller-20">计算平均值</label>
+					<label>
+						<input data-level="markLine"
+							   class="col-sm-7 ace ace-switch ace-switch-3" type="checkbox"/>
+						<span class="lbl"></span>
+					</label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-xs btn-block" id="dynaSeriesOff">
+						<i class="ace-icon fa fa-eye-slash"></i> 关闭动态系列
+					</button>
+				</div>
+			</div>
+		</div>
+		
+    </div>
+</div>

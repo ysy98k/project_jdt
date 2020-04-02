@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.raising.forward.construction.mapper.AlarmMapper">
+    <sql id="sql_select">
+        a."id" as "alarmId",
+        a."start_time" as "startTime",
+        a."end_time" as "endTime",
+        a."alarm_detail" as "alarmDetail",
+        a."project_id" as "projectId"
+    </sql>
+
+    <!--获得报警信息-->
+    <select id="getAlarmInfo" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+          <include refid="sql_select"></include>,
+        c."id" as "alarmCodeId",
+        c."alarm_code" as "alarmCode",
+        c."alarm_name_str" as "alarmStr",
+        c."alarm_type" as "alarmType"
+        FROM
+        "raising"."t_alarm" a inner JOIN "raising"."t_alarm_code" c on a.alarm_code_id = c."id"
+        where
+        "project_id" = #{projectId} and "end_time" is null
+        <if test="startTime != null">
+            and "start_time" >= #{startTime}
+        </if>
+        <if test="alarmTypesArr != null">
+            and c."alarm_type"
+            <trim prefix="in(" suffix=")">
+                <foreach collection="alarmTypesArr" item="value" separator=",">
+                    #{value}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+    <select id="getAlarmCount" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select
+        count(a."id")
+        FROM
+        "raising"."t_alarm" a inner JOIN "raising"."t_alarm_code" c on a.alarm_code_id = c."id"
+        where
+        "project_id" = #{projectId} and  "end_time" is  null
+        <if test="startTime != null">
+            and "start_time" >= #{startTime}
+        </if>
+        <if test="alarmTypesArr != null">
+            and "alarm_type"
+            <trim prefix="in(" suffix=")">
+                <foreach collection="alarmTypesArr" item="value" separator=",">
+                    #{value}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+    <select id="getAlarmHistory" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        <include refid="sql_select"></include>,
+        c."id" as "alarmCodeId",
+        c."alarm_code" as "alarmCode",
+        c."alarm_name_str" as "alarmStr",
+        c."alarm_type" as "alarmType"
+        FROM
+        "raising"."t_alarm" a inner JOIN "raising"."t_alarm_code" c on a.alarm_code_id = c."id"
+        where
+        "project_id" = #{projectId} and "end_time" is not null
+        <if test="startTime != null">
+            and "start_time" >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and  "end_time" &lt;= #{endTime}
+        </if>
+        <if test="alarmTypesArr != null">
+            and c."alarm_type"
+            <trim prefix="in(" suffix=")">
+                <foreach collection="alarmTypesArr" item="value" separator=",">
+                    #{value}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+    <select id="getAlarmHistoryCount" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select
+        count(a."id")
+        FROM
+        "raising"."t_alarm" a inner JOIN "raising"."t_alarm_code" c on a.alarm_code_id = c."id"
+        where
+        "project_id" = #{projectId} and "end_time" is not null
+        <if test="startTime != null">
+            and "start_time" >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and  "end_time" &lt;= #{endTime}
+        </if>
+        <if test="alarmTypesArr != null">
+            and c."alarm_type"
+            <trim prefix="in(" suffix=")">
+                <foreach collection="alarmTypesArr" item="value" separator=",">
+                    #{value}
+                </foreach>
+            </trim>
+        </if>
+    </select>
+
+    <select id="getLastTime" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.sql.Timestamp">
+        select "update_time" as "updateTime"
+        from "raising"."t_alarm"
+        where
+        "project_id" = #{projectId}
+        order by update_time desc limit 1
+    </select>
+
+    <select id="getEidtRows" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.String" >
+        select
+        "alarm_uuid" as "alarmUuid"
+        FROM "raising"."t_alarm"
+        where
+        "project_id" = #{projectId} and
+        "end_time" is null
+    </select>
+
+    <delete id="deleteAlarm" parameterType="com.alibaba.fastjson.JSONObject">
+        delete from "raising"."t_alarm"
+        where "alarm_uuid" in
+        <foreach collection="deleteUuids" open="(" separator="," close=")" item="value" >
+          #{value}
+        </foreach>
+    </delete>
+    <insert id="addAlarm" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into "raising"."t_alarm"("start_time","end_time","project_id","alarm_code_id","update_time","alarm_uuid")
+        values
+        <foreach collection="addAlarmInfoList"  separator=","  item="oneRow">
+            (#{oneRow.startTime},#{oneRow.endTime},#{oneRow.projectId},#{oneRow.alarmCodeId},#{oneRow.updateTime},#{oneRow.alarmUuid})
+        </foreach>
+    </insert>
+
+    <select id="getAllData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        "id","start_time","end_time", "alarm_detail","project_id",
+        "alarm_code_id", "update_time", "alarm_uuid"
+
+        from "raising"."t_alarm"
+        where 1 = 1 and
+        "project_id" in
+        <foreach collection="projectIds" open="(" separator="," item="value" close=")">
+            #{value}
+        </foreach>
+        <if test="id != null">
+            and "id" <![CDATA[ > ]]> #{id}
+        </if>
+        order by id asc OFFSET 0 limit 1000
+    </select>
+
+    <select id="getMaxId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select max("id")
+        from "raising"."t_alarm"
+    </select>
+
+
+</mapper>

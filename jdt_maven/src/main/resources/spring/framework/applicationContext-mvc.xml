@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 要使用注解的SpringMVC需要在SpringMVC的配置文件中进行声明，具体方式为先引入mvc命名空间，然后利用<mvc:annotation-driven 
+		/>进行声明 -->
+	<mvc:annotation-driven />
+	<!-- Spring 会自动去扫描base-package 属性中指定包中的类，查找里面的annoatation -->
+	<context:component-scan base-package="com.baosight">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+        <context:exclude-filter type="assignable" expression="com.baosight.df.example.controller.LeaveWKController" />
+        <context:exclude-filter type="regex" expression="com.baosight.df.example.listener.*" />
+	</context:component-scan>
+	<context:component-scan base-package="com.raising">
+		<context:exclude-filter type="annotation"
+								expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+    <!--<aop:config>
+        <aop:aspect id="b" ref="detailMessageLog">
+            <aop:pointcut id="log" expression="execution(* com.baosight..*.*Controller.*(..))"/>
+            <aop:before pointcut-ref="log" method="doBefore"/>
+            <aop:after pointcut-ref="log" method="doAfter"/>
+            <aop:after-throwing pointcut-ref="log" method="doAfertThrowing" throwing="e"/>
+        </aop:aspect>
+    </aop:config>-->
+	<context:property-placeholder
+		location="classpath:project.properties,file:/Users/ysy/usr/local/xinsight/jdt/conf/*.properties,file:/Users/ysy/usr/local/xinsight/common/conf/*.properties,
+		file:/Users/ysy/usr/local/xinsight/lms_web/conf/*.properties" file-encoding="UTF-8"/>
+
+	<mvc:resources mapping="/otherservice/**" location="/" />
+	<mvc:default-servlet-handler />
+
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jsonHttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="jsonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="bundleMessageSource" class="com.baosight.common.message.DatabaseBundleMessageSource">
+	</bean>
+
+	<!--<bean id="bundleMessageSource" class="com.baosight.common.message.PropertiesBundleMessageSource"> -->
+	<!--<property name="defaultEncoding" value="UTF-8"/> -->
+	<!--<property name="useCodeAsDefaultMessage" value="true"/> -->
+	<!--<property name="cacheSeconds" value="10"/> -->
+	<!--<property name="basenames"> -->
+	<!--<list> -->
+	<!--<value>classpath:message/messages</value> -->
+	<!--</list> -->
+	<!--</property> -->
+	<!--</bean> -->
+
+	<!-- 国际化资源文件 -->
+	<bean id="messageSource"
+		class="com.baosight.common.message.XinsightResourceBundleMessageSource">
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="useCodeAsDefaultMessage" value="true" />
+		<property name="cacheSeconds" value="100" />
+		<property name="basenames">
+			<list>
+				<value>resources.message.aasMessages</value>
+                <value>resources.commonmessage.baseMessages</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="springContextUtil" class="com.baosight.common.SpringContextUtil" />
+	
+	<!-- SpringMVC上传文件时,需配置MultipartResolver处理器 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 指定所上传文件的总大小不能超过800M......注意maxUploadSize属性的限制不是针对单个文件,而是所有文件的容量之和 -->
+		<property name="maxUploadSize" value="800000000" />
+	</bean>
+
+	<!-- SpringMVC在超出上传文件限制时,会抛出org.springframework.web.multipart.MaxUploadSizeExceededException -->
+	<!-- 该异常是SpringMVC在检查上传的文件信息时抛出来的,而且此时还没有进入到Controller方法中 -->
+	<bean id="exceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<!-- 遇到MaxUploadSizeExceededException异常时,自动跳转到/WEB-INF/jsp/error_fileupload.jsp页面 -->
+				<prop
+					key="org.springframework.web.multipart.MaxUploadSizeExceededException">error_fileupload</prop>
+			</props>
+		</property>
+	</bean>
+    <!-- 日志记录-->
+    <bean id="detailMessageLog" class="com.baosight.common.log.PageLogAspect"/>
+
+</beans>
